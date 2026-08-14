@@ -159,6 +159,13 @@ Ambele rute au deja validare, limitare de trafic (5 cereri / IP / 10 minute)
 
 ## Deployment pe VPS
 
+> **Ai Virtualmin pe server?** Atunci sari peste secțiunea asta și urmează
+> [deploy/virtualmin.md](deploy/virtualmin.md). Virtualmin gestionează singur
+> Apache și certificatele SSL, iar pașii de mai jos (nginx, certbot) ar intra
+> în conflict cu el.
+
+Instrucțiunile de mai jos sunt pentru un VPS fără panou de administrare.
+
 ### 1. Pregătirea serverului
 
 ```bash
