@@ -5,6 +5,11 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { randomBytes } from "node:crypto";
+import { existsSync } from "node:fs";
+
+/* Comenzile `prisma` își încarcă singure fișierul .env, dar acest script rulează
+   prin tsx, care nu o face. Fără asta, DATABASE_URL lipsește la conectare. */
+if (existsSync(".env")) process.loadEnvFile(".env");
 
 const db = new PrismaClient();
 

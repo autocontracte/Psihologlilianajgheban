@@ -93,10 +93,24 @@ nano .env.production
 Completează, în plus față de șablon:
 
 ```
-DATABASE_URL="file:./prisma/dev.db"
-NODE_ENV=production
+DATABASE_URL="file:./dev.db"
 NEXT_PUBLIC_SITE_URL=https://psihologlilianajgheban.ro
 CONTACT_EMAIL=adresa-reala@...
+PORT=3001
+```
+
+Două detalii care contează:
+
+- **`file:./dev.db` fără `prisma/`.** Calea se rezolvă relativ la folderul în
+  care stă `schema.prisma`, deci fișierul ajunge oricum în `prisma/dev.db`.
+  Dacă scrii `file:./prisma/dev.db`, baza ajunge în `prisma/prisma/dev.db`.
+- **`PORT`** trebuie să fie liber pe server. Dacă mai rulezi și alte aplicații
+  Node, verifică întâi: `ss -tln | grep 3001`.
+
+Fișierul conține date de configurare, deci restrânge-i accesul:
+
+```bash
+chmod 600 .env
 ```
 
 ### Baza de date și primul build
