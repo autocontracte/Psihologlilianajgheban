@@ -6,7 +6,8 @@ Ghid pentru `psihologlilianajgheban.ro`.
 
 ## Starea instalării de pe 31.97.54.70
 
-Site-ul **este deja instalat** pe acest server. Configurația efectivă:
+Site-ul **este instalat și funcțional** la
+<https://psihologlilianajgheban.ro>. Configurația efectivă:
 
 | | |
 | --- | --- |
@@ -17,15 +18,21 @@ Site-ul **este deja instalat** pe acest server. Configurația efectivă:
 | Port aplicație | **3001** (3000 e ocupat de `autocontracte`) |
 | Proces | PM2 `psiholog-lj`, pornire automată activată |
 | Proxy | Apache → `http://127.0.0.1:3001/` |
-| SSL | **încă nu** — vezi mai jos |
+| DNS | Cloudflare (`desi` / `evan`), A către `31.97.54.70`, DNS only |
+| SSL | Let's Encrypt, valabil până la 12 noiembrie 2026, reînnoire automată |
+| Redirect | HTTP → HTTPS activ, cu excepție pentru `/.well-known` |
 
 Serverul mai găzduiește 7 site-uri. Orice modificare în `httpd.conf` le
 afectează pe toate, deci fă backup și rulează `httpd -t` **înainte** de reload.
+Backup-urile făcute la instalare sunt în `/root/httpd.conf.bak-*`.
 
-**Ce mai lipsește:** domeniul are nameservere la `ns.romania-webhosting.com`,
-nu la acest VPS, deci nu rezolvă către `31.97.54.70`. Până se rezolvă asta,
-certificatul Let's Encrypt nu poate fi emis, iar autentificarea nu funcționează
-(cookie-ul de sesiune e marcat `Secure` și nu se salvează peste HTTP simplu).
+Portul 3001 este **închis** în firewall — aplicația e accesibilă doar prin
+Apache. Dacă ai nevoie temporar de acces direct, pentru diagnosticare:
+
+```bash
+firewall-cmd --add-port=3001/tcp        # doar runtime, dispare la reload
+firewall-cmd --remove-port=3001/tcp     # inchide inapoi
+```
 
 Restul ghidului descrie pașii de la zero, dacă vei muta site-ul pe alt server.
 
@@ -258,13 +265,40 @@ curl -H "Host: psihologlilianajgheban.ro" http://31.97.54.70/
 
 ## 7. Certificatul SSL
 
-**Virtualmin → Server Configuration → SSL Certificate → Let's Encrypt**
+Din linia de comandă, ca root:
 
-Cere certificat pentru `psihologlilianajgheban.ro` și
-`www.psihologlilianajgheban.ro`, apoi activează redirectarea spre HTTPS din
-**Server Configuration → Website Options → Redirect all requests to SSL**.
+```bash
+virtualmin generate-letsencrypt-cert \
+  --domain psihologlilianajgheban.ro \
+  --host psihologlilianajgheban.ro \
+  --host www.psihologlilianajgheban.ro \
+  --web
+```
 
+Din interfață, același lucru se face din
+**Virtualmin → Server Configuration → SSL Certificate → Let's Encrypt**.
 Virtualmin reînnoiește certificatul automat.
+
+Imediat după emitere, Apache se reîncarcă. Dacă testezi în acel moment poți
+primi o eroare de conexiune — reîncearcă după câteva secunde.
+
+### Redirect HTTP → HTTPS
+
+`virtualmin modify-web` nu are opțiune pentru asta. Adaugă în blocul
+`<VirtualHost ...:80>` al domeniului, înainte de directivele de proxy:
+
+```apache
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteCond %{REQUEST_URI} !^/\.well-known/
+RewriteRule ^/?(.*) https://%{HTTP_HOST}/$1 [R=301,L]
+```
+
+A doua condiție e importantă: fără ea, redirectul ar prinde și validarea
+Let's Encrypt, iar reînnoirea automată a certificatului ar începe să eșueze
+peste trei luni, când nu te mai aștepți.
+
+Aplică din nou procedura cu backup și `httpd -t` înainte de reload.
 
 ---
 
