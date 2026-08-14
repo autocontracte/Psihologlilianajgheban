@@ -52,24 +52,32 @@ model Service {
 
 /// O programare. `startsAt` / `endsAt` se păstrează în UTC;
 /// conversia spre ora României se face în src/lib/tz.ts.
+///
+/// Programarea poate veni de la un cont (`userId`) sau de la cineva care a ales
+/// să nu își facă cont — atunci datele de contact stau în câmpurile `guest*`.
+/// Exact una dintre cele două variante este completată.
 model Appointment {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  serviceId String
-  service   Service  @relation(fields: [serviceId], references: [id])
-  startsAt  DateTime
-  endsAt    DateTime
-  format    String   @default("CABINET")
-  status    String   @default("PENDING")
-  notes     String?
-  adminNote String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String   @id @default(cuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  guestName  String?
+  guestEmail String?
+  guestPhone String?
+  serviceId  String
+  service    Service  @relation(fields: [serviceId], references: [id])
+  startsAt   DateTime
+  endsAt     DateTime
+  format     String   @default("CABINET")
+  status     String   @default("PENDING")
+  notes      String?
+  adminNote  String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@index([startsAt])
   @@index([userId])
   @@index([status])
+  @@index([guestEmail])
 }
 
 /// Programul săptămânal recurent. weekday: 0 = duminică … 6 = sâmbătă.

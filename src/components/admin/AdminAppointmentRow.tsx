@@ -15,6 +15,7 @@ export type AdminAppointment = {
   clientName: string;
   clientEmail: string;
   clientPhone: string;
+  hasAccount: boolean;
   serviceName: string;
   duration: number;
   dateLabel: string;
@@ -94,6 +95,11 @@ export function AdminAppointmentRow({ a }: { a: AdminAppointment }) {
             <span className="rounded-pill bg-ink/6 px-3 py-1.5 font-sans text-[0.6rem] uppercase tracking-[0.14em] text-ink-soft">
               {FORMAT_LABEL[a.format]}
             </span>
+            {!a.hasAccount && (
+              <span className="rounded-pill bg-clay-pale px-3 py-1.5 font-sans text-[0.6rem] uppercase tracking-[0.14em] text-clay">
+                Fără cont
+              </span>
+            )}
           </div>
 
           <h3 className="mt-3.5 font-display text-[1.2rem] leading-snug text-ink">

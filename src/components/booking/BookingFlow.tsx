@@ -21,6 +21,9 @@ const STEPS = ["Serviciul", "Data și ora", "Confirmare"] as const;
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
+const guestField =
+  "w-full rounded-[1.25rem] border border-ink/15 bg-cream-warm px-5 py-3.5 font-sans text-[0.9rem] text-ink placeholder:text-ink-muted transition-all duration-300 focus:border-periwinkle focus:bg-cream focus:outline-none focus:ring-4 focus:ring-periwinkle/12";
+
 /* Etichete de dată calculate fără fus orar: șirul "YYYY-MM-DD" e tratat ca UTC,
    deci ziua afișată e exact cea cerută. */
 function dayLabel(date: string, opts: Intl.DateTimeFormatOptions) {
@@ -30,7 +33,14 @@ function dayLabel(date: string, opts: Intl.DateTimeFormatOptions) {
   );
 }
 
-export function BookingFlow({ services }: { services: Service[] }) {
+export function BookingFlow({
+  services,
+  loggedIn,
+}: {
+  services: Service[];
+  /** Când e fals, datele de contact se cer în ultimul pas. */
+  loggedIn: boolean;
+}) {
   const [step, setStep] = useState(0);
   const [done, setDone] = useState(false);
 
@@ -39,6 +49,11 @@ export function BookingFlow({ services }: { services: Service[] }) {
   const [time, setTime] = useState("");
   const [format, setFormat] = useState<Format>("CABINET");
   const [notes, setNotes] = useState("");
+
+  // Folosite doar pentru programările fără cont
+  const [guestName, setGuestName] = useState("");
+  const [guestEmail, setGuestEmail] = useState("");
+  const [guestPhone, setGuestPhone] = useState("");
 
   const [days, setDays] = useState<DayInfo[]>([]);
   const [slots, setSlots] = useState<SlotInfo[]>([]);
@@ -104,7 +119,16 @@ export function BookingFlow({ services }: { services: Service[] }) {
       const res = await fetch("/api/appointments", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ serviceId, date, time, format, notes }),
+        body: JSON.stringify({
+          serviceId,
+          date,
+          time,
+          format,
+          notes,
+          ...(loggedIn
+            ? {}
+            : { name: guestName, email: guestEmail, phone: guestPhone }),
+        }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error ?? "Programarea nu a reușit.");
@@ -138,16 +162,27 @@ export function BookingFlow({ services }: { services: Service[] }) {
               Programarea a fost înregistrată
             </h2>
             <p className="mx-auto mt-4 max-w-md font-sans text-[0.92rem] leading-[1.9] text-ink-soft">
-              {service?.name} — {dayLabel(date, { weekday: "long", day: "numeric", month: "long" })}, ora {time}.
-              Îți confirm programarea în cel mai scurt timp, iar până atunci
-              apare în contul tău ca „în așteptare".
+              {service?.name} —{" "}
+              {dayLabel(date, { weekday: "long", day: "numeric", month: "long" })}
+              , ora {time}.{" "}
+              {loggedIn
+                ? "Îți confirm programarea în cel mai scurt timp, iar până atunci apare în contul tău ca „în așteptare”."
+                : "Te contactez pe telefon sau email ca să confirm programarea, de regulă în aceeași zi lucrătoare."}
             </p>
+
+            {!loggedIn && (
+              <p className="mx-auto mt-5 max-w-md rounded-[1.25rem] bg-cream-warm px-5 py-4 font-sans text-[0.83rem] leading-relaxed text-ink-soft">
+                Dacă îți faci un cont cu aceeași adresă de email, îți vei putea
+                vedea și gestiona singur ședințele viitoare.
+              </p>
+            )}
+
             <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
               <Link
-                href="/cont"
+                href={loggedIn ? "/cont" : "/cont/inregistrare"}
                 className="inline-flex items-center justify-center gap-2 rounded-pill bg-periwinkle px-7 py-3.5 font-sans text-[0.7rem] uppercase tracking-[0.16em] text-cream transition-colors duration-500 hover:bg-ink"
               >
-                Vezi programările mele
+                {loggedIn ? "Vezi programările mele" : "Creează-mi cont"}
               </Link>
               <button
                 type="button"
@@ -171,6 +206,13 @@ export function BookingFlow({ services }: { services: Service[] }) {
   }
 
   const canAdvance = step === 0 ? !!serviceId : step === 1 ? !!date && !!time : true;
+
+  /* Fără cont, programarea are nevoie de date de contact valide. */
+  const contactReady =
+    loggedIn ||
+    (guestName.trim().length >= 2 &&
+      /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(guestEmail.trim()) &&
+      guestPhone.replace(/\D/g, "").length >= 9);
 
   return (
     <div>
@@ -425,6 +467,60 @@ export function BookingFlow({ services }: { services: Service[] }) {
                   </dl>
                 </div>
 
+                {/* Date de contact — doar pentru programările fără cont */}
+                {!loggedIn && (
+                  <div className="mt-7">
+                    <div className="flex flex-wrap items-baseline justify-between gap-2">
+                      <span className="font-sans text-[0.58rem] uppercase tracking-[0.22em] text-ink-muted">
+                        Datele tale de contact
+                      </span>
+                      <Link
+                        href="/cont/autentificare?redirect=/programari"
+                        className="font-sans text-[0.75rem] text-periwinkle underline decoration-periwinkle/30 underline-offset-4 transition-colors hover:text-ink"
+                      >
+                        Ai deja cont? Autentifică-te
+                      </Link>
+                    </div>
+
+                    <div className="mt-3 space-y-3">
+                      <input
+                        type="text"
+                        value={guestName}
+                        onChange={(e) => setGuestName(e.target.value)}
+                        maxLength={100}
+                        autoComplete="name"
+                        placeholder="Nume și prenume *"
+                        className={guestField}
+                      />
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        <input
+                          type="tel"
+                          value={guestPhone}
+                          onChange={(e) => setGuestPhone(e.target.value)}
+                          maxLength={30}
+                          autoComplete="tel"
+                          placeholder="Telefon *"
+                          className={guestField}
+                        />
+                        <input
+                          type="email"
+                          value={guestEmail}
+                          onChange={(e) => setGuestEmail(e.target.value)}
+                          maxLength={150}
+                          autoComplete="email"
+                          placeholder="Email *"
+                          className={guestField}
+                        />
+                      </div>
+                    </div>
+
+                    <p className="mt-2.5 font-sans text-[0.75rem] leading-relaxed text-ink-muted">
+                      Te contactez pe telefon sau email ca să îți confirm
+                      programarea.
+                    </p>
+                  </div>
+                )}
+
                 {/* Format */}
                 <div className="mt-7">
                   <span className="mb-2.5 block font-sans text-[0.58rem] uppercase tracking-[0.22em] text-ink-muted">
@@ -506,7 +602,7 @@ export function BookingFlow({ services }: { services: Service[] }) {
               <button
                 type="button"
                 onClick={submit}
-                disabled={busy}
+                disabled={busy || !contactReady}
                 className="group inline-flex items-center gap-2.5 rounded-pill bg-sage px-7 py-3.5 font-sans text-[0.7rem] uppercase tracking-[0.16em] text-cream transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-ink disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {busy ? "Se trimite…" : "Confirmă programarea"}

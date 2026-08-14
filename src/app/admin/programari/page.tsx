@@ -5,6 +5,7 @@ import {
   type AdminAppointment,
 } from "@/components/admin/AdminAppointmentRow";
 import { formatDateLong, formatTime } from "@/lib/tz";
+import { clientOf } from "@/lib/appointments";
 import { STATUSES, STATUS_LABEL, type Format, type Status, isStatus } from "@/lib/types";
 import type { Prisma } from "@prisma/client";
 
@@ -42,21 +43,25 @@ export default async function AdminAppointmentsPage({
 
   const now = Date.now();
 
-  const items: AdminAppointment[] = rows.map((r) => ({
-    id: r.id,
-    clientName: r.user.name,
-    clientEmail: r.user.email,
-    clientPhone: r.user.phone,
-    serviceName: r.service.name,
-    duration: r.service.duration,
-    dateLabel: formatDateLong(r.startsAt),
-    timeLabel: formatTime(r.startsAt),
-    format: r.format as Format,
-    status: r.status as Status,
-    notes: r.notes,
-    adminNote: r.adminNote,
-    isPast: r.startsAt.getTime() < now,
-  }));
+  const items: AdminAppointment[] = rows.map((r) => {
+    const client = clientOf(r);
+    return {
+      id: r.id,
+      clientName: client.name,
+      clientEmail: client.email,
+      clientPhone: client.phone,
+      hasAccount: client.hasAccount,
+      serviceName: r.service.name,
+      duration: r.service.duration,
+      dateLabel: formatDateLong(r.startsAt),
+      timeLabel: formatTime(r.startsAt),
+      format: r.format as Format,
+      status: r.status as Status,
+      notes: r.notes,
+      adminNote: r.adminNote,
+      isPast: r.startsAt.getTime() < now,
+    };
+  });
 
   return (
     <div>

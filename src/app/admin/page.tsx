@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { db } from "@/lib/db";
 import { formatDateLong, formatTime, todayStr, zonedToUtc, addDays } from "@/lib/tz";
+import { clientOf } from "@/lib/appointments";
 import { STATUS_LABEL, STATUS_STYLE, FORMAT_LABEL, type Format, type Status } from "@/lib/types";
 
 export default async function AdminHome() {
@@ -86,10 +87,16 @@ export default async function AdminHome() {
                   </span>
                   <div className="min-w-0 flex-1">
                     <p className="font-sans text-[0.92rem] text-ink">
-                      {a.user.name}
+                      {clientOf(a).name}
                     </p>
                     <p className="font-sans text-[0.8rem] text-ink-soft">
-                      {a.service.name} · {FORMAT_LABEL[a.format as Format]}
+                      {a.service.name} · {FORMAT_LABEL[a.format as Format]} ·{" "}
+                      <a
+                        href={`tel:${clientOf(a).phone}`}
+                        className="transition-colors hover:text-periwinkle"
+                      >
+                        {clientOf(a).phone}
+                      </a>
                     </p>
                   </div>
                   <span
@@ -130,7 +137,7 @@ export default async function AdminHome() {
                 >
                   <div className="min-w-0">
                     <p className="font-sans text-[0.92rem] text-ink">
-                      {a.user.name} — {a.service.name}
+                      {clientOf(a).name} — {a.service.name}
                     </p>
                     <p className="mt-0.5 font-sans text-[0.8rem] text-ink-soft">
                       {formatDateLong(a.startsAt)}, ora {formatTime(a.startsAt)}

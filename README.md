@@ -71,15 +71,23 @@ ADMIN_EMAIL=liliana@exemplu.ro ADMIN_PASSWORD=parola-ta npm run db:seed
 
 ### Ce poate face clientul
 
+**Contul nu este obligatoriu.** Oricine poate rezerva direct de pe
+`/programari`, lăsând doar nume, telefon și email. Contul rămâne o opțiune,
+utilă celor care vin la mai multe ședințe.
+
 | Pagină | Ce face |
 | --- | --- |
+| `/programari` | Alege serviciul, ziua, ora și formatul, în trei pași — cu sau fără cont |
 | `/cont/inregistrare` | Creează cont (nume, email, telefon, parolă) |
 | `/cont/autentificare` | Intră în cont |
-| `/programari` | Alege serviciul, ziua, ora și formatul, în trei pași |
 | `/cont` | Vede ședințele viitoare și istoricul, poate anula |
 
-Anularea este permisă cu cel puțin 24 de ore înainte (`CANCEL_LEAD_HOURS` din
-`src/lib/slots.ts`).
+Anularea online este permisă cu cel puțin 24 de ore înainte
+(`CANCEL_LEAD_HOURS` din `src/lib/slots.ts`) și doar pentru cei cu cont. Cine
+a programat fără cont anulează telefonic.
+
+În panoul de administrare, programările fără cont sunt marcate cu eticheta
+„Fără cont", iar datele de contact apar la fel ca la ceilalți clienți.
 
 ### Ce poate face administratorul
 
@@ -115,6 +123,9 @@ Asta contează pentru că VPS-ul rulează de regulă pe UTC.
 - Rutele `/admin` sunt protejate în layout, iar fiecare rută API verifică din
   nou rolul — nu doar interfața.
 - Autentificarea și înregistrarea au limitare de încercări per IP.
+- Programările fără cont sunt limitate la 5 rezervări per IP la 30 de minute.
+  Se numără doar rezervările reușite, ca o greșeală de tastare să nu consume
+  din cotă, iar pragul e larg pentru că mai mulți oameni pot împărți un IP.
 - Două persoane nu pot rezerva același interval: verificarea se reia într-o
   tranzacție, în momentul salvării.
 

@@ -21,15 +21,41 @@ export async function GET() {
   return NextResponse.json({ appointments });
 }
 
-/** POST — creează o programare nouă. */
+/* Programările fără cont nu trec prin autentificare, deci au nevoie de o
+   limitare proprie.
+
+   Se numără doar rezervările *reușite*, nu și încercările respinse de
+   validare: altfel o greșeală de tastare ar consuma din cotă. Pragul este
+   larg pentru că mai multe persoane pot împărți același IP — o familie, un
+   birou sau o rețea mobilă. */
+const GUEST_WINDOW_MS = 30 * 60 * 1000;
+const GUEST_MAX = 5;
+const guestBookings = new Map<string, number[]>();
+
+function recentGuestBookings(ip: string): number[] {
+  const now = Date.now();
+  return (guestBookings.get(ip) ?? []).filter((t) => now - t < GUEST_WINDOW_MS);
+}
+
+function guestRateLimited(ip: string): boolean {
+  return recentGuestBookings(ip).length >= GUEST_MAX;
+}
+
+function recordGuestBooking(ip: string): void {
+  const now = Date.now();
+  guestBookings.set(ip, [...recentGuestBookings(ip), now]);
+
+  if (guestBookings.size > 5000) {
+    for (const [key, times] of guestBookings) {
+      if (times.every((t) => now - t >= GUEST_WINDOW_MS))
+        guestBookings.delete(key);
+    }
+  }
+}
+
+/** POST — creează o programare, cu sau fără cont. */
 export async function POST(request: Request) {
   const user = await getCurrentUser();
-  if (!user) {
-    return NextResponse.json(
-      { error: "Trebuie să fii autentificat pentru a te programa." },
-      { status: 401 },
-    );
-  }
 
   let body: Record<string, unknown>;
   try {
@@ -59,6 +85,59 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Mesajul este prea lung." }, { status: 400 });
   }
 
+  /* ---------------------------------------------- cine face programarea */
+  let guestName = "";
+  let guestEmail = "";
+  let guestPhone = "";
+  let guestIp = "";
+
+  if (!user) {
+    guestIp =
+      request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+      request.headers.get("x-real-ip") ??
+      "unknown";
+
+    if (guestRateLimited(guestIp)) {
+      return NextResponse.json(
+        {
+          error:
+            "Prea multe programări trimise de pe această conexiune. Încearcă mai târziu sau sună-mă.",
+        },
+        { status: 429 },
+      );
+    }
+
+    guestName = String(body.name ?? "").trim();
+    guestEmail = String(body.email ?? "")
+      .trim()
+      .toLowerCase();
+    guestPhone = String(body.phone ?? "").trim();
+
+    if (guestName.length < 2 || guestName.length > 100) {
+      return NextResponse.json(
+        { error: "Completează numele tău." },
+        { status: 400 },
+      );
+    }
+
+    if (
+      !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(guestEmail) ||
+      guestEmail.length > 150
+    ) {
+      return NextResponse.json(
+        { error: "Adresa de email nu pare validă." },
+        { status: 400 },
+      );
+    }
+
+    if (guestPhone.replace(/\D/g, "").length < 9 || guestPhone.length > 30) {
+      return NextResponse.json(
+        { error: "Numărul de telefon nu pare valid." },
+        { status: 400 },
+      );
+    }
+  }
+
   const service = await db.service.findUnique({ where: { id: serviceId } });
   if (!service || !service.active) {
     return NextResponse.json({ error: "Serviciu inexistent." }, { status: 404 });
@@ -67,10 +146,10 @@ export async function POST(request: Request) {
   const startsAt = zonedToUtc(date, time);
   const endsAt = addMinutes(startsAt, service.duration);
 
-  // Un client nu poate avea două programări active în același timp
+  // Aceeași persoană nu poate avea două programări active în același interval
   const own = await db.appointment.findFirst({
     where: {
-      userId: user.id,
+      ...(user ? { userId: user.id } : { guestEmail }),
       status: { in: ["PENDING", "CONFIRMED"] },
       startsAt: { lt: endsAt },
       endsAt: { gt: startsAt },
@@ -105,7 +184,10 @@ export async function POST(request: Request) {
 
       return tx.appointment.create({
         data: {
-          userId: user.id,
+          userId: user?.id ?? null,
+          guestName: user ? null : guestName,
+          guestEmail: user ? null : guestEmail,
+          guestPhone: user ? null : guestPhone,
           serviceId: service.id,
           startsAt,
           endsAt,
@@ -117,11 +199,14 @@ export async function POST(request: Request) {
       });
     });
 
+    // Cota se consumă abia acum, când chiar s-a creat o programare
+    if (!user) recordGuestBooking(guestIp);
+
     /* TODO livrare — trimite email de confirmare clientului și înștiințare
        către cabinet. Vezi README, secțiunea „Activarea formularelor". */
     console.log("[programare] creată", {
       id: created.id,
-      user: user.email,
+      client: user?.email ?? `${guestName} <${guestEmail}> (fără cont)`,
       service: service.name,
       startsAt: startsAt.toISOString(),
     });
