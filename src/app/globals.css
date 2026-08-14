@@ -1,0 +1,171 @@
+@import "tailwindcss";
+
+/* ============================================================
+   Design tokens — paletă caldă, naturală
+   ============================================================ */
+@theme {
+  /* Culori de bază */
+  --color-cream: #f2f3ec;
+  --color-cream-deep: #e7e9dd;
+  --color-cream-warm: #f7f6f0;
+
+  --color-ink: #383e52;
+  --color-ink-soft: #5b6178;
+  --color-ink-muted: #8a8fa1;
+
+  --color-periwinkle: #6778af;
+  --color-periwinkle-light: #8c9ac6;
+  --color-periwinkle-pale: #dfe3f0;
+
+  --color-sage: #6a7e63;
+  --color-sage-light: #8ba183;
+  --color-sage-pale: #e0e6dc;
+
+  --color-clay: #b98c76;
+  --color-clay-pale: #f0e3dc;
+
+  /* Colțuri rotunjite — mai generoase decât referința */
+  --radius-soft: 1.25rem;
+  --radius-card: 2rem;
+  --radius-xl2: 2.75rem;
+  --radius-blob: 3.5rem;
+  --radius-pill: 999px;
+
+  /* Tipografie */
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-serif: var(--font-ibarra), Georgia, serif;
+  --font-sans: var(--font-montserrat), system-ui, sans-serif;
+
+  /* Tranziții */
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ============================================================
+   Reset & base
+   ============================================================ */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
+}
+
+/* Animațiile care intră lateral pot depăși ecranul înainte de a se declanșa.
+   Secțiunile taie deja ce iese din ele; asta e plasa de siguranță. */
+html,
+body {
+  overflow-x: clip;
+}
+
+body {
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background-color: var(--color-periwinkle);
+  color: var(--color-cream);
+}
+
+/* Bară de scroll discretă */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-cream-deep);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-periwinkle-light);
+  border-radius: var(--radius-pill);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-periwinkle);
+}
+
+/* ============================================================
+   Utilitare
+   ============================================================ */
+
+/* Textură fină de hârtie, peste secțiuni mari */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.35;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.22'/%3E%3C/svg%3E");
+}
+
+/* Linie decorativă sub titluri */
+.rule-soft {
+  width: 3.5rem;
+  height: 2px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(
+    90deg,
+    var(--color-periwinkle),
+    var(--color-sage)
+  );
+}
+
+/* Formă organică pentru imagini */
+.blob-frame {
+  border-radius: 48% 52% 44% 56% / 54% 44% 56% 46%;
+}
+
+.blob-frame-alt {
+  border-radius: 56% 44% 52% 48% / 46% 56% 44% 54%;
+}
+
+/* Underline animat pentru linkuri de meniu */
+.nav-link {
+  position: relative;
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 1.5px;
+  border-radius: var(--radius-pill);
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.45s var(--ease-soft);
+}
+.nav-link:hover::after,
+.nav-link[data-active="true"]::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Ridicare fină la hover pe carduri */
+.lift {
+  transition:
+    transform 0.5s var(--ease-soft),
+    box-shadow 0.5s var(--ease-soft);
+}
+.lift:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 50px -24px rgba(56, 62, 82, 0.28);
+}
+
+/* Respectă preferința de mișcare redusă */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
