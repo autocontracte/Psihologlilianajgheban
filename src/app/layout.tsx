@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Fraunces, Ibarra_Real_Nova, Montserrat } from "next/font/google";
 import "./globals.css";
 import { SITE } from "@/content/site";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 const fraunces = Fraunces({
   subsets: ["latin", "latin-ext"],
@@ -81,6 +82,7 @@ export default function RootLayout({
     >
       <body className="antialiased">
         {children}
+        <WhatsAppButton />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

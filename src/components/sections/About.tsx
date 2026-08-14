@@ -5,6 +5,7 @@ import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion
 import { useRef } from "react";
 import { ABOUT } from "@/content/site";
 import { Reveal } from "../ui/Reveal";
+import { OrbitFrame } from "../ui/OrbitFrame";
 import { IconCheck } from "../ui/Icons";
 
 export function About() {
@@ -26,7 +27,14 @@ export function About() {
         {/* ------------------------------------------------------ Imagine */}
         <motion.div style={{ y }} className="relative mx-auto w-full max-w-sm lg:max-w-none">
           <Reveal direction="right" duration={1}>
-            <div className="relative">
+            <OrbitFrame
+              accent="sage"
+              inset="-1.5rem"
+              radius="3.5rem"
+              duration={22}
+              tilt={3.5}
+              reverse
+            >
               {/* Pată de culoare în spate */}
               <div
                 aria-hidden
@@ -42,7 +50,7 @@ export function About() {
                   className="h-full w-full object-cover"
                 />
               </div>
-            </div>
+            </OrbitFrame>
           </Reveal>
         </motion.div>
 

@@ -1,13 +1,28 @@
 import { WELCOME } from "@/content/site";
 import { Reveal } from "../ui/Reveal";
+import { OrbitRing } from "../ui/OrbitFrame";
 
 export function Welcome() {
   return (
     <section className="grain relative overflow-hidden bg-ink py-28 lg:py-36">
-      {/* Halou decorativ */}
+      {/* Halou decorativ, cu inele care se rotesc lent în jurul citatului */}
       <div
         aria-hidden
         className="pointer-events-none absolute left-1/2 top-0 h-96 w-[46rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-periwinkle/20 blur-3xl"
+      />
+      <OrbitRing
+        className="left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 sm:block"
+        size="34rem"
+        accent="cream"
+        duration={70}
+        dashed
+      />
+      <OrbitRing
+        className="left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 lg:block"
+        size="46rem"
+        accent="cream"
+        duration={95}
+        reverse
       />
 
       <div className="relative mx-auto max-w-4xl px-6 text-center lg:px-10">

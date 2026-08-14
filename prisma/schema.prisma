@@ -1,0 +1,92 @@
+// Baza de date a sistemului de programări.
+// SQLite — un singur fișier, ușor de rulat și de salvat pe VPS.
+// Pentru trecerea la PostgreSQL: schimbă `provider` și `DATABASE_URL`.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+/// Clienți și administrator. `role` este "CLIENT" sau "ADMIN"
+/// (SQLite nu acceptă enum-uri native, tipurile sunt în src/lib/types.ts).
+model User {
+  id           String        @id @default(cuid())
+  name         String
+  email        String        @unique
+  phone        String
+  passwordHash String
+  role         String        @default("CLIENT")
+  createdAt    DateTime      @default(now())
+  sessions     Session[]
+  appointments Appointment[]
+}
+
+/// Sesiuni păstrate în baza de date, ca să poată fi revocate.
+/// În cookie ajunge tokenul brut; aici se salvează doar hash-ul lui.
+model Session {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+/// Serviciile care pot fi programate, cu durata lor în minute.
+model Service {
+  id           String        @id @default(cuid())
+  slug         String        @unique
+  name         String
+  duration     Int           @default(50)
+  description  String?
+  active       Boolean       @default(true)
+  position     Int           @default(0)
+  appointments Appointment[]
+}
+
+/// O programare. `startsAt` / `endsAt` se păstrează în UTC;
+/// conversia spre ora României se face în src/lib/tz.ts.
+model Appointment {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  serviceId String
+  service   Service  @relation(fields: [serviceId], references: [id])
+  startsAt  DateTime
+  endsAt    DateTime
+  format    String   @default("CABINET")
+  status    String   @default("PENDING")
+  notes     String?
+  adminNote String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([startsAt])
+  @@index([userId])
+  @@index([status])
+}
+
+/// Programul săptămânal recurent. weekday: 0 = duminică … 6 = sâmbătă.
+model Availability {
+  id        String  @id @default(cuid())
+  weekday   Int
+  startTime String
+  endTime   String
+  active    Boolean @default(true)
+
+  @@unique([weekday, startTime, endTime])
+}
+
+/// Zile în care nu se lucrează (concediu, sărbători).
+/// `date` este "YYYY-MM-DD" în ora României — fără ambiguități de fus orar.
+model BlockedDate {
+  id     String  @id @default(cuid())
+  date   String  @unique
+  reason String?
+}

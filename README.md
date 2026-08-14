@@ -35,8 +35,9 @@ contact fără să atingi componentele.
 
 ### ⚠️ De completat înainte de lansare
 
-1. **Date de contact reale** — telefon, email, oraș și adresa cabinetului
-   (`SITE` în `src/content/site.ts`; acum sunt valori de test).
+1. **Date de contact** — telefonul și WhatsApp-ul sunt setate
+   (`+40 764 802 536`). Mai lipsesc **emailul real, orașul și adresa
+   cabinetului** (`SITE` în `src/content/site.ts`).
 2. **Formare și acreditări** — lista `ABOUT.credentials` conține exemple
    generice. Înlocuiește-le cu formările reale, documentabile.
 3. **Linkuri social media** — `SITE.social`; iconițele apar în footer doar
@@ -45,6 +46,82 @@ contact fără să atingi componentele.
    `src/app/termeni/page.tsx` sunt șabloane. Trebuie verificate de un jurist
    și completate cu politica reală de anulare și cu tarifele.
 5. **Trimiterea emailurilor** — vezi secțiunea de mai jos.
+
+---
+
+## Sistemul de programări
+
+Site-ul are un sistem complet de programări online, cu conturi de client și
+panou de administrare.
+
+### Primii pași
+
+```bash
+npx prisma migrate deploy   # creează baza de date
+npm run db:seed             # servicii, program săptămânal, cont de admin
+```
+
+Seed-ul afișează în terminal parola contului de administrator. **Notează-o —
+nu mai poate fi recuperată**, doar resetată rulând seed-ul pe un cont nou.
+Poți fixa datele de acces dinainte:
+
+```bash
+ADMIN_EMAIL=liliana@exemplu.ro ADMIN_PASSWORD=parola-ta npm run db:seed
+```
+
+### Ce poate face clientul
+
+| Pagină | Ce face |
+| --- | --- |
+| `/cont/inregistrare` | Creează cont (nume, email, telefon, parolă) |
+| `/cont/autentificare` | Intră în cont |
+| `/programari` | Alege serviciul, ziua, ora și formatul, în trei pași |
+| `/cont` | Vede ședințele viitoare și istoricul, poate anula |
+
+Anularea este permisă cu cel puțin 24 de ore înainte (`CANCEL_LEAD_HOURS` din
+`src/lib/slots.ts`).
+
+### Ce poate face administratorul
+
+| Pagină | Ce face |
+| --- | --- |
+| `/admin` | Cifre la zi, programul de azi, ce urmează |
+| `/admin/programari` | Confirmă, anulează, marchează finalizate; note interne |
+| `/admin/program` | Program săptămânal și zile libere (concedii) |
+| `/admin/clienti` | Lista clienților, cu istoricul lor |
+
+### Cum se calculează orele libere
+
+Orele nu sunt scrise nicăieri de mână. Se calculează din programul săptămânal,
+minus zilele blocate, minus ședințele deja rezervate, minus intervalul minim
+până la ședință. Reglajele sunt în `src/lib/slots.ts`:
+
+```
+SLOT_STEP_MIN        = 60   pasul grilei de ore
+BOOKING_LEAD_HOURS   = 4    cu cât timp înainte se mai poate rezerva
+BOOKING_HORIZON_DAYS = 60   cât de departe în viitor
+CANCEL_LEAD_HOURS    = 24   până când se poate anula
+```
+
+Orele se păstrează în baza de date în UTC și se convertesc în ora României
+(`src/lib/tz.ts`), inclusiv la trecerea dintre ora de vară și cea de iarnă.
+Asta contează pentru că VPS-ul rulează de regulă pe UTC.
+
+### Securitate
+
+- Parolele sunt salvate cu bcrypt (cost 12), niciodată în clar.
+- Sesiunile stau în baza de date; în cookie ajunge doar un token aleatoriu,
+  iar în baza de date hash-ul lui. Cookie-ul este `httpOnly` și `sameSite=lax`.
+- Rutele `/admin` sunt protejate în layout, iar fiecare rută API verifică din
+  nou rolul — nu doar interfața.
+- Autentificarea și înregistrarea au limitare de încercări per IP.
+- Două persoane nu pot rezerva același interval: verificarea se reia într-o
+  tranzacție, în momentul salvării.
+
+### Ce lipsește încă
+
+Emailurile. Programările apar corect în panou, dar nu se trimite încă nicio
+notificare. Vezi secțiunea următoare.
 
 ---
 
@@ -117,25 +194,27 @@ spre IP-ul VPS-ului.
 cd /var/www/psihologlilianajgheban.ro
 git pull
 npm ci
+npx prisma migrate deploy
 npm run build
 pm2 reload psiholog-lj
 ```
 
+### 6. Baza de date
+
+Baza de date este un singur fișier: `prisma/dev.db`. Salvează-l periodic —
+conține conturile clienților și toate programările.
+
+```bash
+# copie de siguranță zilnică, păstrată 30 de zile
+0 3 * * * sqlite3 /var/www/psihologlilianajgheban.ro/prisma/dev.db ".backup /var/backups/lj-$(date +\%F).db" && find /var/backups -name 'lj-*.db' -mtime +30 -delete
+```
+
+Pentru volume mari se poate trece pe PostgreSQL: schimbi `provider` în
+`prisma/schema.prisma` și `DATABASE_URL`, apoi rulezi migrarea din nou.
+
 ---
 
 ## Ce urmează
-
-### Sistemul de programări
-
-Pagina `/programari` și ruta `src/app/api/programari/route.ts` funcționează
-acum ca **cerere de programare**. Pentru un calendar real cu sloturi:
-
-1. Adaugă PostgreSQL și Prisma, cu tabelele `appointments` și `availability`.
-2. Expune `GET /api/programari/disponibilitate` care întoarce sloturile libere.
-3. Transformă `POST` în creare de rezervare cu status `pending`.
-4. Trimite confirmare pe email, cu fișier `.ics` atașat.
-
-Pașii sunt notați și în comentariile din rută.
 
 ### Testele vocaționale
 
@@ -148,21 +227,36 @@ conținut și scorarea într-o rută API.
 ## Structura proiectului
 
 ```
+prisma/
+├─ schema.prisma              tabelele bazei de date
+└─ seed.ts                    servicii, program, cont de admin
+
 src/
 ├─ app/
-│  ├─ page.tsx                 pagina principală
-│  ├─ layout.tsx               fonturi, metadate, date structurate
-│  ├─ globals.css              paletă, colțuri rotunjite, utilitare
-│  ├─ programari/              pagina de programări
-│  ├─ teste/                   teste vocaționale
-│  ├─ confidentialitate/       GDPR (șablon)
-│  ├─ termeni/                 termeni și condiții (șablon)
-│  └─ api/                     rute pentru formulare
+│  ├─ page.tsx                pagina principală
+│  ├─ layout.tsx              fonturi, metadate, date structurate
+│  ├─ globals.css             paletă, colțuri rotunjite, utilitare
+│  ├─ programari/             fluxul de rezervare în 3 pași
+│  ├─ cont/                   autentificare, înregistrare, contul clientului
+│  ├─ admin/                  panoul de administrare (protejat în layout)
+│  ├─ teste/                  teste vocaționale
+│  ├─ confidentialitate/      GDPR (șablon)
+│  ├─ termeni/                termeni și condiții (șablon)
+│  └─ api/                    auth, sloturi, programări, administrare
 ├─ components/
-│  ├─ Nav.tsx  Footer.tsx  LegalPage.tsx
-│  ├─ sections/               secțiunile paginii principale
-│  └─ ui/                     Reveal, Button, Icons
-└─ content/site.ts            ⭐ tot conținutul editabil
+│  ├─ Nav.tsx  Footer.tsx  WhatsAppButton.tsx  LegalPage.tsx
+│  ├─ sections/              secțiunile paginii principale
+│  ├─ booking/               fluxul de rezervare
+│  ├─ account/               lista de programări a clientului
+│  ├─ admin/                 tabele și acțiuni de administrare
+│  └─ ui/                    Reveal, Button, Icons, OrbitFrame
+├─ lib/
+│  ├─ db.ts                  clientul Prisma
+│  ├─ auth.ts                parole, sesiuni, roluri
+│  ├─ tz.ts                  conversii pentru ora României
+│  ├─ slots.ts               calculul orelor libere
+│  └─ types.ts               statusuri, formate, etichete
+└─ content/site.ts           ⭐ tot conținutul editabil
 ```
 
 ---
@@ -183,3 +277,9 @@ Fonturi: **Fraunces** (titluri), **Ibarra Real Nova** (citate),
 
 Față de referință, colțurile sunt vizibil mai rotunjite: carduri la 32–40px,
 imagini la 44–56px, butoane complet rotunde.
+
+Chenarele decorative care se leagănă încet în spatele conținutului sunt
+componenta `OrbitFrame` din `src/components/ui/OrbitFrame.tsx`. Se folosesc în
+hero, la poza din „Despre mine", în formularele de cont și în fluxul de
+rezervare. `OrbitRing` este varianta circulară, pentru fundalul secțiunilor.
+Ambele se opresc automat dacă vizitatorul a cerut mișcare redusă în sistem.

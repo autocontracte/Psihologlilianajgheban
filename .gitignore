@@ -32,3 +32,7 @@ yarn-error.log*
 # editor
 .vscode/
 .idea/
+
+# baza de date locala
+/prisma/*.db
+/prisma/*.db-journal

@@ -25,7 +25,7 @@ export function Hero() {
     <section
       ref={ref}
       id="acasa"
-      className="grain relative flex min-h-screen items-center overflow-hidden bg-cream pt-32 pb-20 lg:pt-28 lg:pb-0"
+      className="grain relative flex min-h-screen items-center overflow-hidden bg-cream pt-32 pb-28 lg:pt-36 lg:pb-32"
     >
       {/* Forme decorative de fundal */}
       <motion.div
@@ -46,7 +46,9 @@ export function Hero() {
         className="pointer-events-none absolute -bottom-40 -left-32 h-[30rem] w-[30rem] rounded-full bg-sage-pale/60 blur-3xl"
       />
 
-      <div className="relative mx-auto grid w-full max-w-7xl items-center gap-14 px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20 lg:px-10">
+      {/* Coloana imaginii are lățime fixă, ca portretul să nu crească peste
+          înălțimea ecranului pe laptopuri cu ecran scund. */}
+      <div className="relative mx-auto grid w-full max-w-7xl items-center gap-14 px-6 lg:grid-cols-[1fr_24rem] lg:gap-16 lg:px-10 xl:grid-cols-[1fr_26rem] xl:gap-20">
         {/* ------------------------------------------------------- Text */}
         <motion.div style={{ y: textY, opacity: fade }} className="relative z-10">
           <motion.p
@@ -122,7 +124,7 @@ export function Hero() {
           initial={{ opacity: 0, scale: 0.94 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.3, delay: 0.3, ease }}
-          className="relative mx-auto w-full max-w-sm lg:max-w-none"
+          className="relative mx-auto w-full max-w-[19rem] sm:max-w-[21rem] lg:max-w-none"
         >
           {/* Contur decorativ în spate */}
           <motion.div
@@ -139,7 +141,7 @@ export function Hero() {
               width={1066}
               height={1600}
               priority
-              sizes="(max-width: 1024px) 90vw, 45vw"
+              sizes="(max-width: 1024px) 85vw, 26rem"
               className="h-full w-full object-cover"
             />
             {/* Voal cald peste imagine */}
@@ -169,7 +171,7 @@ export function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.6, duration: 1 }}
-        className="pointer-events-none absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-3 lg:flex"
+        className="pointer-events-none absolute bottom-10 left-6 hidden flex-col items-start gap-3 lg:left-10 [@media(min-width:1024px)_and_(min-height:800px)]:flex"
       >
         <span className="font-sans text-[0.55rem] uppercase tracking-[0.28em] text-ink-muted">
           Derulează

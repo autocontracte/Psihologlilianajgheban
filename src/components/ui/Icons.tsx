@@ -139,6 +139,13 @@ export const IconCompass = (p: IconProps) => (
   </svg>
 );
 
+export const IconUser = (p: IconProps) => (
+  <svg {...base} {...p}>
+    <circle cx="12" cy="8.5" r="3.6" />
+    <path d="M5 20.5a7 7 0 0 1 14 0" />
+  </svg>
+);
+
 export const IconCalendar = (p: IconProps) => (
   <svg {...base} {...p}>
     <rect x="3.5" y="5" width="17" height="15.5" rx="2.5" />

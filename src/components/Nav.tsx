@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { NAV, SITE } from "@/content/site";
-import { IconArrow } from "./ui/Icons";
+import { IconArrow, IconUser } from "./ui/Icons";
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
@@ -64,6 +64,17 @@ export function Nav() {
                 {item.label}
               </Link>
             ))}
+            {/* Cont — iconiță, cu etichetă la hover */}
+            <Link
+              href="/cont"
+              aria-label="Contul meu"
+              className="group relative flex h-10 w-10 items-center justify-center rounded-full border border-ink/15 text-ink-soft transition-all duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-periwinkle hover:bg-periwinkle hover:text-cream"
+            >
+              <IconUser className="h-[1.15rem] w-[1.15rem]" />
+              <span className="pointer-events-none absolute -bottom-9 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-pill bg-ink px-3 py-1.5 font-sans text-[0.6rem] uppercase tracking-[0.14em] text-cream opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                Contul meu
+              </span>
+            </Link>
             <Link
               href="/programari"
               className="group inline-flex items-center gap-2 rounded-pill bg-ink px-6 py-3 font-sans text-[0.68rem] uppercase tracking-[0.16em] text-cream transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-periwinkle"
@@ -154,6 +165,14 @@ export function Nav() {
                 >
                   Programează o ședință
                   <IconArrow className="h-4 w-4" />
+                </Link>
+                <Link
+                  href="/cont"
+                  onClick={() => setOpen(false)}
+                  className="inline-flex items-center justify-center gap-2.5 rounded-pill border border-ink/20 px-8 py-3.5 font-sans text-[0.72rem] uppercase tracking-[0.16em] text-ink-soft transition-colors hover:border-periwinkle hover:text-periwinkle"
+                >
+                  <IconUser className="h-4 w-4" />
+                  Contul meu
                 </Link>
                 <a
                   href={`tel:${SITE.phoneHref}`}

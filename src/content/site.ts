@@ -14,9 +14,14 @@ export const SITE = {
   description:
     "Cabinet de psihologie și psihoterapie integrativă pentru adulți, adolescenți și copii. Ședințe în cabinet și online, consiliere parentală, evaluare clinică psihologică și ateliere experiențiale Sandtray.",
 
+  phone: "+40 764 802 536",
+  phoneHref: "+40764802536",
+  /** Format wa.me — doar cifre, cu prefixul de țară, fără + sau spații. */
+  whatsapp: "40764802536",
+  whatsappMessage:
+    "Bună ziua! Aș dori câteva informații despre serviciile dumneavoastră.",
+
   /* ⚠️ DE COMPLETAT cu datele reale */
-  phone: "+40 7XX XXX XXX",
-  phoneHref: "+407XXXXXXXX",
   email: "contact@psihologlilianajgheban.ro",
   city: "București",
   address: "Str. Exemplu nr. 00, București",

@@ -1,5 +1,6 @@
 import { TESTS } from "@/content/site";
 import { Reveal } from "../ui/Reveal";
+import { OrbitRing } from "../ui/OrbitFrame";
 import { Button } from "../ui/Button";
 import { IconCompass } from "../ui/Icons";
 
@@ -9,10 +10,20 @@ export function TestsTeaser() {
       <div className="mx-auto max-w-7xl px-6 lg:px-10">
         <Reveal>
           <div className="grain relative overflow-hidden rounded-[2.75rem] bg-gradient-to-br from-periwinkle to-[#57679b] px-8 py-14 lg:rounded-[3.5rem] lg:px-16 lg:py-20">
-            {/* Forme decorative */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full border border-cream/15"
+            {/* Forme decorative — inelele se rotesc încet, în sensuri opuse */}
+            <OrbitRing
+              className="-right-16 -top-16"
+              size="16rem"
+              accent="cream"
+              duration={48}
+              dashed
+            />
+            <OrbitRing
+              className="-right-8 -top-8"
+              size="11rem"
+              accent="cream"
+              duration={34}
+              reverse
             />
             <div
               aria-hidden

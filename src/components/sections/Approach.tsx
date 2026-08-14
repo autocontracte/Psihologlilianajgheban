@@ -1,5 +1,6 @@
 import { APPROACH } from "@/content/site";
 import { Reveal, Stagger, StaggerItem } from "../ui/Reveal";
+import { OrbitRing } from "../ui/OrbitFrame";
 
 export function Approach() {
   return (
@@ -10,6 +11,20 @@ export function Approach() {
       <div
         aria-hidden
         className="pointer-events-none absolute -left-40 bottom-0 h-[30rem] w-[30rem] rounded-full bg-periwinkle/15 blur-3xl"
+      />
+      <OrbitRing
+        className="-right-32 top-16 hidden lg:block"
+        size="26rem"
+        accent="cream"
+        duration={64}
+        dashed
+      />
+      <OrbitRing
+        className="-right-20 top-40 hidden lg:block"
+        size="15rem"
+        accent="cream"
+        duration={44}
+        reverse
       />
 
       <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
