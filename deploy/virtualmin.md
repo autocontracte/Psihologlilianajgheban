@@ -2,6 +2,35 @@
 
 Ghid pentru `psihologlilianajgheban.ro`.
 
+---
+
+## Starea instalării de pe 31.97.54.70
+
+Site-ul **este deja instalat** pe acest server. Configurația efectivă:
+
+| | |
+| --- | --- |
+| Server virtual | `psihologlilianajgheban.ro` |
+| Utilizator Unix | `psiholog` |
+| Codul aplicației | `/home/psiholog/app` |
+| Baza de date | `/home/psiholog/app/prisma/dev.db` |
+| Port aplicație | **3001** (3000 e ocupat de `autocontracte`) |
+| Proces | PM2 `psiholog-lj`, pornire automată activată |
+| Proxy | Apache → `http://127.0.0.1:3001/` |
+| SSL | **încă nu** — vezi mai jos |
+
+Serverul mai găzduiește 7 site-uri. Orice modificare în `httpd.conf` le
+afectează pe toate, deci fă backup și rulează `httpd -t` **înainte** de reload.
+
+**Ce mai lipsește:** domeniul are nameservere la `ns.romania-webhosting.com`,
+nu la acest VPS, deci nu rezolvă către `31.97.54.70`. Până se rezolvă asta,
+certificatul Let's Encrypt nu poate fi emis, iar autentificarea nu funcționează
+(cookie-ul de sesiune e marcat `Secure` și nu se salvează peste HTTP simplu).
+
+Restul ghidului descrie pașii de la zero, dacă vei muta site-ul pe alt server.
+
+---
+
 Virtualmin gestionează singur configurația Apache și certificatele SSL, deci
 **nu folosi `deploy/nginx.conf`** — acela e pentru un server fără panou. Aici
 lăsăm Virtualmin să se ocupe de web server, iar aplicația Next.js rulează
@@ -35,18 +64,30 @@ Virtualmin creează utilizatorul Unix și directorul `/home/psiholog`.
 
 ## 2. Îndreaptă domeniul spre VPS
 
-La registrarul domeniului, pune un record **A** către IP-ul VPS-ului:
+**Acesta e pasul care mai lipsește.** Domeniul e înregistrat, dar are
+nameserverele la `ns.romania-webhosting.com`, deci nu rezolvă către VPS.
+
+Ai două variante:
+
+**a) Lași nameserverele unde sunt** și adaugi acolo, în zona DNS, două
+înregistrări A:
 
 ```
-psihologlilianajgheban.ro.       A     IP_VPS
-www.psihologlilianajgheban.ro.   A     IP_VPS
+psihologlilianajgheban.ro.       A     31.97.54.70
+www.psihologlilianajgheban.ro.   A     31.97.54.70
 ```
 
-Verifică propagarea înainte de a merge mai departe — certificatul SSL nu poate
-fi emis până când domeniul nu indică spre server:
+**b) Muți DNS-ul pe VPS.** Schimbi nameserverele la registrar (ROTLD) către
+cele ale acestui server. Virtualmin are deja zona creată pentru domeniu.
+
+Prima variantă e mai simplă și nu atinge nimic altceva.
+
+Verifică propagarea înainte de a cere certificatul — Let's Encrypt nu poate
+emite până când domeniul nu indică spre server:
 
 ```bash
 dig +short psihologlilianajgheban.ro
+# trebuie să răspundă: 31.97.54.70
 ```
 
 ---
@@ -158,48 +199,60 @@ dă `pm2 save` încă o dată.
 
 ---
 
-## 6. Configurează proxy-ul în Virtualmin
+## 6. Configurează proxy-ul
 
-Aici se leagă totul. În Virtualmin:
+Aici se leagă totul. Cel mai simplu, dintr-o singură comandă ca root:
 
-**Virtualmin → (alege domeniul) → Server Configuration → Proxy Paths**
+```bash
+virtualmin modify-web --domain psihologlilianajgheban.ro \
+  --proxy http://127.0.0.1:3001/
+```
 
-Adaugă o cale:
+Virtualmin scrie singur `ProxyPass` și `ProxyPassReverse` în ambele blocuri
+`<VirtualHost>` (80 și 443), exclude `/.well-known` (necesar pentru
+Let's Encrypt) și reîncarcă Apache.
 
-| Câmp | Valoare |
-| --- | --- |
-| Path | `/` |
-| Proxy to URL | `http://127.0.0.1:3000` |
+Din interfață, același lucru se face din
+**Virtualmin → Server Configuration → Proxy Paths**, cu path `/` și URL
+`http://127.0.0.1:3001`.
 
-Salvează. Virtualmin scrie singur directivele `ProxyPass` în configurația
-Apache a domeniului și reîncarcă serviciul.
+### Antetele suplimentare
 
-### Dacă Proxy Paths nu apare în meniu
+Virtualmin nu adaugă `ProxyPreserveHost` și `X-Forwarded-Proto`. Fără ele,
+aplicația nu știe pe ce schemă și pe ce gazdă a venit cererea, ceea ce duce la
+URL-uri și redirectări greșite.
 
-Unele versiuni îl ascund. Alternativa este să adaugi directivele manual:
-
-**Virtualmin → Services → Configure Website → Edit Directives**
-
-și pui în blocul `<VirtualHost>`:
+Editează `/etc/httpd/conf/httpd.conf` și adaugă, în blocul VirtualHost al
+domeniului, chiar înainte de linia `ProxyPass /.well-known !`:
 
 ```apache
 ProxyPreserveHost On
-ProxyRequests Off
-ProxyPass / http://127.0.0.1:3000/
-ProxyPassReverse / http://127.0.0.1:3000/
-RequestHeader set X-Forwarded-Proto "https"
+RequestHeader set X-Forwarded-Proto expr=%{REQUEST_SCHEME}
 ```
 
-Modulele necesare, activate ca root:
+`expr=%{REQUEST_SCHEME}` e mai bun decât `"https"` fix, pentru că același bloc
+se folosește și pe portul 80.
+
+**Fă asta cu plasă de siguranță** — o eroare de sintaxă oprește Apache pentru
+toate site-urile de pe server:
 
 ```bash
-a2enmod proxy proxy_http headers
-systemctl reload apache2
+cp /etc/httpd/conf/httpd.conf /root/httpd.conf.bak
+# ... editezi ...
+httpd -t && systemctl reload httpd || cp /root/httpd.conf.bak /etc/httpd/conf/httpd.conf
 ```
 
-`RequestHeader set X-Forwarded-Proto` contează: fără el aplicația crede că
-merge pe HTTP simplu, iar cookie-ul de sesiune marcat `secure` nu se mai
-salvează — nimeni nu se mai poate autentifica.
+Modulele necesare (`proxy`, `proxy_http`, `headers`) sunt de regulă deja
+încărcate. Verifici cu `httpd -M | grep -E "proxy|headers"`.
+
+### Cum testezi înainte de a avea DNS
+
+Vhost-urile sunt legate de IP-ul public, deci un `curl` către `127.0.0.1` va
+nimeri vhost-ul implicit, nu al tău. Testează pe IP-ul real:
+
+```bash
+curl -H "Host: psihologlilianajgheban.ro" http://31.97.54.70/
+```
 
 ---
 
