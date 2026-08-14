@@ -13,55 +13,66 @@ const base = {
 
 /* ---------------------------------------------------- Publicuri / servicii */
 
+/* Siluetele sunt gândite să se deosebească între ele dintr-o privire, la
+   dimensiune mică: numărul de persoane și raportul cap/corp fac diferența.
+   Copilul are capul mai mare față de corp, ca în proporțiile reale. */
+
 export const IconAdults = (p: IconProps) => (
   <svg {...base} {...p}>
-    <circle cx="12" cy="7.5" r="3.4" />
-    <path d="M5.5 20.5a6.5 6.5 0 0 1 13 0" />
+    <circle cx="12" cy="7.2" r="3.6" />
+    <path d="M4.6 20.5a7.4 7.4 0 0 1 14.8 0" />
   </svg>
 );
 
+/** Doi tineri de vârste apropiate, unul puțin mai mic. */
 export const IconTeens = (p: IconProps) => (
   <svg {...base} {...p}>
-    <circle cx="9" cy="7" r="2.8" />
-    <circle cx="16.5" cy="9" r="2.2" />
-    <path d="M3.5 20.5a5.5 5.5 0 0 1 11 0" />
-    <path d="M15 20.5a4.3 4.3 0 0 1 5.5-3.9" />
+    <circle cx="8.4" cy="6.9" r="3" />
+    <path d="M3.2 20.5a5.2 5.2 0 0 1 10.4 0" />
+    <circle cx="16.8" cy="9.6" r="2.4" />
+    <path d="M12.6 20.5a4.2 4.2 0 0 1 8.4 0" />
   </svg>
 );
 
+/** Un copil și o minge — proporția cap/corp plus trimiterea la joc. */
 export const IconChildren = (p: IconProps) => (
   <svg {...base} {...p}>
-    <circle cx="12" cy="8" r="3" />
-    <path d="M7 20.5c0-2.8 2.2-5 5-5s5 2.2 5 5" />
-    <path d="M9.5 7.2c.6.5 1.5.8 2.5.8s1.9-.3 2.5-.8" />
+    <circle cx="9.6" cy="7.4" r="3.8" />
+    <path d="M4.4 20.5a5.2 5.2 0 0 1 10.4 0" />
+    <circle cx="18.8" cy="17.4" r="2.6" />
   </svg>
 );
 
+/** Un adult și un copil, alături — diferența de mărime spune totul. */
 export const IconParents = (p: IconProps) => (
   <svg {...base} {...p}>
-    <circle cx="7.5" cy="7" r="2.8" />
-    <circle cx="16.5" cy="8.5" r="2.2" />
-    <path d="M3 20.5a4.5 4.5 0 0 1 9 0" />
-    <path d="M13 20.5a3.5 3.5 0 0 1 7 0" />
-    <path d="M11 12.5c.8-.6 1.7-.9 2.6-.9" />
+    <circle cx="8.2" cy="6.4" r="3.2" />
+    <path d="M2.8 20.5a5.4 5.4 0 0 1 10.8 0" />
+    <circle cx="17.4" cy="12.4" r="2.2" />
+    <path d="M13.8 20.5a3.6 3.6 0 0 1 7.2 0" />
   </svg>
 );
 
+/** Trei persoane, cea din mijloc în față — un grup, nu o schemă. */
 export const IconGroup = (p: IconProps) => (
   <svg {...base} {...p}>
-    <circle cx="12" cy="6" r="2.2" />
-    <circle cx="5.5" cy="12.5" r="2.2" />
-    <circle cx="18.5" cy="12.5" r="2.2" />
-    <circle cx="12" cy="19" r="2.2" />
-    <path d="M10.4 7.6 7 10.9M13.6 7.6l3.4 3.3M7 14.2l3.4 3.3M17 14.2l-3.4 3.3" />
+    <circle cx="12" cy="8.4" r="2.9" />
+    <path d="M7.4 20.5a4.6 4.6 0 0 1 9.2 0" />
+    <circle cx="4.6" cy="9.6" r="2.2" />
+    <path d="M1.6 17.4a3.4 3.4 0 0 1 3.3-3.4" />
+    <circle cx="19.4" cy="9.6" r="2.2" />
+    <path d="M22.4 17.4a3.4 3.4 0 0 0-3.3-3.4" />
   </svg>
 );
 
+/** Tava cu nisip și două miniaturi așezate în ea. */
 export const IconSandtray = (p: IconProps) => (
   <svg {...base} {...p}>
-    <rect x="3" y="9" width="18" height="10.5" rx="2.5" />
-    <path d="M3.5 14.5c2-1.6 3.6-1.6 5.5 0s3.5 1.6 5.5 0 3.6-1.6 5.5 0" />
-    <path d="M8 6.5V4.5M12 6.5V3.5M16 6.5V5" />
+    <rect x="2.6" y="11" width="18.8" height="8.6" rx="2.4" />
+    <path d="M3.4 15.6c1.9-1.5 3.4-1.5 5.2 0s3.3 1.5 5.2 0 3.4-1.5 5.2 0" />
+    <circle cx="8.6" cy="5.6" r="1.7" />
+    <path d="M8.6 7.6v3.2" />
+    <path d="M15.4 4.8 17 11" />
   </svg>
 );
 

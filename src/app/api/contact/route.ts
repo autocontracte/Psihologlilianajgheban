@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { clientIp } from "@/lib/request";
 
 /* ----------------------------------------------------------------------------
    Rută pentru formularul de contact.
@@ -43,10 +44,7 @@ function isValidEmail(value: string): boolean {
 }
 
 export async function POST(request: Request) {
-  const ip =
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-    request.headers.get("x-real-ip") ??
-    "unknown";
+  const ip = clientIp(request);
 
   if (isRateLimited(ip)) {
     return NextResponse.json(

@@ -39,7 +39,7 @@ export function Audiences() {
               <StaggerItem key={item.title}>
                 <article className="lift group h-full rounded-[2rem] border border-ink/8 bg-cream-warm p-8 lg:p-9">
                   <div className="flex h-14 w-14 items-center justify-center rounded-[1.15rem] bg-periwinkle-pale text-periwinkle transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:bg-periwinkle group-hover:text-cream">
-                    <Icon className="h-6 w-6" />
+                    <Icon className="h-7 w-7" strokeWidth={1.5} />
                   </div>
                   <h3 className="mt-7 font-display text-[1.35rem] leading-snug text-ink">
                     {item.title}

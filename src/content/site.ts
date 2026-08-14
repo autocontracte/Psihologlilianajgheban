@@ -8,6 +8,15 @@
    ========================================================================== */
 
 export const SITE = {
+  /* ⚠️ COMUTATOR PENTRU MOTOARELE DE CĂUTARE
+     false — site-ul cere să nu fie indexat (noindex + robots.txt care
+             interzice tot). Potrivit cât timp încă lucrăm la el.
+     true  — site-ul devine vizibil în Google.
+
+     Când îl treci pe `true`, mai fă un lucru: intră în Google Search Console
+     și cere indexarea, altfel poate dura săptămâni până e găsit singur. */
+  indexable: false,
+
   name: "Liliana Jgheban",
   role: "Psiholog clinician & Psihoterapeut integrativ",
   url: "https://psihologlilianajgheban.ro",

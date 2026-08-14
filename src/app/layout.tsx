@@ -57,10 +57,17 @@ export const metadata: Metadata = {
     title: `${SITE.name} — Psiholog & Psihoterapeut`,
     description: SITE.description,
   },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  /* Cât timp SITE.indexable este false, fiecare pagină cere explicit să nu fie
+     indexată. Doar robots.txt nu e de ajuns: dacă cineva pune un link către
+     site, Google îl poate afișa oricum în rezultate. */
+  robots: SITE.indexable
+    ? { index: true, follow: true }
+    : {
+        index: false,
+        follow: false,
+        nocache: true,
+        googleBot: { index: false, follow: false, noimageindex: true },
+      },
   alternates: {
     canonical: SITE.url,
   },

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
+import { clientIp } from "@/lib/request";
 import { isSlotBookable } from "@/lib/slots";
 import { addMinutes, zonedToUtc } from "@/lib/tz";
 import { isFormat } from "@/lib/types";
@@ -92,10 +93,7 @@ export async function POST(request: Request) {
   let guestIp = "";
 
   if (!user) {
-    guestIp =
-      request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-      request.headers.get("x-real-ip") ??
-      "unknown";
+    guestIp = clientIp(request);
 
     if (guestRateLimited(guestIp)) {
       return NextResponse.json(
