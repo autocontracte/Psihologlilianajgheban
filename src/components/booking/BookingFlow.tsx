@@ -1,9 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { OrbitFrame } from "../ui/OrbitFrame";
 import { IconArrow, IconCheck, IconOffice, IconOnline } from "../ui/Icons";
 import { FORMAT_LABEL, type Format } from "@/lib/types";
 
@@ -59,6 +58,34 @@ export function BookingFlow({
   const [slots, setSlots] = useState<SlotInfo[]>([]);
   const [loadingDays, setLoadingDays] = useState(false);
   const [loadingSlots, setLoadingSlots] = useState(false);
+
+  /* Lista de zile se derulează pe orizontală. Fără un semn, mulți nu își dau
+     seama că mai există zile în dreapta — mai ales pe telefon. */
+  const daysRef = useRef<HTMLDivElement | null>(null);
+  const [showSwipe, setShowSwipe] = useState(false);
+
+  const checkSwipe = useCallback(() => {
+    const el = daysRef.current;
+    if (!el) return;
+    setShowSwipe(el.scrollWidth > el.clientWidth + 8 && el.scrollLeft < 8);
+  }, []);
+
+  /* Pașii sunt învelite în AnimatePresence mode="wait", care montează
+     conținutul nou abia după animația de ieșire a celui vechi. Un useEffect ar
+     măsura prea devreme, când banda încă nu există în pagină. Ref-callback-ul
+     se declanșează exact în momentul montării. */
+  const attachDays = useCallback(
+    (node: HTMLDivElement | null) => {
+      daysRef.current = node;
+      if (node) requestAnimationFrame(checkSwipe);
+    },
+    [checkSwipe],
+  );
+
+  useEffect(() => {
+    window.addEventListener("resize", checkSwipe);
+    return () => window.removeEventListener("resize", checkSwipe);
+  }, [checkSwipe]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
@@ -153,8 +180,7 @@ export function BookingFlow({
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, ease }}
       >
-        <OrbitFrame accent="sage" inset="-1rem" radius="3rem" duration={24} tilt={2.5}>
-          <div className="rounded-[2.25rem] bg-cream p-10 text-center shadow-[0_30px_70px_-40px_rgba(56,62,82,0.4)] lg:p-14">
+        <div className="rounded-[2.25rem] bg-cream p-10 text-center shadow-[0_30px_70px_-40px_rgba(56,62,82,0.4)] lg:p-14">
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-sage-pale text-sage">
               <IconCheck className="h-7 w-7" strokeWidth={1.8} />
             </div>
@@ -199,8 +225,7 @@ export function BookingFlow({
                 Fă altă programare
               </button>
             </div>
-          </div>
-        </OrbitFrame>
+        </div>
       </motion.div>
     );
   }
@@ -261,7 +286,6 @@ export function BookingFlow({
         ))}
       </div>
 
-      <OrbitFrame accent="periwinkle" inset="-1rem" radius="3rem" duration={26} tilt={2}>
         <div className="rounded-[2.25rem] bg-cream p-7 shadow-[0_30px_70px_-40px_rgba(56,62,82,0.4)] sm:p-9 lg:p-11">
           <AnimatePresence mode="wait">
             {/* ---------------------------------------------- Pasul 1 */}
@@ -342,7 +366,12 @@ export function BookingFlow({
                       ))}
                     </div>
                   ) : (
-                    <div className="-mx-1 flex gap-2.5 overflow-x-auto px-1 pb-3">
+                    <div className="relative">
+                      <div
+                        ref={attachDays}
+                        onScroll={checkSwipe}
+                        className="-mx-1 flex gap-2.5 overflow-x-auto px-1 pb-3"
+                      >
                       {days.map((d) => {
                         const disabled = d.closed || d.free === 0;
                         return (
@@ -372,8 +401,47 @@ export function BookingFlow({
                           </button>
                         );
                       })}
+                      </div>
+
+                      {/* Umbră la marginea dreaptă — arată că lista continuă */}
+                      <AnimatePresence>
+                        {showSwipe && (
+                          <motion.div
+                            aria-hidden
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="pointer-events-none absolute inset-y-0 right-0 w-14 bg-gradient-to-l from-cream via-cream/80 to-transparent"
+                          />
+                        )}
+                      </AnimatePresence>
                     </div>
                   )}
+
+                  {/* Indiciu de glisare, dispare după prima derulare */}
+                  <AnimatePresence>
+                    {showSwipe && (
+                      <motion.p
+                        initial={{ opacity: 0, y: -4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="flex items-center gap-2 font-sans text-[0.72rem] text-ink-muted"
+                      >
+                        Glisează pentru mai multe zile
+                        <motion.span
+                          animate={{ x: [0, 5, 0] }}
+                          transition={{
+                            duration: 1.6,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                          }}
+                          className="text-periwinkle"
+                        >
+                          <IconArrow className="h-3.5 w-3.5" />
+                        </motion.span>
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
                 </div>
 
                 {/* Ore */}
@@ -613,7 +681,6 @@ export function BookingFlow({
             )}
           </div>
         </div>
-      </OrbitFrame>
     </div>
   );
 }
