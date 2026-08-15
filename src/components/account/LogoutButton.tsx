@@ -21,7 +21,7 @@ export function LogoutButton({ className = "" }: { className?: string }) {
       disabled={busy}
       className={
         className ||
-        "font-sans text-[0.7rem] uppercase tracking-[0.14em] text-ink-muted transition-colors duration-300 hover:text-clay disabled:opacity-60"
+        "font-sans text-[0.7rem] tracking-[0.02em] text-ink-muted transition-colors duration-300 hover:text-clay disabled:opacity-60"
       }
     >
       {busy ? "Se iese…" : "Ieși din cont"}

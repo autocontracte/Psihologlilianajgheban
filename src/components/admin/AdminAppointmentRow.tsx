@@ -88,15 +88,15 @@ export function AdminAppointmentRow({ a }: { a: AdminAppointment }) {
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2.5">
             <span
-              className={`rounded-pill px-3.5 py-1.5 font-sans text-[0.6rem] uppercase tracking-[0.14em] ${STATUS_STYLE[a.status]}`}
+              className={`rounded-pill px-3.5 py-1.5 font-sans text-[0.75rem] tracking-[0.02em] ${STATUS_STYLE[a.status]}`}
             >
               {STATUS_LABEL[a.status]}
             </span>
-            <span className="rounded-pill bg-ink/6 px-3 py-1.5 font-sans text-[0.6rem] uppercase tracking-[0.14em] text-ink-soft">
+            <span className="rounded-pill bg-ink/6 px-3 py-1.5 font-sans text-[0.75rem] tracking-[0.02em] text-ink-soft">
               {FORMAT_LABEL[a.format]}
             </span>
             {!a.hasAccount && (
-              <span className="rounded-pill bg-clay-pale px-3 py-1.5 font-sans text-[0.6rem] uppercase tracking-[0.14em] text-clay">
+              <span className="rounded-pill bg-clay-pale px-3 py-1.5 font-sans text-[0.75rem] tracking-[0.02em] text-clay">
                 Fără cont
               </span>
             )}
@@ -128,7 +128,7 @@ export function AdminAppointmentRow({ a }: { a: AdminAppointment }) {
 
           {a.notes && (
             <div className="mt-4 rounded-[1rem] bg-cream-warm px-4 py-3">
-              <p className="font-sans text-[0.6rem] uppercase tracking-[0.18em] text-ink-muted">
+              <p className="font-sans text-[0.75rem] tracking-[0.02em] text-ink-muted">
                 De la client
               </p>
               <p className="mt-1.5 font-sans text-[0.82rem] leading-relaxed text-ink-soft">
@@ -139,7 +139,7 @@ export function AdminAppointmentRow({ a }: { a: AdminAppointment }) {
 
           {a.adminNote && !noteOpen && (
             <div className="mt-3 rounded-[1rem] bg-periwinkle-pale/50 px-4 py-3">
-              <p className="font-sans text-[0.6rem] uppercase tracking-[0.18em] text-periwinkle">
+              <p className="font-sans text-[0.75rem] tracking-[0.02em] text-periwinkle">
                 Nota mea
               </p>
               <p className="mt-1.5 font-sans text-[0.82rem] leading-relaxed text-ink-soft">
@@ -157,7 +157,7 @@ export function AdminAppointmentRow({ a }: { a: AdminAppointment }) {
               type="button"
               disabled={busy}
               onClick={() => patch({ status: next })}
-              className={`rounded-pill border px-4 py-2 font-sans text-[0.65rem] uppercase tracking-[0.14em] transition-all duration-400 disabled:opacity-50 ${ACTION_STYLE[next]}`}
+              className={`rounded-pill border px-4 py-2 font-sans text-[0.78rem] tracking-[0.02em] transition-all duration-400 disabled:opacity-50 ${ACTION_STYLE[next]}`}
             >
               {ACTION_LABEL[next]}
             </button>
@@ -165,7 +165,7 @@ export function AdminAppointmentRow({ a }: { a: AdminAppointment }) {
           <button
             type="button"
             onClick={() => setNoteOpen((v) => !v)}
-            className="rounded-pill px-4 py-2 font-sans text-[0.65rem] uppercase tracking-[0.14em] text-ink-muted transition-colors duration-300 hover:text-ink"
+            className="rounded-pill px-4 py-2 font-sans text-[0.78rem] tracking-[0.02em] text-ink-muted transition-colors duration-300 hover:text-ink"
           >
             {a.adminNote ? "Editează nota" : "Adaugă notă"}
           </button>
@@ -187,7 +187,7 @@ export function AdminAppointmentRow({ a }: { a: AdminAppointment }) {
               type="button"
               disabled={busy}
               onClick={() => patch({ adminNote: note })}
-              className="rounded-pill bg-periwinkle px-5 py-2.5 font-sans text-[0.65rem] uppercase tracking-[0.14em] text-cream transition-colors duration-400 hover:bg-ink disabled:opacity-60"
+              className="rounded-pill bg-periwinkle px-5 py-2.5 font-sans text-[0.78rem] tracking-[0.02em] text-cream transition-colors duration-400 hover:bg-ink disabled:opacity-60"
             >
               {busy ? "Se salvează…" : "Salvează"}
             </button>
@@ -197,7 +197,7 @@ export function AdminAppointmentRow({ a }: { a: AdminAppointment }) {
                 setNote(a.adminNote ?? "");
                 setNoteOpen(false);
               }}
-              className="font-sans text-[0.65rem] uppercase tracking-[0.14em] text-ink-muted transition-colors hover:text-ink"
+              className="font-sans text-[0.78rem] tracking-[0.02em] text-ink-muted transition-colors hover:text-ink"
             >
               Renunță
             </button>

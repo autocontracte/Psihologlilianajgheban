@@ -37,7 +37,7 @@ export default async function AdminClientsPage() {
                     (h) => (
                       <th
                         key={h}
-                        className="px-6 py-4 text-left font-sans text-[0.58rem] uppercase tracking-[0.2em] text-ink-muted"
+                        className="px-6 py-4 text-left font-sans text-[0.74rem] tracking-[0.02em] text-ink-muted"
                       >
                         {h}
                       </th>

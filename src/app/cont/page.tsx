@@ -92,7 +92,7 @@ export default async function ContPage() {
           <Reveal>
             <div className="flex flex-wrap items-end justify-between gap-5">
               <div>
-                <p className="font-sans text-[0.62rem] uppercase tracking-[0.28em] text-periwinkle">
+                <p className="font-sans text-[0.76rem] tracking-[0.02em] text-periwinkle">
                   Contul meu
                 </p>
                 <h1 className="mt-4 font-display text-4xl leading-tight text-ink sm:text-5xl">
@@ -109,7 +109,7 @@ export default async function ContPage() {
           <Reveal delay={0.1}>
             <Link
               href="/programari"
-              className="group mt-9 inline-flex items-center gap-2.5 rounded-pill bg-periwinkle px-7 py-3.5 font-sans text-[0.7rem] uppercase tracking-[0.16em] text-cream transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-ink"
+              className="group mt-9 inline-flex items-center gap-2.5 rounded-pill bg-periwinkle px-7 py-3.5 font-sans text-[0.7rem] tracking-[0.02em] text-cream transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-ink"
             >
               Programează o ședință
               <IconArrow className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1" />

@@ -206,7 +206,7 @@ export function BookingFlow({
             <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
               <Link
                 href={loggedIn ? "/cont" : "/cont/inregistrare"}
-                className="inline-flex items-center justify-center gap-2 rounded-pill bg-periwinkle px-7 py-3.5 font-sans text-[0.7rem] uppercase tracking-[0.16em] text-cream transition-colors duration-500 hover:bg-ink"
+                className="inline-flex items-center justify-center gap-2 rounded-pill bg-periwinkle px-7 py-3.5 font-sans text-[0.7rem] tracking-[0.02em] text-cream transition-colors duration-500 hover:bg-ink"
               >
                 {loggedIn ? "Vezi programările mele" : "Creează-mi cont"}
               </Link>
@@ -220,7 +220,7 @@ export function BookingFlow({
                   setTime("");
                   setNotes("");
                 }}
-                className="inline-flex items-center justify-center gap-2 rounded-pill border border-ink/20 px-7 py-3.5 font-sans text-[0.7rem] uppercase tracking-[0.16em] text-ink transition-all duration-500 hover:border-ink/50 hover:bg-ink hover:text-cream"
+                className="inline-flex items-center justify-center gap-2 rounded-pill border border-ink/20 px-7 py-3.5 font-sans text-[0.7rem] tracking-[0.02em] text-ink transition-all duration-500 hover:border-ink/50 hover:bg-ink hover:text-cream"
               >
                 Fă altă programare
               </button>
@@ -260,7 +260,7 @@ export function BookingFlow({
             >
               <span
                 className={[
-                  "flex h-6 w-6 items-center justify-center rounded-full font-sans text-[0.65rem]",
+                  "flex h-6 w-6 items-center justify-center rounded-full font-sans text-[0.78rem]",
                   i === step
                     ? "bg-cream/25"
                     : i < step
@@ -270,7 +270,7 @@ export function BookingFlow({
               >
                 {i < step ? <IconCheck className="h-3 w-3" strokeWidth={2.4} /> : i + 1}
               </span>
-              <span className="hidden font-sans text-[0.68rem] uppercase tracking-[0.14em] sm:inline">
+              <span className="hidden font-sans text-[0.8rem] tracking-[0.02em] sm:inline">
                 {label}
               </span>
             </button>
@@ -329,7 +329,7 @@ export function BookingFlow({
                             </p>
                           )}
                         </div>
-                        <span className="shrink-0 rounded-pill bg-cream px-3 py-1 font-sans text-[0.65rem] text-ink-soft">
+                        <span className="shrink-0 rounded-pill bg-cream px-3 py-1 font-sans text-[0.78rem] text-ink-soft">
                           {s.duration} min
                         </span>
                       </div>
@@ -389,13 +389,13 @@ export function BookingFlow({
                                   : "border-ink/12 bg-cream-warm text-ink hover:border-periwinkle/60",
                             ].join(" ")}
                           >
-                            <span className="font-sans text-[0.58rem] uppercase tracking-[0.12em] opacity-70">
+                            <span className="font-sans text-[0.74rem] tracking-[0.02em] opacity-70">
                               {dayLabel(d.date, { weekday: "short" }).replace(".", "")}
                             </span>
                             <span className="font-display text-xl leading-none">
                               {Number(d.date.slice(8))}
                             </span>
-                            <span className="font-sans text-[0.55rem] opacity-70">
+                            <span className="font-sans text-[0.72rem] opacity-70">
                               {dayLabel(d.date, { month: "short" }).replace(".", "")}
                             </span>
                           </button>
@@ -452,7 +452,7 @@ export function BookingFlow({
                     transition={{ duration: 0.4, ease }}
                     className="mt-7 border-t border-ink/10 pt-7"
                   >
-                    <p className="font-sans text-[0.58rem] uppercase tracking-[0.22em] text-ink-muted">
+                    <p className="font-sans text-[0.74rem] tracking-[0.02em] text-ink-muted">
                       {dayLabel(date, { weekday: "long", day: "numeric", month: "long" })}
                     </p>
 
@@ -524,7 +524,7 @@ export function BookingFlow({
                       ["Ora", `${time} (${service?.duration} min)`],
                     ].map(([k, v]) => (
                       <div key={k} className="flex justify-between gap-4">
-                        <dt className="font-sans text-[0.75rem] uppercase tracking-[0.14em] text-ink-muted">
+                        <dt className="font-sans text-[0.75rem] tracking-[0.02em] text-ink-muted">
                           {k}
                         </dt>
                         <dd className="text-right font-sans text-[0.88rem] text-ink">
@@ -539,7 +539,7 @@ export function BookingFlow({
                 {!loggedIn && (
                   <div className="mt-7">
                     <div className="flex flex-wrap items-baseline justify-between gap-2">
-                      <span className="font-sans text-[0.58rem] uppercase tracking-[0.22em] text-ink-muted">
+                      <span className="font-sans text-[0.74rem] tracking-[0.02em] text-ink-muted">
                         Datele tale de contact
                       </span>
                       <Link
@@ -591,7 +591,7 @@ export function BookingFlow({
 
                 {/* Format */}
                 <div className="mt-7">
-                  <span className="mb-2.5 block font-sans text-[0.58rem] uppercase tracking-[0.22em] text-ink-muted">
+                  <span className="mb-2.5 block font-sans text-[0.74rem] tracking-[0.02em] text-ink-muted">
                     Cum vrei să ne vedem?
                   </span>
                   <div className="grid grid-cols-2 gap-3">
@@ -621,7 +621,7 @@ export function BookingFlow({
                 <div className="mt-6">
                   <label
                     htmlFor="notes"
-                    className="mb-2 block font-sans text-[0.58rem] uppercase tracking-[0.22em] text-ink-muted"
+                    className="mb-2 block font-sans text-[0.74rem] tracking-[0.02em] text-ink-muted"
                   >
                     Vrei să știu ceva dinainte? (opțional)
                   </label>
@@ -651,7 +651,7 @@ export function BookingFlow({
               type="button"
               onClick={() => setStep((s) => Math.max(0, s - 1))}
               disabled={step === 0}
-              className="font-sans text-[0.7rem] uppercase tracking-[0.16em] text-ink-soft transition-colors duration-300 hover:text-ink disabled:invisible"
+              className="font-sans text-[0.7rem] tracking-[0.02em] text-ink-soft transition-colors duration-300 hover:text-ink disabled:invisible"
             >
               ← Înapoi
             </button>
@@ -661,7 +661,7 @@ export function BookingFlow({
                 type="button"
                 onClick={() => setStep((s) => s + 1)}
                 disabled={!canAdvance}
-                className="group inline-flex items-center gap-2.5 rounded-pill bg-periwinkle px-7 py-3.5 font-sans text-[0.7rem] uppercase tracking-[0.16em] text-cream transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-ink disabled:cursor-not-allowed disabled:opacity-40"
+                className="group inline-flex items-center gap-2.5 rounded-pill bg-periwinkle px-7 py-3.5 font-sans text-[0.7rem] tracking-[0.02em] text-cream transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-ink disabled:cursor-not-allowed disabled:opacity-40"
               >
                 Continuă
                 <IconArrow className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1" />
@@ -671,7 +671,7 @@ export function BookingFlow({
                 type="button"
                 onClick={submit}
                 disabled={busy || !contactReady}
-                className="group inline-flex items-center gap-2.5 rounded-pill bg-sage px-7 py-3.5 font-sans text-[0.7rem] uppercase tracking-[0.16em] text-cream transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-ink disabled:cursor-not-allowed disabled:opacity-60"
+                className="group inline-flex items-center gap-2.5 rounded-pill bg-sage px-7 py-3.5 font-sans text-[0.7rem] tracking-[0.02em] text-cream transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-ink disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {busy ? "Se trimite…" : "Confirmă programarea"}
                 {!busy && (

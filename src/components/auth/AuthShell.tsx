@@ -42,7 +42,7 @@ export function AuthShell({
         <div className="relative mx-auto w-full max-w-md">
           <Reveal>
             <div className="mb-9 text-center">
-              <p className="font-sans text-[0.62rem] uppercase tracking-[0.28em] text-periwinkle">
+              <p className="font-sans text-[0.76rem] tracking-[0.02em] text-periwinkle">
                 {eyebrow}
               </p>
               <h1 className="mt-4 font-display text-4xl leading-tight text-ink sm:text-5xl">
@@ -96,4 +96,4 @@ export const authInput =
   "w-full rounded-[1.25rem] border border-ink/15 bg-cream px-5 py-3.5 font-sans text-[0.9rem] text-ink placeholder:text-ink-muted transition-all duration-300 focus:border-periwinkle focus:outline-none focus:ring-4 focus:ring-periwinkle/12";
 
 export const authLabel =
-  "mb-2 block font-sans text-[0.58rem] uppercase tracking-[0.22em] text-ink-muted";
+  "mb-2 block font-sans text-[0.74rem] tracking-[0.02em] text-ink-muted";

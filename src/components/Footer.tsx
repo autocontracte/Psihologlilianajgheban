@@ -32,7 +32,7 @@ export function Footer() {
           {/* Identitate */}
           <div>
             <p className="font-display text-2xl text-cream">{SITE.name}</p>
-            <p className="mt-2 font-sans text-[0.6rem] uppercase tracking-[0.26em] text-periwinkle-light">
+            <p className="mt-2 font-sans text-[0.75rem] tracking-[0.02em] text-periwinkle-light">
               {SITE.role}
             </p>
             <p className="mt-6 max-w-sm font-sans text-[0.87rem] leading-[1.85] text-cream/55">
@@ -60,7 +60,7 @@ export function Footer() {
 
           {/* Navigare */}
           <div>
-            <p className="font-sans text-[0.58rem] uppercase tracking-[0.24em] text-cream/40">
+            <p className="font-sans text-[0.74rem] tracking-[0.02em] text-cream/40">
               Navigare
             </p>
             <ul className="mt-5 space-y-2.5">
@@ -95,7 +95,7 @@ export function Footer() {
 
           {/* Contact */}
           <div>
-            <p className="font-sans text-[0.58rem] uppercase tracking-[0.24em] text-cream/40">
+            <p className="font-sans text-[0.74rem] tracking-[0.02em] text-cream/40">
               Contact
             </p>
             <ul className="mt-5 space-y-3.5">

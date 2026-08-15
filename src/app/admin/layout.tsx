@@ -34,7 +34,7 @@ export default async function AdminLayout({
               <span className="font-display text-lg text-ink">
                 Panou de administrare
               </span>
-              <span className="mt-1 font-sans text-[0.55rem] uppercase tracking-[0.24em] text-ink-muted">
+              <span className="mt-1 font-sans text-[0.72rem] tracking-[0.02em] text-ink-muted">
                 Liliana Jgheban
               </span>
             </Link>
@@ -44,7 +44,7 @@ export default async function AdminLayout({
             <Link
               href="/"
               target="_blank"
-              className="hidden font-sans text-[0.7rem] uppercase tracking-[0.14em] text-ink-soft transition-colors duration-300 hover:text-periwinkle sm:block"
+              className="hidden font-sans text-[0.7rem] tracking-[0.02em] text-ink-soft transition-colors duration-300 hover:text-periwinkle sm:block"
             >
               Vezi site-ul ↗
             </Link>

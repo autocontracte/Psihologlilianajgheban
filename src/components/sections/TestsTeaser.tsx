@@ -36,7 +36,7 @@ export function TestsTeaser() {
                   <span className="flex h-11 w-11 items-center justify-center rounded-[0.95rem] bg-cream/15 text-cream">
                     <IconCompass className="h-5 w-5" />
                   </span>
-                  <span className="rounded-pill bg-cream/15 px-4 py-1.5 font-sans text-[0.58rem] uppercase tracking-[0.22em] text-cream">
+                  <span className="rounded-pill bg-cream/15 px-4 py-1.5 font-sans text-[0.74rem] tracking-[0.02em] text-cream">
                     {TESTS.eyebrow}
                   </span>
                 </div>

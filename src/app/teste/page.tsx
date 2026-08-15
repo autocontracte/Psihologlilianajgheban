@@ -43,7 +43,7 @@ export default function TestePage() {
           />
           <div className="relative mx-auto max-w-4xl px-6 text-center lg:px-10">
             <Reveal>
-              <span className="inline-flex rounded-pill bg-periwinkle-pale px-5 py-2 font-sans text-[0.58rem] uppercase tracking-[0.22em] text-periwinkle">
+              <span className="inline-flex rounded-pill bg-periwinkle-pale px-5 py-2 font-sans text-[0.74rem] tracking-[0.02em] text-periwinkle">
                 În curând
               </span>
             </Reveal>

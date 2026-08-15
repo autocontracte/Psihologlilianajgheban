@@ -18,7 +18,7 @@ export function Services() {
         <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-end">
           <div>
             <Reveal>
-              <p className="font-sans text-[0.65rem] uppercase tracking-[0.3em] text-sage">
+              <p className="font-sans text-[0.78rem] tracking-[0.02em] text-sage">
                 {SERVICES.eyebrow}
               </p>
             </Reveal>
@@ -49,7 +49,7 @@ export function Services() {
                 </span>
 
                 <div className="relative">
-                  <span className="inline-flex rounded-pill bg-sage-pale px-4 py-1.5 font-sans text-[0.58rem] uppercase tracking-[0.2em] text-sage">
+                  <span className="inline-flex rounded-pill bg-sage-pale px-4 py-1.5 font-sans text-[0.74rem] tracking-[0.02em] text-sage">
                     {item.audience}
                   </span>
 

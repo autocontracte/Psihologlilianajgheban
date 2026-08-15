@@ -90,7 +90,7 @@ export function ScheduleManager({
         <div className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {byDay.map((d) => (
             <div key={d.name} className="rounded-[1.5rem] bg-cream p-5">
-              <p className="font-sans text-[0.6rem] uppercase tracking-[0.2em] text-ink-muted">
+              <p className="font-sans text-[0.75rem] tracking-[0.02em] text-ink-muted">
                 {d.name}
               </p>
 
@@ -116,7 +116,7 @@ export function ScheduleManager({
                             method: "DELETE",
                           })
                         }
-                        className="font-sans text-[0.68rem] text-ink-muted transition-colors duration-300 hover:text-clay disabled:opacity-50"
+                        className="font-sans text-[0.8rem] text-ink-muted transition-colors duration-300 hover:text-clay disabled:opacity-50"
                         aria-label={`Șterge intervalul ${w.startTime}–${w.endTime}`}
                       >
                         Șterge
@@ -131,7 +131,7 @@ export function ScheduleManager({
 
         {/* Adăugare interval */}
         <div className="mt-6 rounded-[1.5rem] bg-cream p-6">
-          <p className="font-sans text-[0.6rem] uppercase tracking-[0.2em] text-ink-muted">
+          <p className="font-sans text-[0.75rem] tracking-[0.02em] text-ink-muted">
             Adaugă un interval
           </p>
           <div className="mt-4 flex flex-wrap items-end gap-3">
@@ -180,7 +180,7 @@ export function ScheduleManager({
                   body: JSON.stringify({ weekday, startTime, endTime }),
                 })
               }
-              className="rounded-pill bg-periwinkle px-6 py-2.5 font-sans text-[0.68rem] uppercase tracking-[0.14em] text-cream transition-colors duration-400 hover:bg-ink disabled:opacity-60"
+              className="rounded-pill bg-periwinkle px-6 py-2.5 font-sans text-[0.8rem] tracking-[0.02em] text-cream transition-colors duration-400 hover:bg-ink disabled:opacity-60"
             >
               Adaugă
             </button>
@@ -237,7 +237,7 @@ export function ScheduleManager({
                   setBlockReason("");
                 }
               }}
-              className="rounded-pill bg-periwinkle px-6 py-2.5 font-sans text-[0.68rem] uppercase tracking-[0.14em] text-cream transition-colors duration-400 hover:bg-ink disabled:opacity-60"
+              className="rounded-pill bg-periwinkle px-6 py-2.5 font-sans text-[0.8rem] tracking-[0.02em] text-cream transition-colors duration-400 hover:bg-ink disabled:opacity-60"
             >
               Blochează ziua
             </button>
@@ -259,7 +259,7 @@ export function ScheduleManager({
                     onClick={() =>
                       call(`/api/admin/blocked?id=${b.id}`, { method: "DELETE" })
                     }
-                    className="font-sans text-[0.68rem] text-ink-muted transition-colors duration-300 hover:text-clay disabled:opacity-50"
+                    className="font-sans text-[0.8rem] text-ink-muted transition-colors duration-300 hover:text-clay disabled:opacity-50"
                   >
                     Deblochează
                   </button>

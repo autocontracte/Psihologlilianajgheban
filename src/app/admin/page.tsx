@@ -59,7 +59,7 @@ export default async function AdminHome() {
             href={s.href}
             className="lift rounded-[1.75rem] bg-cream p-6 transition-shadow"
           >
-            <p className="font-sans text-[0.58rem] uppercase tracking-[0.22em] text-ink-muted">
+            <p className="font-sans text-[0.74rem] tracking-[0.02em] text-ink-muted">
               {s.label}
             </p>
             <p className={`mt-3 font-display text-4xl ${s.accent}`}>{s.value}</p>
@@ -100,7 +100,7 @@ export default async function AdminHome() {
                     </p>
                   </div>
                   <span
-                    className={`rounded-pill px-3.5 py-1.5 font-sans text-[0.6rem] uppercase tracking-[0.14em] ${STATUS_STYLE[a.status as Status]}`}
+                    className={`rounded-pill px-3.5 py-1.5 font-sans text-[0.75rem] tracking-[0.02em] ${STATUS_STYLE[a.status as Status]}`}
                   >
                     {STATUS_LABEL[a.status as Status]}
                   </span>
@@ -117,7 +117,7 @@ export default async function AdminHome() {
           <h2 className="font-display text-2xl text-ink">Ce urmează</h2>
           <Link
             href="/admin/programari"
-            className="font-sans text-[0.7rem] uppercase tracking-[0.14em] text-periwinkle transition-colors duration-300 hover:text-ink"
+            className="font-sans text-[0.7rem] tracking-[0.02em] text-periwinkle transition-colors duration-300 hover:text-ink"
           >
             Toate programările →
           </Link>
@@ -144,7 +144,7 @@ export default async function AdminHome() {
                     </p>
                   </div>
                   <span
-                    className={`rounded-pill px-3.5 py-1.5 font-sans text-[0.6rem] uppercase tracking-[0.14em] ${STATUS_STYLE[a.status as Status]}`}
+                    className={`rounded-pill px-3.5 py-1.5 font-sans text-[0.75rem] tracking-[0.02em] ${STATUS_STYLE[a.status as Status]}`}
                   >
                     {STATUS_LABEL[a.status as Status]}
                   </span>

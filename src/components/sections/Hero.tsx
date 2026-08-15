@@ -55,7 +55,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.25, ease }}
-            className="font-sans text-[0.65rem] uppercase tracking-[0.3em] text-periwinkle sm:text-xs"
+            className="font-sans text-[0.78rem] tracking-[0.02em] text-periwinkle sm:text-xs"
           >
             {HERO.eyebrow}
           </motion.p>
@@ -104,14 +104,14 @@ export function Hero() {
           >
             <Link
               href={HERO.ctaPrimary.href}
-              className="group inline-flex items-center justify-center gap-2.5 rounded-pill bg-periwinkle px-8 py-4 font-sans text-[0.7rem] uppercase tracking-[0.16em] text-cream shadow-[0_18px_40px_-16px_rgba(103,120,175,0.8)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-ink hover:shadow-[0_22px_48px_-18px_rgba(56,62,82,0.7)]"
+              className="group inline-flex items-center justify-center gap-2.5 rounded-pill bg-periwinkle px-8 py-4 font-sans text-[0.7rem] tracking-[0.02em] text-cream shadow-[0_18px_40px_-16px_rgba(103,120,175,0.8)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-ink hover:shadow-[0_22px_48px_-18px_rgba(56,62,82,0.7)]"
             >
               {HERO.ctaPrimary.label}
               <IconArrow className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1" />
             </Link>
             <Link
               href={HERO.ctaSecondary.href}
-              className="group inline-flex items-center justify-center gap-2.5 rounded-pill border border-ink/20 px-8 py-4 font-sans text-[0.7rem] uppercase tracking-[0.16em] text-ink transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-ink/50 hover:bg-ink hover:text-cream"
+              className="group inline-flex items-center justify-center gap-2.5 rounded-pill border border-ink/20 px-8 py-4 font-sans text-[0.7rem] tracking-[0.02em] text-ink transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-ink/50 hover:bg-ink hover:text-cream"
             >
               {HERO.ctaSecondary.label}
             </Link>
@@ -155,7 +155,7 @@ export function Hero() {
             transition={{ duration: 0.9, delay: 1.15, ease }}
             className="absolute -bottom-6 -left-4 rounded-[1.75rem] bg-cream/90 px-6 py-4 shadow-[0_20px_50px_-24px_rgba(56,62,82,0.5)] backdrop-blur-md sm:-left-8 sm:px-7 sm:py-5"
           >
-            <p className="font-sans text-[0.58rem] uppercase tracking-[0.24em] text-ink-muted">
+            <p className="font-sans text-[0.74rem] tracking-[0.02em] text-ink-muted">
               Ședințe
             </p>
             <p className="mt-1.5 font-display text-lg text-ink sm:text-xl">
@@ -173,7 +173,7 @@ export function Hero() {
         transition={{ delay: 1.6, duration: 1 }}
         className="pointer-events-none absolute bottom-10 left-6 hidden flex-col items-start gap-3 lg:left-10 [@media(min-width:1024px)_and_(min-height:800px)]:flex"
       >
-        <span className="font-sans text-[0.55rem] uppercase tracking-[0.28em] text-ink-muted">
+        <span className="font-sans text-[0.72rem] tracking-[0.02em] text-ink-muted">
           Derulează
         </span>
         <div className="relative h-12 w-px overflow-hidden bg-ink/15">

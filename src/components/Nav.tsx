@@ -48,7 +48,7 @@ export function Nav() {
             <span className="font-display text-lg tracking-tight text-ink transition-colors duration-500 group-hover:text-periwinkle sm:text-xl">
               Liliana Jgheban
             </span>
-            <span className="mt-1 font-sans text-[0.55rem] uppercase tracking-[0.28em] text-ink-muted">
+            <span className="mt-1 font-sans text-[0.72rem] tracking-[0.02em] text-ink-muted">
               Psiholog · Psihoterapeut
             </span>
           </Link>
@@ -59,7 +59,7 @@ export function Nav() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="nav-link font-sans text-[0.7rem] uppercase tracking-[0.16em] text-ink-soft transition-colors duration-300 hover:text-ink"
+                className="nav-link font-sans text-[0.7rem] tracking-[0.02em] text-ink-soft transition-colors duration-300 hover:text-ink"
               >
                 {item.label}
               </Link>
@@ -71,13 +71,13 @@ export function Nav() {
               className="group relative flex h-10 w-10 items-center justify-center rounded-full border border-ink/15 text-ink-soft transition-all duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-periwinkle hover:bg-periwinkle hover:text-cream"
             >
               <IconUser className="h-[1.15rem] w-[1.15rem]" />
-              <span className="pointer-events-none absolute -bottom-9 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-pill bg-ink px-3 py-1.5 font-sans text-[0.6rem] uppercase tracking-[0.14em] text-cream opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+              <span className="pointer-events-none absolute -bottom-9 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-pill bg-ink px-3 py-1.5 font-sans text-[0.75rem] tracking-[0.02em] text-cream opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                 Contul meu
               </span>
             </Link>
             <Link
               href="/programari"
-              className="group inline-flex items-center gap-2 rounded-pill bg-ink px-6 py-3 font-sans text-[0.68rem] uppercase tracking-[0.16em] text-cream transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-periwinkle"
+              className="group inline-flex items-center gap-2 rounded-pill bg-ink px-6 py-3 font-sans text-[0.8rem] tracking-[0.02em] text-cream transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-periwinkle"
             >
               Programare
               <IconArrow className="h-3.5 w-3.5 transition-transform duration-500 group-hover:translate-x-1" />
@@ -161,7 +161,7 @@ export function Nav() {
                 <Link
                   href="/programari"
                   onClick={() => setOpen(false)}
-                  className="inline-flex items-center justify-center gap-2 rounded-pill bg-periwinkle px-8 py-4 font-sans text-xs uppercase tracking-[0.16em] text-cream"
+                  className="inline-flex items-center justify-center gap-2 rounded-pill bg-periwinkle px-8 py-4 font-sans text-xs tracking-[0.02em] text-cream"
                 >
                   Programează o ședință
                   <IconArrow className="h-4 w-4" />
@@ -169,7 +169,7 @@ export function Nav() {
                 <Link
                   href="/cont"
                   onClick={() => setOpen(false)}
-                  className="inline-flex items-center justify-center gap-2.5 rounded-pill border border-ink/20 px-8 py-3.5 font-sans text-[0.72rem] uppercase tracking-[0.16em] text-ink-soft transition-colors hover:border-periwinkle hover:text-periwinkle"
+                  className="inline-flex items-center justify-center gap-2.5 rounded-pill border border-ink/20 px-8 py-3.5 font-sans text-[0.72rem] tracking-[0.02em] text-ink-soft transition-colors hover:border-periwinkle hover:text-periwinkle"
                 >
                   <IconUser className="h-4 w-4" />
                   Contul meu

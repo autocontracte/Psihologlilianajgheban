@@ -73,7 +73,7 @@ export function AppointmentList({
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <span
-                className={`inline-flex rounded-pill px-3.5 py-1.5 font-sans text-[0.6rem] uppercase tracking-[0.16em] ${STATUS_STYLE[a.status]}`}
+                className={`inline-flex rounded-pill px-3.5 py-1.5 font-sans text-[0.75rem] tracking-[0.02em] ${STATUS_STYLE[a.status]}`}
               >
                 {STATUS_LABEL[a.status]}
               </span>
@@ -99,14 +99,14 @@ export function AppointmentList({
                       type="button"
                       onClick={() => cancel(a.id)}
                       disabled={busyId === a.id}
-                      className="rounded-pill bg-clay px-4 py-2 font-sans text-[0.65rem] uppercase tracking-[0.14em] text-cream transition-opacity duration-300 disabled:opacity-60"
+                      className="rounded-pill bg-clay px-4 py-2 font-sans text-[0.78rem] tracking-[0.02em] text-cream transition-opacity duration-300 disabled:opacity-60"
                     >
                       {busyId === a.id ? "Se anulează…" : "Da, anulează"}
                     </button>
                     <button
                       type="button"
                       onClick={() => setConfirmId(null)}
-                      className="font-sans text-[0.65rem] uppercase tracking-[0.14em] text-ink-muted transition-colors hover:text-ink"
+                      className="font-sans text-[0.78rem] tracking-[0.02em] text-ink-muted transition-colors hover:text-ink"
                     >
                       Renunță
                     </button>
@@ -115,7 +115,7 @@ export function AppointmentList({
                   <button
                     type="button"
                     onClick={() => setConfirmId(a.id)}
-                    className="rounded-pill border border-ink/20 px-4 py-2 font-sans text-[0.65rem] uppercase tracking-[0.14em] text-ink-soft transition-all duration-400 hover:border-clay/60 hover:text-clay"
+                    className="rounded-pill border border-ink/20 px-4 py-2 font-sans text-[0.78rem] tracking-[0.02em] text-ink-soft transition-all duration-400 hover:border-clay/60 hover:text-clay"
                   >
                     Anulează
                   </button>

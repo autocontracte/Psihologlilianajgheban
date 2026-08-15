@@ -16,7 +16,7 @@ export function Faq() {
       <div className="relative mx-auto max-w-4xl px-6 lg:px-10">
         <div className="text-center">
           <Reveal>
-            <p className="font-sans text-[0.65rem] uppercase tracking-[0.3em] text-periwinkle">
+            <p className="font-sans text-[0.78rem] tracking-[0.02em] text-periwinkle">
               {FAQ.eyebrow}
             </p>
           </Reveal>

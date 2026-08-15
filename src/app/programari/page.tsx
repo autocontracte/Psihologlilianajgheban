@@ -48,7 +48,7 @@ export default async function ProgramariPage() {
 
           <div className="relative mx-auto max-w-4xl px-6 text-center lg:px-10">
             <Reveal>
-              <p className="font-sans text-[0.65rem] uppercase tracking-[0.3em] text-periwinkle">
+              <p className="font-sans text-[0.78rem] tracking-[0.02em] text-periwinkle">
                 Programare online
               </p>
             </Reveal>
@@ -86,7 +86,7 @@ export default async function ProgramariPage() {
                     </p>
                     <Link
                       href="/cont"
-                      className="font-sans text-[0.7rem] uppercase tracking-[0.14em] text-periwinkle transition-colors duration-300 hover:text-ink"
+                      className="font-sans text-[0.7rem] tracking-[0.02em] text-periwinkle transition-colors duration-300 hover:text-ink"
                     >
                       Programările mele →
                     </Link>
@@ -172,14 +172,14 @@ function AccountBenefits() {
         <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
           <Link
             href="/cont/inregistrare?redirect=/programari"
-            className="group inline-flex items-center justify-center gap-2.5 rounded-pill bg-periwinkle px-7 py-3.5 font-sans text-[0.7rem] uppercase tracking-[0.16em] text-cream transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-ink"
+            className="group inline-flex items-center justify-center gap-2.5 rounded-pill bg-periwinkle px-7 py-3.5 font-sans text-[0.7rem] tracking-[0.02em] text-cream transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-ink"
           >
             Creează cont
             <IconArrow className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1" />
           </Link>
           <Link
             href="/cont/autentificare?redirect=/programari"
-            className="inline-flex items-center justify-center gap-2.5 rounded-pill border border-ink/20 px-7 py-3.5 font-sans text-[0.7rem] uppercase tracking-[0.16em] text-ink transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-ink/50 hover:bg-ink hover:text-cream"
+            className="inline-flex items-center justify-center gap-2.5 rounded-pill border border-ink/20 px-7 py-3.5 font-sans text-[0.7rem] tracking-[0.02em] text-ink transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-ink/50 hover:bg-ink hover:text-cream"
           >
             Am deja cont
           </Link>

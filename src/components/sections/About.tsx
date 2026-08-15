@@ -57,7 +57,7 @@ export function About() {
         {/* --------------------------------------------------------- Text */}
         <div>
           <Reveal>
-            <p className="font-sans text-[0.65rem] uppercase tracking-[0.3em] text-periwinkle">
+            <p className="font-sans text-[0.78rem] tracking-[0.02em] text-periwinkle">
               {ABOUT.eyebrow}
             </p>
           </Reveal>
@@ -85,7 +85,7 @@ export function About() {
           {/* Formare & acreditări */}
           <Reveal delay={0.45}>
             <div className="mt-11 rounded-[2rem] border border-ink/10 bg-cream-warm p-8">
-              <p className="font-sans text-[0.58rem] uppercase tracking-[0.24em] text-ink-muted">
+              <p className="font-sans text-[0.74rem] tracking-[0.02em] text-ink-muted">
                 Formare și competențe
               </p>
               <ul className="mt-5 space-y-3.5">

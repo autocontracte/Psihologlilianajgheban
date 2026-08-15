@@ -59,7 +59,7 @@ export function Contact() {
           {/* ------------------------------------------------ Date contact */}
           <div>
             <Reveal>
-              <p className="font-sans text-[0.65rem] uppercase tracking-[0.3em] text-periwinkle">
+              <p className="font-sans text-[0.78rem] tracking-[0.02em] text-periwinkle">
                 {CONTACT.eyebrow}
               </p>
             </Reveal>
@@ -104,7 +104,7 @@ export function Contact() {
                       <Icon className="h-4.5 w-4.5" />
                     </span>
                     <div className="pt-0.5">
-                      <p className="font-sans text-[0.58rem] uppercase tracking-[0.22em] text-ink-muted">
+                      <p className="font-sans text-[0.74rem] tracking-[0.02em] text-ink-muted">
                         {label}
                       </p>
                       {href ? (
@@ -136,7 +136,7 @@ export function Contact() {
                     <IconClock className="h-4.5 w-4.5" />
                   </span>
                   <div className="pt-0.5">
-                    <p className="font-sans text-[0.58rem] uppercase tracking-[0.22em] text-ink-muted">
+                    <p className="font-sans text-[0.74rem] tracking-[0.02em] text-ink-muted">
                       Program
                     </p>
                     <ul className="mt-2 space-y-1">
@@ -189,7 +189,7 @@ export function Contact() {
                   <button
                     type="button"
                     onClick={() => setStatus("idle")}
-                    className="mt-8 font-sans text-[0.7rem] uppercase tracking-[0.16em] text-periwinkle transition-colors duration-300 hover:text-ink"
+                    className="mt-8 font-sans text-[0.7rem] tracking-[0.02em] text-periwinkle transition-colors duration-300 hover:text-ink"
                   >
                     Trimite alt mesaj
                   </button>
@@ -200,7 +200,7 @@ export function Contact() {
                     <div>
                       <label
                         htmlFor="name"
-                        className="mb-2 block font-sans text-[0.58rem] uppercase tracking-[0.22em] text-ink-muted"
+                        className="mb-2 block font-sans text-[0.74rem] tracking-[0.02em] text-ink-muted"
                       >
                         Nume *
                       </label>
@@ -216,7 +216,7 @@ export function Contact() {
                     <div>
                       <label
                         htmlFor="phone"
-                        className="mb-2 block font-sans text-[0.58rem] uppercase tracking-[0.22em] text-ink-muted"
+                        className="mb-2 block font-sans text-[0.74rem] tracking-[0.02em] text-ink-muted"
                       >
                         Telefon
                       </label>
@@ -234,7 +234,7 @@ export function Contact() {
                   <div>
                     <label
                       htmlFor="email"
-                      className="mb-2 block font-sans text-[0.58rem] uppercase tracking-[0.22em] text-ink-muted"
+                      className="mb-2 block font-sans text-[0.74rem] tracking-[0.02em] text-ink-muted"
                     >
                       Email *
                     </label>
@@ -252,7 +252,7 @@ export function Contact() {
                   <div>
                     <label
                       htmlFor="subject"
-                      className="mb-2 block font-sans text-[0.58rem] uppercase tracking-[0.22em] text-ink-muted"
+                      className="mb-2 block font-sans text-[0.74rem] tracking-[0.02em] text-ink-muted"
                     >
                       Ce te aduce aici
                     </label>
@@ -271,7 +271,7 @@ export function Contact() {
                   <div>
                     <label
                       htmlFor="message"
-                      className="mb-2 block font-sans text-[0.58rem] uppercase tracking-[0.22em] text-ink-muted"
+                      className="mb-2 block font-sans text-[0.74rem] tracking-[0.02em] text-ink-muted"
                     >
                       Mesaj *
                     </label>
@@ -318,7 +318,7 @@ export function Contact() {
                   <button
                     type="submit"
                     disabled={status === "sending"}
-                    className="group inline-flex w-full items-center justify-center gap-2.5 rounded-pill bg-periwinkle px-8 py-4 font-sans text-[0.7rem] uppercase tracking-[0.16em] text-cream transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-ink disabled:cursor-not-allowed disabled:opacity-60"
+                    className="group inline-flex w-full items-center justify-center gap-2.5 rounded-pill bg-periwinkle px-8 py-4 font-sans text-[0.7rem] tracking-[0.02em] text-cream transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-ink disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {status === "sending" ? "Se trimite…" : "Trimite mesajul"}
                     {status !== "sending" && (

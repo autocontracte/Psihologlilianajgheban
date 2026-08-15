@@ -12,7 +12,7 @@ export function Formats() {
         {/* Antet */}
         <div className="mx-auto max-w-2xl text-center">
           <Reveal>
-            <p className="font-sans text-[0.65rem] uppercase tracking-[0.3em] text-sage">
+            <p className="font-sans text-[0.78rem] tracking-[0.02em] text-sage">
               {FORMATS.eyebrow}
             </p>
           </Reveal>

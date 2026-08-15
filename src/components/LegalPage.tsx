@@ -30,7 +30,7 @@ export function LegalPage({
           />
           <div className="relative mx-auto max-w-3xl px-6 lg:px-10">
             <Reveal>
-              <p className="font-sans text-[0.6rem] uppercase tracking-[0.26em] text-periwinkle">
+              <p className="font-sans text-[0.75rem] tracking-[0.02em] text-periwinkle">
                 Actualizat: {updated}
               </p>
             </Reveal>
