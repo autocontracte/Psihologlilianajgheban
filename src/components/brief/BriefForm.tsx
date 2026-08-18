@@ -161,8 +161,8 @@ export function BriefForm({
       >
         <div style={{ background: p.bg }} className="p-5">
           <div className="flex items-center justify-between gap-3">
-            <span className="font-display text-[1.1rem]" style={{ color: p.ink }}>
-              {p.n}. {p.name}
+            <span className="font-display text-[1.2rem]" style={{ color: p.ink }}>
+              {p.n}
             </span>
             <span
               className="flex h-6 w-6 items-center justify-center rounded-full border-2 transition-all duration-300"
@@ -220,17 +220,17 @@ export function BriefForm({
       body: (
         <>
           <p className="font-sans text-[0.85rem] text-ink-soft">
-            Tonuri stinse — calme, discrete
-          </p>
-          <div className="mt-3 grid gap-3 sm:grid-cols-2">
-            {PALETTES.filter((p) => p.group === "stinse").map(paletteCard)}
-          </div>
-
-          <p className="mt-8 font-sans text-[0.85rem] text-ink-soft">
-            Tonuri aprinse — mai multă culoare
+            Cu mai multă culoare
           </p>
           <div className="mt-3 grid gap-3 sm:grid-cols-2">
             {PALETTES.filter((p) => p.group === "aprinse").map(paletteCard)}
+          </div>
+
+          <p className="mt-8 font-sans text-[0.85rem] text-ink-soft">
+            Mai discrete
+          </p>
+          <div className="mt-3 grid gap-3 sm:grid-cols-2">
+            {PALETTES.filter((p) => p.group === "stinse").map(paletteCard)}
           </div>
 
           <textarea

@@ -8,7 +8,6 @@
 export type Palette = {
   n: number;
   name: string;
-  note: string;
   group: "stinse" | "aprinse";
   bg: string;
   ink: string;
@@ -20,84 +19,106 @@ export type Palette = {
 };
 
 export const PALETTES: Palette[] = [
+  /* Vii întâi — sunt cele cerute cel mai des. Numele nu apar în chestionar,
+     alegerea se face din culoare; rămân aici ca să le pot identifica în panou. */
   {
     n: 1,
-    name: "Salvie și cretă",
-    note: "Verdele stins este cel mai frecvent registru la cabinetele de psihoterapie — trimite la calm și la creștere, fără să fie rece.",
-    group: "stinse",
-    bg: "#F3F4EE", ink: "#363C45", accent: "#6E8567", second: "#B9A48C", line: "#DCE0D4",
-    btnText: "#FFFFFF",
-  },
-  {
-    n: 2,
-    name: "Lut și in",
-    note: "Pământiu și cald. Senzația e de încăpere primitoare, nu de clinică.",
-    group: "stinse",
-    bg: "#F5F0EB", ink: "#43342C", accent: "#B08363", second: "#7E8F7C", line: "#E4D8CC",
-    btnText: "#FFFFFF",
-  },
-  {
-    n: 3,
-    name: "Albastru de seară",
-    note: "Albastru prăfuit pe fond crem. Vorbește despre încredere și liniște. Este direcția în care arată site-ul acum.",
-    group: "stinse",
-    bg: "#F2F3EC", ink: "#383E52", accent: "#6778AF", second: "#6A7E63", line: "#DFE3F0",
-    btnText: "#FFFFFF",
-  },
-  {
-    n: 4,
-    name: "Prun și cenușă trandafirie",
-    note: "Mov-prun cu roz stins. Cea mai caldă și mai personală dintre variantele discrete.",
-    group: "stinse",
-    bg: "#F7F2F1", ink: "#3B2B36", accent: "#8C6A7D", second: "#A8927E", line: "#EADDE0",
-    btnText: "#FFFFFF",
-  },
-  {
-    n: 5,
-    name: "Piatră și cerneală",
-    note: "Neutru cald cu un singur accent verde-albăstrui. Cea mai sobră — lasă fotografiile și textul să vorbească.",
-    group: "stinse",
-    bg: "#F4F3F0", ink: "#26262A", accent: "#5F7F7C", second: "#9A948C", line: "#E2E0DA",
-    btnText: "#FFFFFF",
-  },
-  {
-    n: 6,
     name: "Turcoaz și coral",
-    note: "Viu și optimist, fără să fie strident. Merge bine dacă lucrezi mult cu adolescenți și copii.",
     group: "aprinse",
     bg: "#F4FAFA", ink: "#14343A", accent: "#0B7E7D", second: "#F0714F", line: "#CFE8E7",
     btnText: "#FFFFFF",
   },
   {
-    n: 7,
+    n: 2,
     name: "Chihlimbar și indigo",
-    note: "Galben cald pe albastru închis. Cea mai luminoasă variantă — se ține minte.",
     group: "aprinse",
     bg: "#FFF9EE", ink: "#1F2A56", accent: "#F0A818", second: "#4A5BC4", line: "#F6E4C0",
     btnText: "#1F2A56",
   },
   {
-    n: 8,
+    n: 3,
     name: "Verde crud",
-    note: "Verde limpede, mai viu decât salvia. Vorbește despre vitalitate și început.",
     group: "aprinse",
     bg: "#F4FAF2", ink: "#1E3324", accent: "#237A41", second: "#C08A4A", line: "#D3EBD5",
     btnText: "#FFFFFF",
   },
   {
-    n: 9,
+    n: 4,
     name: "Zmeură și prun",
-    note: "Roz intens cu prun adânc. Caldă și hotărâtă, dacă vrei un ton apropiat, dar sigur pe el.",
     group: "aprinse",
     bg: "#FFF6F7", ink: "#3A1E33", accent: "#C43A6B", second: "#7A4FA3", line: "#F7D9E2",
     btnText: "#FFFFFF",
   },
   {
-    n: 10,
+    n: 5,
     name: "Albastru viu și lămâie",
-    note: "Albastru curat cu un accent citric. Cea mai modernă și mai directă.",
     group: "aprinse",
     bg: "#F4F8FF", ink: "#16244A", accent: "#2F6BE8", second: "#E8B31F", line: "#D6E4FB",
+    btnText: "#FFFFFF",
+  },
+  {
+    n: 6,
+    name: "Portocaliu ars și petrol",
+    group: "aprinse",
+    bg: "#FFF7F2", ink: "#21353B", accent: "#B55024", second: "#17656E", line: "#F8DFD0",
+    btnText: "#FFFFFF",
+  },
+  {
+    n: 7,
+    name: "Mov și mentă",
+    group: "aprinse",
+    bg: "#FAF6FF", ink: "#2B1F45", accent: "#6B3FBF", second: "#2FA98A", line: "#E7DDF7",
+    btnText: "#FFFFFF",
+  },
+  {
+    n: 8,
+    name: "Cărămidă și bleu",
+    group: "aprinse",
+    bg: "#FFF7F5", ink: "#3A2320", accent: "#B23A2E", second: "#4E8FC7", line: "#F6DDD6",
+    btnText: "#FFFFFF",
+  },
+  {
+    n: 9,
+    name: "Lime și grafit",
+    group: "aprinse",
+    bg: "#FAFCF0", ink: "#26291B", accent: "#5D7D19", second: "#4A5D6B", line: "#E8EFCD",
+    btnText: "#FFFFFF",
+  },
+
+  /* Stinse — pentru cine vrea ceva mai discret. */
+  {
+    n: 10,
+    name: "Salvie și cretă",
+    group: "stinse",
+    bg: "#F3F4EE", ink: "#363C45", accent: "#6E8567", second: "#B9A48C", line: "#DCE0D4",
+    btnText: "#FFFFFF",
+  },
+  {
+    n: 11,
+    name: "Lut și in",
+    group: "stinse",
+    bg: "#F5F0EB", ink: "#43342C", accent: "#B08363", second: "#7E8F7C", line: "#E4D8CC",
+    btnText: "#FFFFFF",
+  },
+  {
+    n: 12,
+    name: "Albastru de seară",
+    group: "stinse",
+    bg: "#F2F3EC", ink: "#383E52", accent: "#6778AF", second: "#6A7E63", line: "#DFE3F0",
+    btnText: "#FFFFFF",
+  },
+  {
+    n: 13,
+    name: "Prun și cenușă trandafirie",
+    group: "stinse",
+    bg: "#F7F2F1", ink: "#3B2B36", accent: "#8C6A7D", second: "#A8927E", line: "#EADDE0",
+    btnText: "#FFFFFF",
+  },
+  {
+    n: 14,
+    name: "Piatră și cerneală",
+    group: "stinse",
+    bg: "#F4F3F0", ink: "#26262A", accent: "#5F7F7C", second: "#9A948C", line: "#E2E0DA",
     btnText: "#FFFFFF",
   },
 ];
