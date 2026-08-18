@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { SITE } from "@/content/site";
 
@@ -17,7 +18,12 @@ function IconWhatsApp({ className }: { className?: string }) {
   );
 }
 
+/* Butonul e pentru vizitatorii site-ului. Pe chestionar și în panou nu are ce
+   căuta — acolo numărul afișat ar fi chiar al Lilianei. */
+const HIDDEN_ON = ["/chestionar", "/admin", "/cont"];
+
 export function WhatsAppButton() {
+  const pathname = usePathname();
   const [visible, setVisible] = useState(false);
   const [hinted, setHinted] = useState(false);
 
@@ -34,6 +40,8 @@ export function WhatsAppButton() {
     const show = setTimeout(() => setHinted(true), 900);
     return () => clearTimeout(show);
   }, [visible, hinted]);
+
+  if (HIDDEN_ON.some((p) => pathname?.startsWith(p))) return null;
 
   return (
     <AnimatePresence>

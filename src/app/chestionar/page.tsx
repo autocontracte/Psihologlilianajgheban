@@ -85,26 +85,15 @@ export default async function ChestionarPage() {
               Bună ziua, revin cu câteva întrebări
             </h1>
             <p className="mx-auto mt-6 max-w-xl font-sans text-[0.95rem] leading-[1.9] text-ink-soft">
-              Sunt zece întrebări, iar la unele răspundeți doar apăsând pe o
-              variantă. <span className="text-ink">Nu trebuie completate toate
-              odată</span> — fiecare răspuns se salvează singur, așa că puteți
-              închide pagina și reveni când aveți răgaz.
+              Zece întrebări, una câte una. La multe dintre ele răspunzi doar
+              apăsând pe o variantă. <span className="text-ink">Nu trebuie
+              completate toate odată</span> — fiecare răspuns se salvează
+              singur, deci poți închide pagina și reveni când ai răgaz.
             </p>
           </header>
 
           <BriefForm initial={initial} initialFiles={initialFiles} />
 
-          {/* Contact */}
-          <p className="mt-10 text-center font-sans text-[0.88rem] leading-relaxed text-ink-soft">
-            Dacă ceva nu e clar sau preferați să discutăm, mă găsiți la{" "}
-            <a
-              href={`tel:${SITE.phoneHref}`}
-              className="text-periwinkle underline decoration-periwinkle/30 underline-offset-4 transition-colors hover:text-ink"
-            >
-              {SITE.phone}
-            </a>
-            .
-          </p>
         </div>
       </main>
     </div>
