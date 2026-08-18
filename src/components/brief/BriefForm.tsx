@@ -2,7 +2,13 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import { motion } from "framer-motion";
-import { PALETTES, FONT_PAIRS, SPECIMEN, type Palette } from "@/content/themes";
+import {
+  PALETTES,
+  FONT_PAIRS,
+  SPECIMEN,
+  readableOn,
+  type Palette,
+} from "@/content/themes";
 import { useAutosave, type SaveState } from "./useAutosave";
 import { IconArrow, IconCheck } from "../ui/Icons";
 
@@ -186,19 +192,37 @@ export function BriefForm({
             ))}
           </div>
 
-          <div className="mt-4 flex flex-wrap items-center gap-2.5">
-            <span
-              className="rounded-pill px-3.5 py-1.5 font-sans text-[0.7rem]"
-              style={{ background: p.accent, color: p.btnText }}
+          <div className="mt-4 border-t pt-4" style={{ borderColor: p.line }}>
+            <p className="font-display text-[1.3rem]" style={{ color: p.ink }}>
+              Liliana Jgheban
+            </p>
+            <p
+              className="mt-1 font-sans text-[0.78rem]"
+              style={{ color: readableOn(p.accent, p.bg) }}
             >
-              Programează o ședință
-            </span>
-            <span
-              className="rounded-pill border px-3.5 py-1.5 font-sans text-[0.7rem]"
-              style={{ borderColor: p.second, color: p.ink }}
+              Psiholog clinician și psihoterapeut
+            </p>
+            <p
+              className="mt-2.5 font-sans text-[0.76rem] leading-relaxed"
+              style={{ color: p.ink, opacity: 0.7 }}
             >
-              Servicii
-            </span>
+              Ședințe în cabinet și online, pentru adulți, adolescenți și copii.
+            </p>
+
+            <div className="mt-4 flex flex-wrap items-center gap-2.5">
+              <span
+                className="rounded-pill px-3.5 py-1.5 font-sans text-[0.7rem]"
+                style={{ background: p.accent, color: p.btnText }}
+              >
+                Programează o ședință
+              </span>
+              <span
+                className="rounded-pill border px-3.5 py-1.5 font-sans text-[0.7rem]"
+                style={{ borderColor: p.second, color: p.ink }}
+              >
+                Servicii
+              </span>
+            </div>
           </div>
         </div>
       </button>

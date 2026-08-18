@@ -177,3 +177,36 @@ export const SPECIMEN = {
   heading: "Un spațiu sigur, în care să fii ascultat",
   body: "Terapia nu înseamnă că ceva e în neregulă cu tine. Înseamnă că alegi să îți acorzi atenție, sprijin și timp.",
 };
+
+/* ---------------------------------------------------------------- contrast */
+
+const lum = (hex: string) => {
+  const c = [1, 3, 5]
+    .map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
+    .map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+  return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+};
+
+const ratio = (a: string, b: string) => {
+  const [x, y] = [lum(a), lum(b)];
+  return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+};
+
+const toHex = (r: number, g: number, b: number) =>
+  `#${[r, g, b].map((v) => v.toString(16).padStart(2, "0")).join("")}`;
+
+/**
+ * Întunecă o culoare până devine lizibilă pe fundalul dat.
+ *
+ * Accentul arată bine pe suprafețe mari, dar ca text mic multe nuanțe cad sub
+ * pragul de citire — galbenul, de pildă, ajunge la 1.9:1 pe crem.
+ */
+export function readableOn(hex: string, bg: string, target = 4.5): string {
+  let [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+  for (let i = 0; i < 40 && ratio(toHex(r, g, b), bg) < target; i++) {
+    r = Math.round(r * 0.93);
+    g = Math.round(g * 0.93);
+    b = Math.round(b * 0.93);
+  }
+  return toHex(r, g, b);
+}
