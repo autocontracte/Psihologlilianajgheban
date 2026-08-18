@@ -36,3 +36,6 @@ yarn-error.log*
 # baza de date locala
 /prisma/*.db
 /prisma/*.db-journal
+
+# documente incarcate prin chestionar
+/uploads

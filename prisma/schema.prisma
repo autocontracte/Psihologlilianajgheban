@@ -98,3 +98,28 @@ model BlockedDate {
   date   String  @unique
   reason String?
 }
+
+/// Răspunsurile la chestionarul de brief, salvate pe măsură ce sunt completate.
+/// Fiecare întrebare are cheia ei, deci un răspuns nou îl înlocuiește pe cel
+/// vechi fără să pierdem restul.
+model BriefAnswer {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+}
+
+/// Fișierele încărcate în chestionar (de exemplu modelul de contract).
+/// Se salvează în afara folderului public — se descarcă doar din panou.
+model BriefFile {
+  id        String   @id @default(cuid())
+  key       String
+  fileName  String
+  storedAs  String   @unique
+  mimeType  String
+  size      Int
+  createdAt DateTime @default(now())
+
+  @@index([key])
+}

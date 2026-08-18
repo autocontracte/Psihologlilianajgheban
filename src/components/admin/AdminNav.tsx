@@ -8,6 +8,7 @@ const LINKS = [
   { href: "/admin/programari", label: "Programări" },
   { href: "/admin/program", label: "Program și zile libere" },
   { href: "/admin/clienti", label: "Clienți" },
+  { href: "/admin/chestionar", label: "Chestionar" },
 ];
 
 export function AdminNav() {
