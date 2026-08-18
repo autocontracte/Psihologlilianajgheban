@@ -325,6 +325,7 @@ cd ~/app
 git pull
 npm ci
 npx prisma migrate deploy
+npx prisma generate
 npm run build
 pm2 reload psiholog-lj
 ```

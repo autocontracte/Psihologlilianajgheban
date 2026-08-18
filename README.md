@@ -129,6 +129,14 @@ Asta contează pentru că VPS-ul rulează de regulă pe UTC.
 - Două persoane nu pot rezerva același interval: verificarea se reia într-o
   tranzacție, în momentul salvării.
 
+### O capcană la actualizare
+
+`prisma migrate deploy` aplică migrările, dar **nu** regenerează clientul
+Prisma. Dacă schema s-a schimbat și sari peste `npm ci` (care îl regenerează
+prin `postinstall`), build-ul cade cu erori de tipul „Property does not exist
+on type PrismaClient" — iar dacă procesul e repornit între timp, site-ul rămâne
+jos. Rulează întotdeauna `npx prisma generate` înainte de build.
+
 ### Ce lipsește încă
 
 Emailurile. Programările apar corect în panou, dar nu se trimite încă nicio
@@ -213,6 +221,7 @@ cd /var/www/psihologlilianajgheban.ro
 git pull
 npm ci
 npx prisma migrate deploy
+npx prisma generate
 npm run build
 pm2 reload psiholog-lj
 ```
