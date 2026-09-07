@@ -16,6 +16,8 @@ export type ClientAppointment = {
   status: Status;
   notes: string | null;
   canCancel: boolean;
+  /** Lipsește dacă plata online nu e activată. */
+  plata?: { platita: boolean; suma: number } | null;
 };
 
 export function AppointmentList({
@@ -29,6 +31,25 @@ export function AppointmentList({
   const [busyId, setBusyId] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [confirmId, setConfirmId] = useState<string | null>(null);
+  const [platesc, setPlatesc] = useState<string | null>(null);
+
+  async function plateste(id: string) {
+    setPlatesc(id);
+    setError("");
+    try {
+      const res = await fetch("/api/plati/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ appointmentId: id }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error ?? "Plata nu a putut fi pornită.");
+      window.location.href = json.url;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "A apărut o eroare.");
+      setPlatesc(null);
+    }
+  }
 
   async function cancel(id: string) {
     setBusyId(id);
@@ -91,8 +112,28 @@ export function AppointmentList({
               )}
             </div>
 
+            <div className="flex shrink-0 flex-col items-end gap-2">
+              {a.plata && !a.plata.platita && (
+                <button
+                  type="button"
+                  onClick={() => plateste(a.id)}
+                  disabled={platesc === a.id}
+                  className="bg-periwinkle px-4 py-2 font-sans text-[0.82rem] text-cream transition-colors hover:bg-ink disabled:opacity-60"
+                >
+                  {platesc === a.id
+                    ? "Se deschide…"
+                    : `Plătește ${(a.plata.suma / 100).toFixed(0)} lei`}
+                </button>
+              )}
+
+              {a.plata?.platita && (
+                <span className="bg-periwinkle-pale px-3 py-1.5 font-sans text-[0.78rem] text-periwinkle">
+                  Plătită
+                </span>
+              )}
+
             {a.canCancel && (
-              <div className="shrink-0">
+              <div>
                 {confirmId === a.id ? (
                   <div className="flex items-center gap-2">
                     <button
@@ -122,6 +163,7 @@ export function AppointmentList({
                 )}
               </div>
             )}
+            </div>
           </div>
         </motion.article>
       ))}

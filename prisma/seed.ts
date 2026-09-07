@@ -13,11 +13,15 @@ if (existsSync(".env")) process.loadEnvFile(".env");
 
 const db = new PrismaClient();
 
+/* Prețurile sunt în bani: 28000 = 280 lei.
+   ⚠️ Toate serviciile pornesc de la tariful standard. Evaluările durează 90 de
+   minute — dacă au alt tarif, schimbă-l aici sau direct în baza de date. */
 const SERVICES = [
   {
     slug: "psihoterapie-adult",
     name: "Psihoterapie individuală — adult",
     duration: 50,
+    price: 28000,
     position: 1,
     description:
       "Ședință individuală de psihoterapie integrativă pentru adulți.",
@@ -26,6 +30,7 @@ const SERVICES = [
     slug: "psihoterapie-adolescent",
     name: "Psihoterapie — adolescent",
     duration: 50,
+    price: 28000,
     position: 2,
     description: "Ședință individuală pentru adolescenți și preadolescenți.",
   },
@@ -33,6 +38,7 @@ const SERVICES = [
     slug: "terapie-copil",
     name: "Terapie pentru copil",
     duration: 50,
+    price: 28000,
     position: 3,
     description: "Ședință de terapie prin joc și metode potrivite vârstei.",
   },
@@ -40,6 +46,7 @@ const SERVICES = [
     slug: "consiliere-parentala",
     name: "Consiliere parentală",
     duration: 50,
+    price: 28000,
     position: 4,
     description: "Întâlnire dedicată părinților, despre relația cu copilul.",
   },
@@ -47,6 +54,7 @@ const SERVICES = [
     slug: "evaluare-copil",
     name: "Evaluare clinică psihologică — copil / adolescent",
     duration: 90,
+    price: 28000,
     position: 5,
     description:
       "Evaluarea dezvoltării emoționale și comportamentale, ADHD, dificultăți de învățare.",
@@ -55,6 +63,7 @@ const SERVICES = [
     slug: "evaluare-adult",
     name: "Evaluare clinică psihologică — adult",
     duration: 90,
+    price: 28000,
     position: 6,
     description:
       "Evaluare pentru anxietate, depresie, tulburări afective și de personalitate.",
@@ -63,6 +72,7 @@ const SERVICES = [
     slug: "atelier-sandtray",
     name: "Atelier experiențial (Sandtray)",
     duration: 90,
+    price: 28000,
     position: 7,
     description: "Intervenție experiențială cu nisip și miniaturi.",
   },
@@ -85,7 +95,7 @@ async function main() {
   for (const s of SERVICES) {
     await db.service.upsert({
       where: { slug: s.slug },
-      update: { name: s.name, duration: s.duration, position: s.position },
+      update: { name: s.name, duration: s.duration, price: s.price, position: s.position },
       create: s,
     });
   }

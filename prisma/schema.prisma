@@ -44,6 +44,8 @@ model Service {
   slug         String        @unique
   name         String
   duration     Int           @default(50)
+  /// Prețul în bani (28000 = 280 lei). Evită erorile de rotunjire de la zecimale.
+  price        Int           @default(28000)
   description  String?
   active       Boolean       @default(true)
   position     Int           @default(0)
@@ -73,6 +75,7 @@ model Appointment {
   adminNote  String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  payments   Payment[]
 
   @@index([startsAt])
   @@index([userId])
@@ -122,4 +125,55 @@ model BriefFile {
   createdAt DateTime @default(now())
 
   @@index([key])
+}
+
+/// O încercare de plată. Deocamdată doar Stripe, dar `provider` lasă loc și
+/// altora fără schimbări de structură.
+model Payment {
+  id            String      @id @default(cuid())
+  appointmentId String
+  appointment   Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  provider      String      @default("STRIPE")
+  /// Identificatorul de la furnizor (la Stripe, sesiunea de checkout).
+  externalId    String?     @unique
+  /// În bani, ca și prețul serviciului.
+  amount        Int
+  currency      String      @default("RON")
+  /// PENDING | PAID | FAILED | REFUNDED
+  status        String      @default("PENDING")
+  paidAt        DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  invoice       Invoice?
+
+  @@index([appointmentId])
+  @@index([status])
+}
+
+/// Factura emisă pentru o plată.
+///
+/// `provider` spune cine a emis-o. Cât timp nu e ales niciun program de
+/// facturare, se salvează aici datele necesare, cu status DRAFT — nu se pierde
+/// nimic, iar la conectare pot fi emise retroactiv.
+model Invoice {
+  id        String   @id @default(cuid())
+  paymentId String?  @unique
+  payment   Payment? @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+  /// NONE | SMARTBILL | FGO | SAGA
+  provider  String   @default("NONE")
+  series    String?
+  number    String?
+  /// Linkul către factura de la furnizor, dacă există.
+  url       String?
+  /// DRAFT | ISSUED | FAILED
+  status    String   @default("DRAFT")
+  issuedAt  DateTime?
+  /// Mesajul de eroare, dacă emiterea a eșuat.
+  error     String?
+  /// Datele trimise, păstrate pentru depanare și pentru reemitere.
+  payload   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
 }

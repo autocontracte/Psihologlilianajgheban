@@ -13,6 +13,7 @@ import { LogoutButton } from "@/components/account/LogoutButton";
 import { getCurrentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { CANCEL_LEAD_HOURS } from "@/lib/slots";
+import { platileSuntActive } from "@/lib/stripe";
 import { formatDateLong, formatTime } from "@/lib/tz";
 import type { Format, Status } from "@/lib/types";
 import { IconArrow } from "@/components/ui/Icons";
@@ -31,7 +32,7 @@ export default async function ContPage() {
 
   const rows = await db.appointment.findMany({
     where: { userId: user.id },
-    include: { service: true },
+    include: { service: true, payments: true },
     orderBy: { startsAt: "asc" },
   });
 
@@ -50,6 +51,14 @@ export default async function ContPage() {
     canCancel:
       (r.status === "PENDING" || r.status === "CONFIRMED") &&
       r.startsAt.getTime() - now > CANCEL_LEAD_HOURS * 60 * 60 * 1000,
+    /* Butonul de plată apare doar dacă Stripe e configurat și ședința nu e
+       anulată — altfel n-ar avea ce face cu el. */
+    plata: platileSuntActive && r.status !== "CANCELLED"
+      ? {
+          platita: r.payments.some((p) => p.status === "PAID"),
+          suma: r.service.price,
+        }
+      : null,
   });
 
   const upcoming = rows
