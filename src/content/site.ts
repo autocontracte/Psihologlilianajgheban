@@ -398,3 +398,27 @@ export const REVIEWS = {
     { src: "/foto/recenzie-3.jpg", alt: "Mesaj primit de la un client al cabinetului" },
   ],
 };
+
+/* ============================================================================
+   Ce se întâmplă mai departe, în funcție de formatul ales
+
+   ⚠️ DE COMPLETAT: adresa reală a cabinetului și linkul de Zoom. Până atunci,
+   textul spune că detaliile vin la confirmare — ceea ce e oricum adevărat.
+   ========================================================================== */
+
+export const MEETING = {
+  cabinet: {
+    title: "Ne vedem la cabinet",
+    /** Lăsat gol → se afișează doar orașul și nota de mai jos. */
+    address: "",
+    city: SITE.city,
+    note: "Adresa exactă și indicațiile de acces îți sunt trimise odată cu confirmarea programării.",
+  },
+  online: {
+    title: "Ne vedem pe Zoom",
+    platform: "Zoom",
+    /** Camera personală de Zoom. Lăsat gol → se anunță că linkul vine pe email. */
+    link: "",
+    note: "Primești linkul de Zoom pe email, cu cel puțin o oră înainte de ședință. Nu ai nevoie de cont — se deschide direct din browser.",
+  },
+};

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { IconArrow, IconCheck, IconOffice, IconOnline } from "../ui/Icons";
 import { FORMAT_LABEL, type Format } from "@/lib/types";
+import { MEETING } from "@/content/site";
 import { MonthCalendar } from "./MonthCalendar";
 
 type Service = {
@@ -30,6 +31,49 @@ function dayLabel(date: string, opts: Intl.DateTimeFormatOptions) {
   const [y, m, d] = date.split("-").map(Number);
   return new Intl.DateTimeFormat("ro-RO", { timeZone: "UTC", ...opts }).format(
     new Date(Date.UTC(y, m - 1, d)),
+  );
+}
+
+/* --------------------------------------------------------- detalii format */
+
+/** Ce urmează diferă complet între cele două: la cabinet contează adresa,
+    online contează linkul de conectare. */
+function MeetingNote({ format }: { format: Format }) {
+  const cabinet = format === "CABINET";
+  const m = cabinet ? MEETING.cabinet : MEETING.online;
+
+  return (
+    <div className="mt-4 border-l-2 border-periwinkle bg-cream-warm px-5 py-4">
+      <p className="flex items-center gap-2.5 font-sans text-[0.9rem] text-ink">
+        {cabinet ? (
+          <IconOffice className="h-5 w-5 text-periwinkle" />
+        ) : (
+          <IconOnline className="h-5 w-5 text-periwinkle" />
+        )}
+        {m.title}
+      </p>
+
+      {cabinet && (MEETING.cabinet.address || MEETING.cabinet.city) && (
+        <p className="mt-2 font-sans text-[0.88rem] text-ink-soft">
+          {MEETING.cabinet.address || MEETING.cabinet.city}
+        </p>
+      )}
+
+      {!cabinet && MEETING.online.link && (
+        <a
+          href={MEETING.online.link}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-2 inline-block font-sans text-[0.88rem] text-periwinkle underline underline-offset-4 hover:text-ink"
+        >
+          {MEETING.online.link}
+        </a>
+      )}
+
+      <p className="mt-2 font-sans text-[0.83rem] leading-relaxed text-ink-muted">
+        {m.note}
+      </p>
+    </div>
   );
 }
 
@@ -200,6 +244,10 @@ export function BookingFlow({
                 ? "Îți confirm programarea în cel mai scurt timp, iar până atunci apare în contul tău ca „în așteptare”."
                 : "Te contactez pe telefon sau email ca să confirm programarea, de regulă în aceeași zi lucrătoare."}
             </p>
+
+            <div className="mx-auto mt-6 max-w-md text-left">
+              <MeetingNote format={format} />
+            </div>
 
             {!loggedIn && (
               <p className="mx-auto mt-5 max-w-md rounded-none bg-cream-warm px-5 py-4 font-sans text-[0.83rem] leading-relaxed text-ink-soft">
@@ -639,6 +687,10 @@ export function BookingFlow({
                       );
                     })}
                   </div>
+
+                  {/* Ce urmează diferă complet între cele două: la cabinet
+                      contează adresa, online contează linkul. */}
+                  <MeetingNote format={format} />
                 </div>
 
                 {/* Note */}
