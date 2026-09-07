@@ -1,6 +1,6 @@
 import { SERVICES, PRICE } from "@/content/site";
 import { Reveal, Stagger, StaggerItem } from "../ui/Reveal";
-import { Button } from "../ui/Button";
+import { ActionButtons } from "../ui/ActionButtons";
 
 export function Services() {
   return (
@@ -85,11 +85,7 @@ export function Services() {
         </Reveal>
 
         <Reveal delay={0.1}>
-          <div className="mt-10 text-center">
-            <Button href="/programari" variant="primary">
-              Programează o ședință
-            </Button>
-          </div>
+          <ActionButtons className="mt-10" />
         </Reveal>
       </div>
     </section>

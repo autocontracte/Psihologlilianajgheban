@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 import { REVIEWS } from "@/content/site";
 import { Reveal } from "../ui/Reveal";
 import { IconArrow, IconQuote } from "../ui/Icons";
+import { ActionButtons } from "../ui/ActionButtons";
 
 /** Mesajele primite, ca imagini, într-o bandă care se derulează lateral. */
 export function Reviews() {
@@ -105,6 +106,8 @@ export function Reviews() {
           <IconQuote className="h-4 w-4" />
           Publicate cu acordul persoanelor care le-au scris.
         </p>
+
+        <ActionButtons className="mt-14" />
       </div>
 
       {/* Mesajul, la mărime întreagă */}

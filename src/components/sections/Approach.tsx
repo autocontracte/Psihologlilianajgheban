@@ -1,6 +1,7 @@
 import { APPROACH } from "@/content/site";
 import { Reveal, Stagger, StaggerItem } from "../ui/Reveal";
 import { OrbitRing } from "../ui/OrbitFrame";
+import { ActionButtons } from "../ui/ActionButtons";
 
 export function Approach() {
   return (
@@ -83,6 +84,8 @@ export function Approach() {
             ))}
           </Stagger>
         </div>
+        <ActionButtons variant="dark" className="mt-16" />
+
       </div>
     </section>
   );

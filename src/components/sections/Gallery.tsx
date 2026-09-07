@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { PHOTOS } from "@/content/site";
 import { Reveal } from "../ui/Reveal";
+import { ActionButtons } from "../ui/ActionButtons";
 
 /** Fotografiile cabinetului. Un om care caută terapie vrea să vadă unde intră. */
 export function Gallery() {
@@ -59,6 +60,8 @@ export function Gallery() {
             ))}
           </div>
         </div>
+        <ActionButtons variant="light" className="mt-16" />
+
       </div>
     </section>
   );

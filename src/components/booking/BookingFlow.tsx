@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { IconArrow, IconCheck, IconOffice, IconOnline } from "../ui/Icons";
 import { FORMAT_LABEL, type Format } from "@/lib/types";
+import { MonthCalendar } from "./MonthCalendar";
 
 type Service = {
   id: string;
@@ -64,6 +65,10 @@ export function BookingFlow({
   const daysRef = useRef<HTMLDivElement | null>(null);
   const [showSwipe, setShowSwipe] = useState(false);
 
+  /* Banda e bună pentru zilele apropiate. Cine vrea peste câteva săptămâni
+     are nevoie de un calendar — altfel ar trage de bandă la nesfârșit. */
+  const [calendar, setCalendar] = useState(false);
+
   const checkSwipe = useCallback(() => {
     const el = daysRef.current;
     if (!el) return;
@@ -96,7 +101,7 @@ export function BookingFlow({
     setLoadingDays(true);
     setError("");
     try {
-      const res = await fetch(`/api/slots/days?serviceId=${id}&days=28`);
+      const res = await fetch(`/api/slots/days?serviceId=${id}&days=60`);
       const json = await res.json();
       if (!res.ok) throw new Error(json.error ?? "Nu am putut încărca zilele.");
       setDays(json.days);
@@ -356,7 +361,26 @@ export function BookingFlow({
 
                 {/* Zile */}
                 <div className="mt-7">
-                  {loadingDays ? (
+                  <div className="mb-4 flex justify-end">
+                    <button
+                      type="button"
+                      onClick={() => setCalendar((v) => !v)}
+                      className="inline-flex items-center gap-2 border border-ink/20 px-4 py-2 font-sans text-[0.85rem] text-ink-soft transition-colors hover:border-periwinkle hover:text-periwinkle"
+                    >
+                      <span className="mi text-[1.05rem]">
+                        {calendar ? "view_week" : "calendar_month"}
+                      </span>
+                      {calendar ? "Vezi zilele apropiate" : "Vezi sub formă de calendar"}
+                    </button>
+                  </div>
+
+                  {calendar ? (
+                    <MonthCalendar
+                      days={days}
+                      selected={date}
+                      onPick={setDate}
+                    />
+                  ) : loadingDays ? (
                     <div className="flex gap-2.5 overflow-hidden">
                       {Array.from({ length: 7 }).map((_, i) => (
                         <div

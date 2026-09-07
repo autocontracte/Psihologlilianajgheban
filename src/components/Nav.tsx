@@ -10,11 +10,27 @@ export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
+  /* Numele apare deja mare în hero. Cât timp ești acolo, l-am afișa de două
+     ori pe același ecran, așa că în bara de sus îl arătăm abia după ce hero-ul
+     a ieșit din câmpul vizual. */
+  const [pastHero, setPastHero] = useState(false);
+
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > 40);
+
+      const hero = document.getElementById("acasa");
+      const prag = hero ? hero.offsetHeight - 120 : window.innerHeight * 0.7;
+      setPastHero(y > prag);
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, []);
 
   // Blochează scroll-ul paginii cât timp meniul mobil e deschis
@@ -42,8 +58,13 @@ export function Nav() {
           {/* Logo */}
           <Link
             href="/#acasa"
-            className="group flex flex-col leading-none"
             onClick={() => setOpen(false)}
+            className={[
+              "group flex flex-col leading-none transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+              pastHero || open
+                ? "translate-y-0 opacity-100"
+                : "pointer-events-none -translate-y-1 opacity-0",
+            ].join(" ")}
           >
             <span className="font-display text-lg tracking-tight text-ink transition-colors duration-500 group-hover:text-periwinkle sm:text-xl">
               Liliana Jgheban

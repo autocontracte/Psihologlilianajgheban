@@ -1,6 +1,7 @@
 import { FORMATS } from "@/content/site";
 import { ICONS, type IconName, IconCheck } from "../ui/Icons";
 import { Reveal, Stagger, StaggerItem } from "../ui/Reveal";
+import { ActionButtons } from "../ui/ActionButtons";
 
 export function Formats() {
   return (
@@ -87,6 +88,8 @@ export function Formats() {
             );
           })}
         </Stagger>
+        <ActionButtons variant="light" className="mt-16" />
+
       </div>
     </section>
   );
