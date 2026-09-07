@@ -9,7 +9,7 @@ export default function NotFound() {
       <main className="grain relative flex min-h-[80vh] items-center overflow-hidden bg-cream pt-32">
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-32 top-0 h-96 w-96 rounded-full bg-periwinkle-pale/60 blur-3xl"
+          className="pointer-events-none absolute -right-32 top-0 h-96 w-96 rounded-none bg-periwinkle-pale/60 blur-3xl"
         />
         <div className="relative mx-auto max-w-2xl px-6 text-center lg:px-10">
           <p className="font-display text-7xl text-periwinkle/40 sm:text-8xl">

@@ -55,7 +55,7 @@ export function OrbitFrame({
         aria-hidden
         animate={reduce ? {} : { rotate: sway }}
         transition={{ duration, repeat: Infinity, ease: "easeInOut" }}
-        style={{ inset, borderRadius: radius }}
+        style={{ inset, borderRadius: "0" }}
         className={`pointer-events-none absolute border ${borderColor[accent]} ${frameClassName}`}
       />
 
@@ -71,7 +71,7 @@ export function OrbitFrame({
           }}
           style={{
             inset: `calc(${inset} - 0.75rem)`,
-            borderRadius: `calc(${radius} + 0.75rem)`,
+            borderRadius: "0",
           }}
           className={`pointer-events-none absolute border ${borderColor[accent]} opacity-50`}
         />
@@ -110,7 +110,7 @@ export function OrbitRing({
       transition={{ duration, repeat: Infinity, ease: "linear" }}
       style={{ width: size, height: size }}
       className={[
-        "pointer-events-none absolute rounded-full border",
+        "pointer-events-none absolute rounded-none border",
         dashed ? "border-dashed" : "",
         borderColor[accent],
         className,

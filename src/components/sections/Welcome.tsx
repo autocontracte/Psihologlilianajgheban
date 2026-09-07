@@ -8,7 +8,7 @@ export function Welcome() {
       {/* Halou decorativ, cu inele care se rotesc lent în jurul citatului */}
       <div
         aria-hidden
-        className="pointer-events-none absolute left-1/2 top-0 h-96 w-[46rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-periwinkle/20 blur-3xl"
+        className="pointer-events-none absolute left-1/2 top-0 h-96 w-[46rem] -translate-x-1/2 -translate-y-1/2 rounded-none bg-periwinkle/20 blur-3xl"
       />
       <OrbitRing
         className="left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 sm:block"

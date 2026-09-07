@@ -60,7 +60,7 @@ export function WhatsAppButton() {
                 animate={{ opacity: 1, x: 0, scale: 1 }}
                 exit={{ opacity: 0, x: 12, scale: 0.9 }}
                 transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                className="hidden rounded-pill bg-cream px-4 py-2.5 font-sans text-[0.72rem] text-ink shadow-[0_14px_34px_-16px_rgba(56,62,82,0.55)] sm:block"
+                className="hidden rounded-none bg-cream px-4 py-2.5 font-sans text-[0.72rem] text-ink shadow-[0_14px_34px_-16px_rgba(56,62,82,0.55)] sm:block"
               >
                 Scrie-mi pe WhatsApp
               </motion.span>
@@ -73,12 +73,12 @@ export function WhatsAppButton() {
             rel="noreferrer"
             aria-label="Scrie-mi pe WhatsApp"
             onMouseEnter={() => setHinted(true)}
-            className="group relative flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_16px_36px_-12px_rgba(37,211,102,0.75)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-110"
+            className="group relative flex h-14 w-14 items-center justify-center rounded-none bg-[#25D366] text-white shadow-[0_16px_36px_-12px_rgba(37,211,102,0.75)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-110"
           >
             {/* Undă discretă în jurul butonului */}
             <span
               aria-hidden
-              className="absolute inset-0 animate-ping rounded-full bg-[#25D366] opacity-20 [animation-duration:2.5s]"
+              className="absolute inset-0 animate-ping rounded-none bg-[#25D366] opacity-20 [animation-duration:2.5s]"
             />
             <IconWhatsApp className="relative h-7 w-7" />
           </a>

@@ -65,7 +65,7 @@ export default async function ChestionarPage() {
       <main className="grain relative min-h-screen overflow-hidden bg-cream-deep py-16 lg:py-24">
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-40 top-0 h-[32rem] w-[32rem] rounded-full bg-periwinkle-pale/50 blur-3xl"
+          className="pointer-events-none absolute -right-40 top-0 h-[32rem] w-[32rem] rounded-none bg-periwinkle-pale/50 blur-3xl"
         />
         <OrbitRing
           className="-left-32 top-56 hidden lg:block"

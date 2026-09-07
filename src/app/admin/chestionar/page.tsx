@@ -81,14 +81,14 @@ export default async function AdminBriefPage() {
           href="/chestionar"
           target="_blank"
           rel="noreferrer"
-          className="rounded-pill border border-ink/20 px-5 py-2.5 font-sans text-[0.8rem] text-ink-soft transition-colors hover:border-ink/50 hover:text-ink"
+          className="rounded-none border border-ink/20 px-5 py-2.5 font-sans text-[0.8rem] text-ink-soft transition-colors hover:border-ink/50 hover:text-ink"
         >
           Deschide chestionarul ↗
         </a>
       </div>
 
       {rows.length === 0 && (
-        <p className="mt-9 rounded-[1.5rem] bg-cream px-6 py-10 text-center font-sans text-[0.9rem] text-ink-soft">
+        <p className="mt-9 rounded-none bg-cream px-6 py-10 text-center font-sans text-[0.9rem] text-ink-soft">
           Nu a fost completat nimic încă. Trimiteți linkul{" "}
           <span className="text-ink">psihologlilianajgheban.ro/chestionar</span>.
         </p>
@@ -98,7 +98,7 @@ export default async function AdminBriefPage() {
       {(palette || font) && (
         <div className="mt-9 grid gap-4 lg:grid-cols-2">
           {palette && (
-            <div className="rounded-[1.75rem] bg-cream p-6">
+            <div className="rounded-none bg-cream p-6">
               <p className="font-sans text-[0.75rem] text-ink-muted">
                 Paleta aleasă
               </p>
@@ -110,7 +110,7 @@ export default async function AdminBriefPage() {
                   (c) => (
                     <div key={c} className="flex-1">
                       <div
-                        className="h-12 rounded-[0.4rem]"
+                        className="h-12 rounded-none"
                         style={{ background: c, border: "1px solid rgba(0,0,0,.08)" }}
                       />
                       <p className="mt-1.5 text-center font-mono text-[0.62rem] text-ink-muted">
@@ -124,7 +124,7 @@ export default async function AdminBriefPage() {
           )}
 
           {font && (
-            <div className="rounded-[1.75rem] bg-cream p-6">
+            <div className="rounded-none bg-cream p-6">
               <p className="font-sans text-[0.75rem] text-ink-muted">Fontul ales</p>
               <p className="mt-2 font-display text-xl text-ink">
                 {font.n}. {font.display} + {font.body}
@@ -148,7 +148,7 @@ export default async function AdminBriefPage() {
           const multiline = raw?.includes("\n");
 
           return (
-            <section key={q.key} className="rounded-[1.5rem] bg-cream p-6">
+            <section key={q.key} className="rounded-none bg-cream p-6">
               <div className="flex flex-wrap items-baseline justify-between gap-3">
                 <p className="font-sans text-[0.75rem] text-ink-muted">
                   {q.n !== null && `${q.n}. `}
@@ -173,7 +173,7 @@ export default async function AdminBriefPage() {
               )}
 
               {extra && (
-                <p className="mt-3 rounded-[1rem] bg-cream-warm px-4 py-3 font-sans text-[0.87rem] leading-[1.75] whitespace-pre-line text-ink-soft">
+                <p className="mt-3 rounded-none bg-cream-warm px-4 py-3 font-sans text-[0.87rem] leading-[1.75] whitespace-pre-line text-ink-soft">
                   {extra}
                 </p>
               )}
@@ -184,7 +184,7 @@ export default async function AdminBriefPage() {
 
       {/* Documente încărcate */}
       {files.length > 0 && (
-        <section className="mt-4 rounded-[1.5rem] bg-cream p-6">
+        <section className="mt-4 rounded-none bg-cream p-6">
           <p className="font-sans text-[0.75rem] text-ink-muted">
             Documente încărcate
           </p>

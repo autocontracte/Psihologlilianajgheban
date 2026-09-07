@@ -25,11 +25,11 @@ export default async function AdminClientsPage() {
 
       <div className="mt-9">
         {clients.length === 0 ? (
-          <p className="rounded-[1.5rem] bg-cream px-6 py-10 text-center font-sans text-[0.88rem] text-ink-soft">
+          <p className="rounded-none bg-cream px-6 py-10 text-center font-sans text-[0.88rem] text-ink-soft">
             Nu există încă niciun client înregistrat.
           </p>
         ) : (
-          <div className="overflow-x-auto rounded-[1.75rem] bg-cream">
+          <div className="overflow-x-auto rounded-none bg-cream">
             <table className="w-full min-w-[46rem]">
               <thead>
                 <tr className="border-b border-ink/10">

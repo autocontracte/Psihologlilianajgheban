@@ -55,6 +55,8 @@ export const NAV = [
   { label: "Acasă", href: "/#acasa" },
   { label: "Despre mine", href: "/#despre" },
   { label: "Servicii", href: "/#servicii" },
+  { label: "Cabinet", href: "/#cabinet" },
+  { label: "Recenzii", href: "/#recenzii" },
   { label: "Abordare", href: "/#abordare" },
   { label: "Întrebări", href: "/#intrebari" },
   { label: "Contact", href: "/#contact" },
@@ -347,4 +349,52 @@ export const TESTS = {
   description:
     "Pregătesc o secțiune cu teste vocaționale gratuite, gândite pentru adolescenți și tineri aflați în fața unei alegeri: ce liceu, ce facultate, ce direcție profesională. Rezultatele vor veni însoțite de o interpretare clară, nu doar de un scor.",
   cta: "Anunță-mă când sunt gata",
+};
+
+/* ============================================================================
+   Prețuri, fotografii și recenzii
+   ========================================================================== */
+
+/** ⚠️ Prețul se schimbă doar aici — apare automat peste tot pe site. */
+export const PRICE = {
+  standard: 280,
+  currency: "lei",
+  /** Ce acoperă tariful, în cuvinte simple. */
+  note: "O ședință de 50 de minute, în cabinet sau online.",
+};
+
+/** Fotografiile cabinetului, folosite în galerie și în hero. */
+export const PHOTOS = {
+  hero: "/foto/cabinet-camera-1.jpg",
+  despre: "/foto/liliana-fotoliu.jpg",
+  cabinet: [
+    { src: "/foto/cabinet-camera-1.jpg", alt: "Camera de consultații, cu canapea și bibliotecă" },
+    { src: "/foto/cabinet-camera-2.jpg", alt: "Spațiul de lucru al cabinetului" },
+    { src: "/foto/cabinet-camera-3.jpg", alt: "Colțul de lectură din cabinet" },
+    { src: "/foto/cabinet-spatiu-1.jpg", alt: "Baia cabinetului" },
+    { src: "/foto/cabinet-spatiu-2.jpg", alt: "Holul de intrare" },
+    { src: "/foto/cabinet-spatiu-3.jpg", alt: "Spațiul de așteptare" },
+    { src: "/foto/cabinet-spatiu-4.jpg", alt: "Detaliu din cabinet" },
+  ],
+  portrete: [
+    "/foto/liliana-portret-1.jpg",
+    "/foto/liliana-portret-2.jpg",
+    "/foto/liliana-portret-3.jpg",
+    "/foto/liliana-portret-4.jpg",
+    "/foto/liliana-portret-5.jpg",
+  ],
+};
+
+/** Mesaje primite de la oameni care au trecut prin terapie.
+    ⚠️ Înainte de publicare, asigură-te că ai acordul scris al fiecăruia. */
+export const REVIEWS = {
+  eyebrow: "Ce spun oamenii",
+  title: "Mesaje primite după terapie",
+  subtitle:
+    "Câteva dintre mesajele primite de-a lungul timpului, publicate cu acordul celor care le-au scris.",
+  images: [
+    { src: "/foto/recenzie-1.jpg", alt: "Mesaj primit de la o persoană care a urmat terapie" },
+    { src: "/foto/recenzie-2.jpg", alt: "Mesaj de mulțumire primit după încheierea terapiei" },
+    { src: "/foto/recenzie-3.jpg", alt: "Mesaj primit de la un client al cabinetului" },
+  ],
 };

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import { ABOUT } from "@/content/site";
+import { ABOUT, PHOTOS } from "@/content/site";
 import { Reveal } from "../ui/Reveal";
 import { OrbitFrame } from "../ui/OrbitFrame";
 import { IconCheck } from "../ui/Icons";
@@ -38,14 +38,14 @@ export function About() {
               {/* Pată de culoare în spate */}
               <div
                 aria-hidden
-                className="absolute -inset-5 rounded-[3.25rem] bg-sage-pale/70"
+                className="absolute -inset-5 rounded-none bg-sage-pale/70"
               />
-              <div className="relative overflow-hidden rounded-[2.75rem] shadow-[0_36px_80px_-40px_rgba(56,62,82,0.5)]">
+              <div className="relative overflow-hidden rounded-none shadow-[0_36px_80px_-40px_rgba(56,62,82,0.5)]">
                 <Image
-                  src="/liliana-jgheban.webp"
+                  src={PHOTOS.despre}
                   alt="Liliana Jgheban în cabinetul de psihologie"
-                  width={1066}
-                  height={1600}
+                  width={1056}
+                  height={1599}
                   sizes="(max-width: 1024px) 85vw, 40vw"
                   className="h-full w-full object-cover"
                 />
@@ -84,14 +84,14 @@ export function About() {
 
           {/* Formare & acreditări */}
           <Reveal delay={0.45}>
-            <div className="mt-11 rounded-[2rem] border border-ink/10 bg-cream-warm p-8">
+            <div className="mt-11 rounded-none border border-ink/10 bg-cream-warm p-8">
               <p className="font-sans text-[0.74rem] tracking-[0.02em] text-ink-muted">
                 Formare și competențe
               </p>
               <ul className="mt-5 space-y-3.5">
                 {ABOUT.credentials.map((c) => (
                   <li key={c} className="flex items-start gap-3.5">
-                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-sage-pale text-sage">
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-none bg-sage-pale text-sage">
                       <IconCheck className="h-3 w-3" strokeWidth={2} />
                     </span>
                     <span className="font-sans text-[0.87rem] leading-relaxed text-ink-soft">

@@ -77,7 +77,7 @@ export default async function ContPage() {
       <main className="grain relative min-h-screen overflow-hidden bg-cream pt-36 pb-24 lg:pt-44">
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-40 top-10 h-[30rem] w-[30rem] rounded-full bg-periwinkle-pale/50 blur-3xl"
+          className="pointer-events-none absolute -right-40 top-10 h-[30rem] w-[30rem] rounded-none bg-periwinkle-pale/50 blur-3xl"
         />
         <OrbitRing
           className="-left-32 top-40 hidden lg:block"
@@ -109,7 +109,7 @@ export default async function ContPage() {
           <Reveal delay={0.1}>
             <Link
               href="/programari"
-              className="group mt-9 inline-flex items-center gap-2.5 rounded-pill bg-periwinkle px-7 py-3.5 font-sans text-[0.7rem] tracking-[0.02em] text-cream transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-ink"
+              className="group mt-9 inline-flex items-center gap-2.5 rounded-none bg-periwinkle px-7 py-3.5 font-sans text-[0.7rem] tracking-[0.02em] text-cream transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-ink"
             >
               Programează o ședință
               <IconArrow className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1" />

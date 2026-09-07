@@ -82,7 +82,7 @@ export default async function AdminAppointmentsPage({
                 : `/admin/programari?status=${f.key}`
             }
             className={[
-              "rounded-pill px-4 py-2 font-sans text-[0.8rem] tracking-[0.02em] transition-all duration-400",
+              "rounded-none px-4 py-2 font-sans text-[0.8rem] tracking-[0.02em] transition-all duration-400",
               active === f.key
                 ? "bg-periwinkle text-cream"
                 : "bg-cream text-ink-soft hover:bg-periwinkle-pale hover:text-ink",
@@ -96,7 +96,7 @@ export default async function AdminAppointmentsPage({
       {/* Listă */}
       <div className="mt-8 space-y-4">
         {items.length === 0 ? (
-          <p className="rounded-[1.5rem] bg-cream px-6 py-10 text-center font-sans text-[0.88rem] text-ink-soft">
+          <p className="rounded-none bg-cream px-6 py-10 text-center font-sans text-[0.88rem] text-ink-soft">
             Nicio programare pentru filtrul selectat.
           </p>
         ) : (

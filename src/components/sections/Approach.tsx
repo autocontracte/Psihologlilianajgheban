@@ -10,7 +10,7 @@ export function Approach() {
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute -left-40 bottom-0 h-[30rem] w-[30rem] rounded-full bg-periwinkle/15 blur-3xl"
+        className="pointer-events-none absolute -left-40 bottom-0 h-[30rem] w-[30rem] rounded-none bg-periwinkle/15 blur-3xl"
       />
       <OrbitRing
         className="-right-32 top-16 hidden lg:block"
@@ -51,7 +51,7 @@ export function Approach() {
         <Stagger className="mt-16 grid gap-6 sm:grid-cols-2 lg:mt-20 lg:grid-cols-4">
           {APPROACH.steps.map((s) => (
             <StaggerItem key={s.step}>
-              <article className="group relative h-full rounded-[2rem] border border-cream/12 bg-cream/[0.045] p-8 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-periwinkle/50 hover:bg-cream/[0.09]">
+              <article className="group relative h-full rounded-none border border-cream/12 bg-cream/[0.045] p-8 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-periwinkle/50 hover:bg-cream/[0.09]">
                 <span className="font-display text-4xl text-periwinkle-light/70 transition-colors duration-500 group-hover:text-periwinkle-light">
                   {s.step}
                 </span>

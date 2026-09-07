@@ -25,11 +25,11 @@ export function AuthShell({
         {/* Accente decorative */}
         <div
           aria-hidden
-          className="pointer-events-none absolute -left-40 top-10 h-[28rem] w-[28rem] rounded-full bg-periwinkle-pale/50 blur-3xl"
+          className="pointer-events-none absolute -left-40 top-10 h-[28rem] w-[28rem] rounded-none bg-periwinkle-pale/50 blur-3xl"
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-32 bottom-0 h-[26rem] w-[26rem] rounded-full bg-sage-pale/50 blur-3xl"
+          className="pointer-events-none absolute -right-32 bottom-0 h-[26rem] w-[26rem] rounded-none bg-sage-pale/50 blur-3xl"
         />
         <OrbitRing
           className="-right-24 top-24 hidden lg:block"
@@ -62,7 +62,7 @@ export function AuthShell({
               duration={24}
               tilt={2.5}
             >
-              <div className="rounded-[2.25rem] bg-cream-warm p-8 shadow-[0_30px_70px_-40px_rgba(56,62,82,0.45)] sm:p-10">
+              <div className="rounded-none bg-cream-warm p-8 shadow-[0_30px_70px_-40px_rgba(56,62,82,0.45)] sm:p-10">
                 {children}
               </div>
             </OrbitFrame>
@@ -93,7 +93,7 @@ export function AuthShell({
 
 /* Stiluri comune pentru câmpurile din formularele de cont. */
 export const authInput =
-  "w-full rounded-[1.25rem] border border-ink/15 bg-cream px-5 py-3.5 font-sans text-[0.9rem] text-ink placeholder:text-ink-muted transition-all duration-300 focus:border-periwinkle focus:outline-none focus:ring-4 focus:ring-periwinkle/12";
+  "w-full rounded-none border border-ink/15 bg-cream px-5 py-3.5 font-sans text-[0.9rem] text-ink placeholder:text-ink-muted transition-all duration-300 focus:border-periwinkle focus:outline-none focus:ring-4 focus:ring-periwinkle/12";
 
 export const authLabel =
   "mb-2 block font-sans text-[0.74rem] tracking-[0.02em] text-ink-muted";

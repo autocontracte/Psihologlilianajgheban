@@ -36,7 +36,7 @@ export default async function ProgramariPage() {
         <section className="grain relative overflow-hidden bg-cream pt-40 pb-16 lg:pt-48 lg:pb-20">
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-32 -top-24 h-[30rem] w-[30rem] rounded-full bg-periwinkle-pale/60 blur-3xl"
+            className="pointer-events-none absolute -right-32 -top-24 h-[30rem] w-[30rem] rounded-none bg-periwinkle-pale/60 blur-3xl"
           />
           <OrbitRing
             className="-left-28 top-32 hidden lg:block"
@@ -78,7 +78,7 @@ export default async function ProgramariPage() {
         <section className="relative bg-cream-deep py-16 lg:py-24">
           <div className="mx-auto max-w-3xl px-6 lg:px-10">
             <Reveal>
-              <div className="mb-9 flex flex-wrap items-center justify-between gap-4 rounded-[1.5rem] bg-cream px-6 py-4">
+              <div className="mb-9 flex flex-wrap items-center justify-between gap-4 rounded-none bg-cream px-6 py-4">
                 {user ? (
                   <>
                     <p className="font-sans text-[0.85rem] text-ink-soft">
@@ -146,7 +146,7 @@ function AccountBenefits() {
 
   return (
     <Reveal>
-      <div className="mt-10 rounded-[2rem] border border-ink/10 bg-cream/60 p-8 text-center sm:p-10">
+      <div className="mt-10 rounded-none border border-ink/10 bg-cream/60 p-8 text-center sm:p-10">
         <h2 className="font-display text-xl text-ink sm:text-2xl">
           Vrei să îți faci și cont?
         </h2>
@@ -157,8 +157,8 @@ function AccountBenefits() {
 
           <div className="mt-9 grid gap-4 text-left sm:grid-cols-3">
             {steps.map((s) => (
-              <div key={s.title} className="rounded-[1.5rem] bg-cream-warm p-5">
-                <span className="flex h-10 w-10 items-center justify-center rounded-[0.85rem] bg-periwinkle-pale text-periwinkle">
+              <div key={s.title} className="rounded-none bg-cream-warm p-5">
+                <span className="flex h-10 w-10 items-center justify-center rounded-none bg-periwinkle-pale text-periwinkle">
                   <s.Icon className="h-4.5 w-4.5" />
                 </span>
                 <p className="mt-4 font-display text-[1rem] text-ink">{s.title}</p>
@@ -172,14 +172,14 @@ function AccountBenefits() {
         <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
           <Link
             href="/cont/inregistrare?redirect=/programari"
-            className="group inline-flex items-center justify-center gap-2.5 rounded-pill bg-periwinkle px-7 py-3.5 font-sans text-[0.7rem] tracking-[0.02em] text-cream transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-ink"
+            className="group inline-flex items-center justify-center gap-2.5 rounded-none bg-periwinkle px-7 py-3.5 font-sans text-[0.7rem] tracking-[0.02em] text-cream transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-ink"
           >
             Creează cont
             <IconArrow className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1" />
           </Link>
           <Link
             href="/cont/autentificare?redirect=/programari"
-            className="inline-flex items-center justify-center gap-2.5 rounded-pill border border-ink/20 px-7 py-3.5 font-sans text-[0.7rem] tracking-[0.02em] text-ink transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-ink/50 hover:bg-ink hover:text-cream"
+            className="inline-flex items-center justify-center gap-2.5 rounded-none border border-ink/20 px-7 py-3.5 font-sans text-[0.7rem] tracking-[0.02em] text-ink transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-ink/50 hover:bg-ink hover:text-cream"
           >
             Am deja cont
           </Link>

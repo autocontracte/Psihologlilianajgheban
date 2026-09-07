@@ -37,7 +37,7 @@ export function Faq() {
               <Reveal key={item.q} delay={Math.min(i * 0.05, 0.3)}>
                 <div
                   className={[
-                    "overflow-hidden rounded-[1.65rem] bg-cream transition-shadow duration-500",
+                    "overflow-hidden rounded-none bg-cream transition-shadow duration-500",
                     isOpen
                       ? "shadow-[0_20px_50px_-28px_rgba(56,62,82,0.45)]"
                       : "",
@@ -61,18 +61,18 @@ export function Faq() {
                     {/* Indicator plus / minus */}
                     <span
                       className={[
-                        "relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                        "relative flex h-8 w-8 shrink-0 items-center justify-center rounded-none transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
                         isOpen
                           ? "bg-periwinkle text-cream"
                           : "bg-periwinkle-pale text-periwinkle",
                       ].join(" ")}
                       aria-hidden
                     >
-                      <span className="absolute h-[1.5px] w-3 rounded-pill bg-current" />
+                      <span className="absolute h-[1.5px] w-3 rounded-none bg-current" />
                       <motion.span
                         animate={{ rotate: isOpen ? 0 : 90, opacity: isOpen ? 0 : 1 }}
                         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                        className="absolute h-[1.5px] w-3 rounded-pill bg-current"
+                        className="absolute h-[1.5px] w-3 rounded-none bg-current"
                       />
                     </span>
                   </button>

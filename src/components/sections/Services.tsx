@@ -1,4 +1,4 @@
-import { SERVICES } from "@/content/site";
+import { SERVICES, PRICE } from "@/content/site";
 import { Reveal, Stagger, StaggerItem } from "../ui/Reveal";
 import { Button } from "../ui/Button";
 
@@ -10,7 +10,7 @@ export function Services() {
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-40 top-1/4 h-[28rem] w-[28rem] rounded-full bg-sage-pale/50 blur-3xl"
+        className="pointer-events-none absolute -right-40 top-1/4 h-[28rem] w-[28rem] rounded-none bg-sage-pale/50 blur-3xl"
       />
 
       <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
@@ -39,7 +39,7 @@ export function Services() {
         <Stagger className="mt-16 grid gap-5 lg:mt-20 lg:grid-cols-2">
           {SERVICES.items.map((item) => (
             <StaggerItem key={item.number}>
-              <article className="lift group relative h-full overflow-hidden rounded-[2.25rem] bg-cream p-9 lg:p-11">
+              <article className="lift group relative h-full overflow-hidden rounded-none bg-cream p-9 lg:p-11">
                 {/* Număr filigran */}
                 <span
                   aria-hidden
@@ -49,7 +49,7 @@ export function Services() {
                 </span>
 
                 <div className="relative">
-                  <span className="inline-flex rounded-pill bg-sage-pale px-4 py-1.5 font-sans text-[0.74rem] tracking-[0.02em] text-sage">
+                  <span className="inline-flex rounded-none bg-sage-pale px-4 py-1.5 font-sans text-[0.74rem] tracking-[0.02em] text-sage">
                     {item.audience}
                   </span>
 
@@ -65,15 +65,27 @@ export function Services() {
                 {/* Bară de accent la hover */}
                 <span
                   aria-hidden
-                  className="absolute inset-x-9 bottom-0 h-[2px] origin-left scale-x-0 rounded-pill bg-gradient-to-r from-periwinkle to-sage transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-x-100 lg:inset-x-11"
+                  className="absolute inset-x-9 bottom-0 h-[2px] origin-left scale-x-0 rounded-none bg-gradient-to-r from-periwinkle to-sage transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-x-100 lg:inset-x-11"
                 />
               </article>
             </StaggerItem>
           ))}
         </Stagger>
 
+        {/* Tariful, spus limpede — oamenii îl caută și e corect să-l găsească */}
+        <Reveal delay={0.06}>
+          <div className="mt-12 flex flex-wrap items-baseline justify-center gap-x-4 gap-y-1 border-t border-ink/12 pt-10 text-center">
+            <span className="font-display text-3xl text-ink">
+              {PRICE.standard} {PRICE.currency}
+            </span>
+            <span className="font-sans text-[0.95rem] text-ink-soft">
+              {PRICE.note}
+            </span>
+          </div>
+        </Reveal>
+
         <Reveal delay={0.1}>
-          <div className="mt-14 text-center">
+          <div className="mt-10 text-center">
             <Button href="/programari" variant="primary">
               Programează o ședință
             </Button>

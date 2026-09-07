@@ -26,7 +26,7 @@ export function LegalPage({
         <section className="grain relative overflow-hidden bg-cream pt-40 pb-16 lg:pt-48">
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-32 -top-24 h-96 w-96 rounded-full bg-periwinkle-pale/50 blur-3xl"
+            className="pointer-events-none absolute -right-32 -top-24 h-96 w-96 rounded-none bg-periwinkle-pale/50 blur-3xl"
           />
           <div className="relative mx-auto max-w-3xl px-6 lg:px-10">
             <Reveal>
@@ -55,7 +55,7 @@ export function LegalPage({
             <div className="space-y-10">
               {sections.map((s, i) => (
                 <Reveal key={s.heading} delay={Math.min(i * 0.05, 0.3)}>
-                  <div className="rounded-[2rem] border border-ink/8 bg-cream-warm p-8 lg:p-9">
+                  <div className="rounded-none border border-ink/8 bg-cream-warm p-8 lg:p-9">
                     <h2 className="font-display text-[1.4rem] leading-snug text-ink">
                       {s.heading}
                     </h2>
@@ -74,7 +74,7 @@ export function LegalPage({
                             key={b}
                             className="flex gap-3 font-sans text-[0.88rem] leading-[1.85] text-ink-soft"
                           >
-                            <span className="mt-2.5 h-1 w-1 shrink-0 rounded-full bg-periwinkle" />
+                            <span className="mt-2.5 h-1 w-1 shrink-0 rounded-none bg-periwinkle" />
                             <span>{b}</span>
                           </li>
                         ))}

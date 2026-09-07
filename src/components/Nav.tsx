@@ -68,16 +68,16 @@ export function Nav() {
             <Link
               href="/cont"
               aria-label="Contul meu"
-              className="group relative flex h-10 w-10 items-center justify-center rounded-full border border-ink/15 text-ink-soft transition-all duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-periwinkle hover:bg-periwinkle hover:text-cream"
+              className="group relative flex h-10 w-10 items-center justify-center rounded-none border border-ink/15 text-ink-soft transition-all duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-periwinkle hover:bg-periwinkle hover:text-cream"
             >
               <IconUser className="h-[1.15rem] w-[1.15rem]" />
-              <span className="pointer-events-none absolute -bottom-9 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-pill bg-ink px-3 py-1.5 font-sans text-[0.75rem] tracking-[0.02em] text-cream opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+              <span className="pointer-events-none absolute -bottom-9 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-none bg-ink px-3 py-1.5 font-sans text-[0.75rem] tracking-[0.02em] text-cream opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                 Contul meu
               </span>
             </Link>
             <Link
               href="/programari"
-              className="group inline-flex items-center gap-2 rounded-pill bg-ink px-6 py-3 font-sans text-[0.8rem] tracking-[0.02em] text-cream transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-periwinkle"
+              className="group inline-flex items-center gap-2 rounded-none bg-ink px-6 py-3 font-sans text-[0.8rem] tracking-[0.02em] text-cream transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-periwinkle"
             >
               Programare
               <IconArrow className="h-3.5 w-3.5 transition-transform duration-500 group-hover:translate-x-1" />
@@ -90,7 +90,7 @@ export function Nav() {
             onClick={() => setOpen((v) => !v)}
             aria-label={open ? "Închide meniul" : "Deschide meniul"}
             aria-expanded={open}
-            className="relative z-50 flex h-11 w-11 items-center justify-center rounded-full border border-ink/15 transition-colors duration-300 hover:border-ink/40 lg:hidden"
+            className="relative z-50 flex h-11 w-11 items-center justify-center rounded-none border border-ink/15 transition-colors duration-300 hover:border-ink/40 lg:hidden"
           >
             <span className="sr-only">Meniu</span>
             <div className="flex w-5 flex-col items-end gap-[5px]">
@@ -99,19 +99,19 @@ export function Nav() {
                   open ? { rotate: 45, y: 6.5, width: 20 } : { rotate: 0, y: 0 }
                 }
                 transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                className="block h-[1.5px] w-5 rounded-pill bg-ink"
+                className="block h-[1.5px] w-5 rounded-none bg-ink"
               />
               <motion.span
                 animate={open ? { opacity: 0, x: 8 } : { opacity: 1, x: 0 }}
                 transition={{ duration: 0.3 }}
-                className="block h-[1.5px] w-3.5 rounded-pill bg-ink"
+                className="block h-[1.5px] w-3.5 rounded-none bg-ink"
               />
               <motion.span
                 animate={
                   open ? { rotate: -45, y: -7, width: 20 } : { rotate: 0, y: 0 }
                 }
                 transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                className="block h-[1.5px] w-5 rounded-pill bg-ink"
+                className="block h-[1.5px] w-5 rounded-none bg-ink"
               />
             </div>
           </button>
@@ -161,7 +161,7 @@ export function Nav() {
                 <Link
                   href="/programari"
                   onClick={() => setOpen(false)}
-                  className="inline-flex items-center justify-center gap-2 rounded-pill bg-periwinkle px-8 py-4 font-sans text-xs tracking-[0.02em] text-cream"
+                  className="inline-flex items-center justify-center gap-2 rounded-none bg-periwinkle px-8 py-4 font-sans text-xs tracking-[0.02em] text-cream"
                 >
                   Programează o ședință
                   <IconArrow className="h-4 w-4" />
@@ -169,7 +169,7 @@ export function Nav() {
                 <Link
                   href="/cont"
                   onClick={() => setOpen(false)}
-                  className="inline-flex items-center justify-center gap-2.5 rounded-pill border border-ink/20 px-8 py-3.5 font-sans text-[0.72rem] tracking-[0.02em] text-ink-soft transition-colors hover:border-periwinkle hover:text-periwinkle"
+                  className="inline-flex items-center justify-center gap-2.5 rounded-none border border-ink/20 px-8 py-3.5 font-sans text-[0.72rem] tracking-[0.02em] text-ink-soft transition-colors hover:border-periwinkle hover:text-periwinkle"
                 >
                   <IconUser className="h-4 w-4" />
                   Contul meu

@@ -39,11 +39,11 @@ export default function TestePage() {
         <section className="grain relative overflow-hidden bg-cream pt-40 pb-20 lg:pt-48 lg:pb-24">
           <div
             aria-hidden
-            className="pointer-events-none absolute -left-32 -top-20 h-[30rem] w-[30rem] rounded-full bg-sage-pale/60 blur-3xl"
+            className="pointer-events-none absolute -left-32 -top-20 h-[30rem] w-[30rem] rounded-none bg-sage-pale/60 blur-3xl"
           />
           <div className="relative mx-auto max-w-4xl px-6 text-center lg:px-10">
             <Reveal>
-              <span className="inline-flex rounded-pill bg-periwinkle-pale px-5 py-2 font-sans text-[0.74rem] tracking-[0.02em] text-periwinkle">
+              <span className="inline-flex rounded-none bg-periwinkle-pale px-5 py-2 font-sans text-[0.74rem] tracking-[0.02em] text-periwinkle">
                 În curând
               </span>
             </Reveal>
@@ -70,8 +70,8 @@ export default function TestePage() {
             <Stagger className="grid gap-6 sm:grid-cols-3">
               {planned.map((p) => (
                 <StaggerItem key={p.title}>
-                  <div className="lift h-full rounded-[2rem] border border-ink/8 bg-cream-warm p-8 text-center">
-                    <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-[1.15rem] bg-sage-pale text-sage">
+                  <div className="lift h-full rounded-none border border-ink/8 bg-cream-warm p-8 text-center">
+                    <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-none bg-sage-pale text-sage">
                       <p.Icon className="h-6 w-6" />
                     </span>
                     <h2 className="mt-6 font-display text-[1.25rem] leading-snug text-ink">
@@ -87,7 +87,7 @@ export default function TestePage() {
 
             {/* Îndemn */}
             <Reveal delay={0.2}>
-              <div className="mt-16 rounded-[2.5rem] bg-ink px-8 py-14 text-center lg:rounded-[3rem] lg:px-16">
+              <div className="mt-16 rounded-none bg-ink px-8 py-14 text-center lg:rounded-none lg:px-16">
                 <h2 className="font-display text-3xl leading-tight text-cream lg:text-4xl">
                   Nu vrei să aștepți?
                 </h2>

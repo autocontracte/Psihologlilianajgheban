@@ -30,7 +30,7 @@ export function Button({
   external?: boolean;
 }) {
   const classes = [
-    "group inline-flex items-center gap-2.5 rounded-pill px-7 py-3.5",
+    "group inline-flex items-center gap-2.5 rounded-none px-7 py-3.5",
     "font-sans text-[0.72rem] font-medium tracking-[0.02em]",
     "transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
     variants[variant],

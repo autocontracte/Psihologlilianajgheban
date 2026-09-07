@@ -21,7 +21,7 @@ const STEPS = ["Serviciul", "Data și ora", "Confirmare"] as const;
 const ease = [0.22, 1, 0.36, 1] as const;
 
 const guestField =
-  "w-full rounded-[1.25rem] border border-ink/15 bg-cream-warm px-5 py-3.5 font-sans text-[0.9rem] text-ink placeholder:text-ink-muted transition-all duration-300 focus:border-periwinkle focus:bg-cream focus:outline-none focus:ring-4 focus:ring-periwinkle/12";
+  "w-full rounded-none border border-ink/15 bg-cream-warm px-5 py-3.5 font-sans text-[0.9rem] text-ink placeholder:text-ink-muted transition-all duration-300 focus:border-periwinkle focus:bg-cream focus:outline-none focus:ring-4 focus:ring-periwinkle/12";
 
 /* Etichete de dată calculate fără fus orar: șirul "YYYY-MM-DD" e tratat ca UTC,
    deci ziua afișată e exact cea cerută. */
@@ -180,8 +180,8 @@ export function BookingFlow({
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, ease }}
       >
-        <div className="rounded-[2.25rem] bg-cream p-10 text-center shadow-[0_30px_70px_-40px_rgba(56,62,82,0.4)] lg:p-14">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-sage-pale text-sage">
+        <div className="rounded-none bg-cream p-10 text-center shadow-[0_30px_70px_-40px_rgba(56,62,82,0.4)] lg:p-14">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-none bg-sage-pale text-sage">
               <IconCheck className="h-7 w-7" strokeWidth={1.8} />
             </div>
             <h2 className="mt-7 font-display text-3xl text-ink">
@@ -197,7 +197,7 @@ export function BookingFlow({
             </p>
 
             {!loggedIn && (
-              <p className="mx-auto mt-5 max-w-md rounded-[1.25rem] bg-cream-warm px-5 py-4 font-sans text-[0.83rem] leading-relaxed text-ink-soft">
+              <p className="mx-auto mt-5 max-w-md rounded-none bg-cream-warm px-5 py-4 font-sans text-[0.83rem] leading-relaxed text-ink-soft">
                 Dacă îți faci un cont cu aceeași adresă de email, îți vei putea
                 vedea și gestiona singur ședințele viitoare.
               </p>
@@ -206,7 +206,7 @@ export function BookingFlow({
             <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
               <Link
                 href={loggedIn ? "/cont" : "/cont/inregistrare"}
-                className="inline-flex items-center justify-center gap-2 rounded-pill bg-periwinkle px-7 py-3.5 font-sans text-[0.7rem] tracking-[0.02em] text-cream transition-colors duration-500 hover:bg-ink"
+                className="inline-flex items-center justify-center gap-2 rounded-none bg-periwinkle px-7 py-3.5 font-sans text-[0.7rem] tracking-[0.02em] text-cream transition-colors duration-500 hover:bg-ink"
               >
                 {loggedIn ? "Vezi programările mele" : "Creează-mi cont"}
               </Link>
@@ -220,7 +220,7 @@ export function BookingFlow({
                   setTime("");
                   setNotes("");
                 }}
-                className="inline-flex items-center justify-center gap-2 rounded-pill border border-ink/20 px-7 py-3.5 font-sans text-[0.7rem] tracking-[0.02em] text-ink transition-all duration-500 hover:border-ink/50 hover:bg-ink hover:text-cream"
+                className="inline-flex items-center justify-center gap-2 rounded-none border border-ink/20 px-7 py-3.5 font-sans text-[0.7rem] tracking-[0.02em] text-ink transition-all duration-500 hover:border-ink/50 hover:bg-ink hover:text-cream"
               >
                 Fă altă programare
               </button>
@@ -250,7 +250,7 @@ export function BookingFlow({
               onClick={() => i < step && setStep(i)}
               disabled={i > step}
               className={[
-                "flex items-center gap-2.5 rounded-pill px-3 py-2 transition-all duration-500 sm:px-4",
+                "flex items-center gap-2.5 rounded-none px-3 py-2 transition-all duration-500 sm:px-4",
                 i === step
                   ? "bg-periwinkle text-cream"
                   : i < step
@@ -260,7 +260,7 @@ export function BookingFlow({
             >
               <span
                 className={[
-                  "flex h-6 w-6 items-center justify-center rounded-full font-sans text-[0.78rem]",
+                  "flex h-6 w-6 items-center justify-center rounded-none font-sans text-[0.78rem]",
                   i === step
                     ? "bg-cream/25"
                     : i < step
@@ -277,7 +277,7 @@ export function BookingFlow({
             {i < STEPS.length - 1 && (
               <span
                 className={[
-                  "h-px w-4 rounded-pill transition-colors duration-500 sm:w-10",
+                  "h-px w-4 rounded-none transition-colors duration-500 sm:w-10",
                   i < step ? "bg-sage" : "bg-ink/15",
                 ].join(" ")}
               />
@@ -286,7 +286,7 @@ export function BookingFlow({
         ))}
       </div>
 
-        <div className="rounded-[2.25rem] bg-cream p-7 shadow-[0_30px_70px_-40px_rgba(56,62,82,0.4)] sm:p-9 lg:p-11">
+        <div className="rounded-none bg-cream p-7 shadow-[0_30px_70px_-40px_rgba(56,62,82,0.4)] sm:p-9 lg:p-11">
           <AnimatePresence mode="wait">
             {/* ---------------------------------------------- Pasul 1 */}
             {step === 0 && (
@@ -312,7 +312,7 @@ export function BookingFlow({
                       type="button"
                       onClick={() => setServiceId(s.id)}
                       className={[
-                        "rounded-[1.5rem] border p-5 text-left transition-all duration-400 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                        "rounded-none border p-5 text-left transition-all duration-400 ease-[cubic-bezier(0.22,1,0.36,1)]",
                         serviceId === s.id
                           ? "border-periwinkle bg-periwinkle-pale/50 shadow-[0_16px_36px_-22px_rgba(103,120,175,0.9)]"
                           : "border-ink/12 bg-cream-warm hover:border-ink/30",
@@ -329,7 +329,7 @@ export function BookingFlow({
                             </p>
                           )}
                         </div>
-                        <span className="shrink-0 rounded-pill bg-cream px-3 py-1 font-sans text-[0.78rem] text-ink-soft">
+                        <span className="shrink-0 rounded-none bg-cream px-3 py-1 font-sans text-[0.78rem] text-ink-soft">
                           {s.duration} min
                         </span>
                       </div>
@@ -361,7 +361,7 @@ export function BookingFlow({
                       {Array.from({ length: 7 }).map((_, i) => (
                         <div
                           key={i}
-                          className="h-[4.75rem] w-[4.25rem] shrink-0 animate-pulse rounded-[1.25rem] bg-ink/6"
+                          className="h-[4.75rem] w-[4.25rem] shrink-0 animate-pulse rounded-none bg-ink/6"
                         />
                       ))}
                     </div>
@@ -381,7 +381,7 @@ export function BookingFlow({
                             disabled={disabled}
                             onClick={() => setDate(d.date)}
                             className={[
-                              "flex w-[4.25rem] shrink-0 flex-col items-center gap-0.5 rounded-[1.25rem] border py-3 transition-all duration-400",
+                              "flex w-[4.25rem] shrink-0 flex-col items-center gap-0.5 rounded-none border py-3 transition-all duration-400",
                               date === d.date
                                 ? "border-periwinkle bg-periwinkle text-cream"
                                 : disabled
@@ -461,12 +461,12 @@ export function BookingFlow({
                         {Array.from({ length: 8 }).map((_, i) => (
                           <div
                             key={i}
-                            className="h-11 animate-pulse rounded-[1rem] bg-ink/6"
+                            className="h-11 animate-pulse rounded-none bg-ink/6"
                           />
                         ))}
                       </div>
                     ) : slots.filter((s) => s.available).length === 0 ? (
-                      <p className="mt-4 rounded-[1.25rem] bg-cream-warm px-5 py-4 font-sans text-[0.85rem] text-ink-soft">
+                      <p className="mt-4 rounded-none bg-cream-warm px-5 py-4 font-sans text-[0.85rem] text-ink-soft">
                         Nu mai sunt intervale libere în această zi. Încearcă altă
                         dată din listă.
                       </p>
@@ -479,7 +479,7 @@ export function BookingFlow({
                             disabled={!s.available}
                             onClick={() => setTime(s.time)}
                             className={[
-                              "rounded-[1rem] border py-3 font-sans text-[0.85rem] transition-all duration-400",
+                              "rounded-none border py-3 font-sans text-[0.85rem] transition-all duration-400",
                               time === s.time
                                 ? "border-periwinkle bg-periwinkle text-cream"
                                 : s.available
@@ -509,7 +509,7 @@ export function BookingFlow({
                 <h2 className="font-display text-2xl text-ink">Ultimele detalii</h2>
 
                 {/* Rezumat */}
-                <div className="mt-6 rounded-[1.5rem] bg-cream-warm p-6">
+                <div className="mt-6 rounded-none bg-cream-warm p-6">
                   <dl className="space-y-3">
                     {[
                       ["Serviciu", service?.name ?? ""],
@@ -603,7 +603,7 @@ export function BookingFlow({
                           type="button"
                           onClick={() => setFormat(f)}
                           className={[
-                            "flex items-center justify-center gap-2.5 rounded-[1.25rem] border px-5 py-4 font-sans text-[0.85rem] transition-all duration-400",
+                            "flex items-center justify-center gap-2.5 rounded-none border px-5 py-4 font-sans text-[0.85rem] transition-all duration-400",
                             format === f
                               ? "border-periwinkle bg-periwinkle text-cream"
                               : "border-ink/12 bg-cream-warm text-ink-soft hover:border-ink/35",
@@ -632,7 +632,7 @@ export function BookingFlow({
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
                     placeholder="Câteva rânduri despre ce te aduce în terapie. Poți lăsa gol — vorbim la prima întâlnire."
-                    className="w-full resize-none rounded-[1.25rem] border border-ink/15 bg-cream-warm px-5 py-3.5 font-sans text-[0.9rem] text-ink placeholder:text-ink-muted transition-all duration-300 focus:border-periwinkle focus:bg-cream focus:outline-none focus:ring-4 focus:ring-periwinkle/12"
+                    className="w-full resize-none rounded-none border border-ink/15 bg-cream-warm px-5 py-3.5 font-sans text-[0.9rem] text-ink placeholder:text-ink-muted transition-all duration-300 focus:border-periwinkle focus:bg-cream focus:outline-none focus:ring-4 focus:ring-periwinkle/12"
                   />
                 </div>
               </motion.div>
@@ -640,7 +640,7 @@ export function BookingFlow({
           </AnimatePresence>
 
           {error && (
-            <p className="mt-6 rounded-[1rem] bg-clay-pale px-4 py-3 font-sans text-[0.82rem] text-clay">
+            <p className="mt-6 rounded-none bg-clay-pale px-4 py-3 font-sans text-[0.82rem] text-clay">
               {error}
             </p>
           )}
@@ -661,7 +661,7 @@ export function BookingFlow({
                 type="button"
                 onClick={() => setStep((s) => s + 1)}
                 disabled={!canAdvance}
-                className="group inline-flex items-center gap-2.5 rounded-pill bg-periwinkle px-7 py-3.5 font-sans text-[0.7rem] tracking-[0.02em] text-cream transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-ink disabled:cursor-not-allowed disabled:opacity-40"
+                className="group inline-flex items-center gap-2.5 rounded-none bg-periwinkle px-7 py-3.5 font-sans text-[0.7rem] tracking-[0.02em] text-cream transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-ink disabled:cursor-not-allowed disabled:opacity-40"
               >
                 Continuă
                 <IconArrow className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1" />
@@ -671,7 +671,7 @@ export function BookingFlow({
                 type="button"
                 onClick={submit}
                 disabled={busy || !contactReady}
-                className="group inline-flex items-center gap-2.5 rounded-pill bg-sage px-7 py-3.5 font-sans text-[0.7rem] tracking-[0.02em] text-cream transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-ink disabled:cursor-not-allowed disabled:opacity-60"
+                className="group inline-flex items-center gap-2.5 rounded-none bg-sage px-7 py-3.5 font-sans text-[0.7rem] tracking-[0.02em] text-cream transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-ink disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {busy ? "Se trimite…" : "Confirmă programarea"}
                 {!busy && (

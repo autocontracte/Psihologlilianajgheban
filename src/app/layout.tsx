@@ -1,26 +1,20 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Ibarra_Real_Nova, Montserrat } from "next/font/google";
+import { Lora, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
 import { SITE } from "@/content/site";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 
-const fraunces = Fraunces({
+/* Perechea aleasă de Liliana: Lora pentru titluri, Source Sans 3 pentru text. */
+const lora = Lora({
   subsets: ["latin", "latin-ext"],
   display: "swap",
-  variable: "--font-fraunces",
-  axes: ["SOFT", "WONK", "opsz"],
+  variable: "--font-lora",
 });
 
-const ibarra = Ibarra_Real_Nova({
+const sourceSans = Source_Sans_3({
   subsets: ["latin", "latin-ext"],
   display: "swap",
-  variable: "--font-ibarra",
-});
-
-const montserrat = Montserrat({
-  subsets: ["latin", "latin-ext"],
-  display: "swap",
-  variable: "--font-montserrat",
+  variable: "--font-source-sans",
 });
 
 export const metadata: Metadata = {
@@ -85,7 +79,7 @@ export default function RootLayout({
   return (
     <html
       lang="ro"
-      className={`${fraunces.variable} ${ibarra.variable} ${montserrat.variable}`}
+      className={`${lora.variable} ${sourceSans.variable}`}
     >
       <body className="antialiased">
         {children}

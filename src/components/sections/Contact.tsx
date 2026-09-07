@@ -15,7 +15,7 @@ import {
 type Status = "idle" | "sending" | "sent" | "error";
 
 const inputClass =
-  "w-full rounded-[1.25rem] border border-ink/15 bg-cream-warm px-5 py-3.5 font-sans text-[0.9rem] text-ink placeholder:text-ink-muted transition-all duration-300 focus:border-periwinkle focus:bg-cream focus:outline-none focus:ring-4 focus:ring-periwinkle/12";
+  "w-full rounded-none border border-ink/15 bg-cream-warm px-5 py-3.5 font-sans text-[0.9rem] text-ink placeholder:text-ink-muted transition-all duration-300 focus:border-periwinkle focus:bg-cream focus:outline-none focus:ring-4 focus:ring-periwinkle/12";
 
 export function Contact() {
   const [status, setStatus] = useState<Status>("idle");
@@ -100,7 +100,7 @@ export function Contact() {
               ].map(({ Icon, label, value, href, note }, i) => (
                 <Reveal key={label} delay={0.26 + i * 0.07}>
                   <div className="flex items-start gap-4">
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[0.95rem] bg-periwinkle-pale text-periwinkle">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-none bg-periwinkle-pale text-periwinkle">
                       <Icon className="h-4.5 w-4.5" />
                     </span>
                     <div className="pt-0.5">
@@ -132,7 +132,7 @@ export function Contact() {
               {/* Program */}
               <Reveal delay={0.47}>
                 <div className="flex items-start gap-4">
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[0.95rem] bg-sage-pale text-sage">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-none bg-sage-pale text-sage">
                     <IconClock className="h-4.5 w-4.5" />
                   </span>
                   <div className="pt-0.5">
@@ -158,7 +158,7 @@ export function Contact() {
 
           {/* ----------------------------------------------------- Formular */}
           <Reveal direction="left" delay={0.1}>
-            <div className="rounded-[2.5rem] bg-cream p-8 shadow-[0_30px_70px_-40px_rgba(56,62,82,0.4)] lg:p-11">
+            <div className="rounded-none bg-cream p-8 shadow-[0_30px_70px_-40px_rgba(56,62,82,0.4)] lg:p-11">
               {status === "sent" ? (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
@@ -166,7 +166,7 @@ export function Contact() {
                   transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                   className="flex min-h-[26rem] flex-col items-center justify-center text-center"
                 >
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-sage-pale text-sage">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-none bg-sage-pale text-sage">
                     <svg
                       viewBox="0 0 24 24"
                       fill="none"
@@ -310,7 +310,7 @@ export function Contact() {
                   </label>
 
                   {status === "error" && (
-                    <p className="rounded-[1rem] bg-clay-pale px-4 py-3 font-sans text-[0.82rem] text-clay">
+                    <p className="rounded-none bg-clay-pale px-4 py-3 font-sans text-[0.82rem] text-clay">
                       {error}
                     </p>
                   )}
@@ -318,7 +318,7 @@ export function Contact() {
                   <button
                     type="submit"
                     disabled={status === "sending"}
-                    className="group inline-flex w-full items-center justify-center gap-2.5 rounded-pill bg-periwinkle px-8 py-4 font-sans text-[0.7rem] tracking-[0.02em] text-cream transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-ink disabled:cursor-not-allowed disabled:opacity-60"
+                    className="group inline-flex w-full items-center justify-center gap-2.5 rounded-none bg-periwinkle px-8 py-4 font-sans text-[0.7rem] tracking-[0.02em] text-cream transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-ink disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {status === "sending" ? "Se trimite…" : "Trimite mesajul"}
                     {status !== "sending" && (

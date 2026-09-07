@@ -1,48 +1,69 @@
 @import "tailwindcss";
 
-/* ============================================================
-   Design tokens — paletă caldă, naturală
-   ============================================================ */
+/* ============================================================================
+   Iconițele Google (Material Symbols), auto-găzduite.
+   Fișierul conține doar cele 29 de simboluri folosite — 5 KB, fără cerere
+   externă și fără licărirea textului înainte să se încarce fontul.
+   ========================================================================== */
+@font-face {
+  font-family: "Material Symbols Outlined";
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("/fonts/material-symbols.woff2") format("woff2");
+}
+
+/* ============================================================================
+   Design tokens — paleta „Salvie și cretă" (varianta 10 aleasă de Liliana).
+
+   ⚠️ Numele variabilelor sunt cele din prima versiune a site-ului. Valorile
+   urmează acum paleta aleasă, deci `periwinkle` este verdele-salvie, iar
+   `sage` este nisipiul cald. Se schimbă doar aici, restul aplicației urmează.
+   ========================================================================== */
 @theme {
-  /* Culori de bază */
-  --color-cream: #f2f3ec;
-  --color-cream-deep: #e7e9dd;
-  --color-cream-warm: #f7f6f0;
+  /* Fundaluri */
+  --color-cream: #f3f4ee;
+  --color-cream-deep: #e9ebe1;
+  --color-cream-warm: #f8f9f4;
 
-  --color-ink: #383e52;
-  --color-ink-soft: #5b6178;
-  --color-ink-muted: #8a8fa1;
+  /* Text */
+  --color-ink: #363c45;
+  --color-ink-soft: #5c626c;
+  --color-ink-muted: #8b9098;
 
-  --color-periwinkle: #6778af;
-  --color-periwinkle-light: #8c9ac6;
-  --color-periwinkle-pale: #dfe3f0;
+  /* Accent principal — verde salvie */
+  --color-periwinkle: #6e8567;
+  --color-periwinkle-light: #8aa081;
+  --color-periwinkle-pale: #dce0d4;
 
-  --color-sage: #6a7e63;
-  --color-sage-light: #8ba183;
-  --color-sage-pale: #e0e6dc;
+  /* Accent secundar — nisipiu cald */
+  --color-sage: #a08b6f;
+  --color-sage-light: #b9a48c;
+  --color-sage-pale: #efe8de;
 
-  --color-clay: #b98c76;
-  --color-clay-pale: #f0e3dc;
+  /* Pentru atenționări și erori */
+  --color-clay: #a8624a;
+  --color-clay-pale: #f3e4dd;
 
-  /* Colțuri rotunjite — mai generoase decât referința */
-  --radius-soft: 1.25rem;
-  --radius-card: 2rem;
-  --radius-xl2: 2.75rem;
-  --radius-blob: 3.5rem;
-  --radius-pill: 999px;
+  /* Colțuri drepte peste tot — decizia clientului. Tokenele rămân, ca o
+     eventuală revenire la colțuri rotunjite să fie o singură modificare. */
+  --radius-soft: 0;
+  --radius-card: 0;
+  --radius-xl2: 0;
+  --radius-blob: 0;
+  --radius-pill: 0;
 
-  /* Tipografie */
-  --font-display: var(--font-fraunces), Georgia, serif;
-  --font-serif: var(--font-ibarra), Georgia, serif;
-  --font-sans: var(--font-montserrat), system-ui, sans-serif;
+  /* Tipografie — perechea 4: Lora pentru titluri, Source Sans 3 pentru text */
+  --font-display: var(--font-lora), Georgia, serif;
+  --font-serif: var(--font-lora), Georgia, serif;
+  --font-sans: var(--font-source-sans), system-ui, sans-serif;
 
-  /* Tranziții */
   --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* ============================================================
+/* ============================================================================
    Reset & base
-   ============================================================ */
+   ========================================================================== */
 * {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -71,7 +92,6 @@ body {
   color: var(--color-cream);
 }
 
-/* Bară de scroll discretă */
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -80,15 +100,34 @@ body {
 }
 ::-webkit-scrollbar-thumb {
   background: var(--color-periwinkle-light);
-  border-radius: var(--radius-pill);
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-periwinkle);
 }
 
-/* ============================================================
+/* ============================================================================
+   Iconițe
+   ========================================================================== */
+.mi {
+  font-family: "Material Symbols Outlined";
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-feature-settings: "liga";
+  -webkit-font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+/* ============================================================================
    Utilitare
-   ============================================================ */
+   ========================================================================== */
 
 /* Textură fină de hârtie, peste secțiuni mari */
 .grain::after {
@@ -96,30 +135,16 @@ body {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  opacity: 0.35;
+  opacity: 0.3;
   mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.22'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.2'/%3E%3C/svg%3E");
 }
 
 /* Linie decorativă sub titluri */
 .rule-soft {
   width: 3.5rem;
   height: 2px;
-  border-radius: var(--radius-pill);
-  background: linear-gradient(
-    90deg,
-    var(--color-periwinkle),
-    var(--color-sage)
-  );
-}
-
-/* Formă organică pentru imagini */
-.blob-frame {
-  border-radius: 48% 52% 44% 56% / 54% 44% 56% 46%;
-}
-
-.blob-frame-alt {
-  border-radius: 56% 44% 52% 48% / 46% 56% 44% 54%;
+  background: var(--color-periwinkle);
 }
 
 /* Underline animat pentru linkuri de meniu */
@@ -133,7 +158,6 @@ body {
   bottom: -4px;
   width: 100%;
   height: 1.5px;
-  border-radius: var(--radius-pill);
   background: currentColor;
   transform: scaleX(0);
   transform-origin: right;
@@ -152,8 +176,8 @@ body {
     box-shadow 0.5s var(--ease-soft);
 }
 .lift:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 24px 50px -24px rgba(56, 62, 82, 0.28);
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px -24px rgba(54, 60, 69, 0.3);
 }
 
 /* Respectă preferința de mișcare redusă */

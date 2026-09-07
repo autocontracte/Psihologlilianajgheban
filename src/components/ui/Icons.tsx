@@ -1,79 +1,105 @@
 /* ============================================================================
-   Iconițele vin din Lucide (https://lucide.dev) — set open-source, licență ISC,
-   folosit pe scară largă. Aici doar le dăm nume potrivite contextului și un
-   contur puțin mai subțire decât implicit, ca să se așeze lângă serife.
+   Iconițe Google — Material Symbols Outlined, auto-găzduite ca font.
 
-   Numele exportate sunt cele folosite deja în componente, așa că înlocuirea
-   setului nu cere modificări în restul aplicației.
+   Fontul e subsetat la cele 29 de simboluri folosite (5 KB) și declarat în
+   globals.css. Iconița se randează prin ligatură: textul „person" devine
+   simbolul. De aceea numele simbolului e conținutul elementului.
+
+   Numele exportate sunt cele folosite deja în componente, așa că schimbarea
+   setului nu a cerut modificări în restul aplicației.
    ========================================================================== */
 
-import type { ComponentType, SVGProps } from "react";
-import {
-  Armchair,
-  ArrowRight,
-  Baby,
-  CalendarDays,
-  Check,
-  Clock,
-  Compass,
-  HeartHandshake,
-  Mail,
-  MapPin,
-  PersonStanding,
-  Phone,
-  Plus,
-  Shapes,
-  UserRound,
-  UsersRound,
-  Video,
-  type LucideProps,
-} from "lucide-react";
+type IconProps = {
+  className?: string;
+  /** Grosimea conturului nu se aplică — păstrat pentru compatibilitate. */
+  strokeWidth?: number;
+  style?: React.CSSProperties;
+  "aria-hidden"?: boolean;
+};
 
-/** Conturul implicit din Lucide (2) e prea greu lângă titlurile cu serife. */
-function tune(Icon: ComponentType<LucideProps>, displayName: string) {
-  const Wrapped = (props: LucideProps) => (
-    <Icon strokeWidth={1.6} {...props} />
+/* Iconițele sunt acum text, nu SVG, deci clasele de tip `h-4 w-4` le dau
+   cutia, nu și mărimea semnului. Ca să nu fie nevoie să atingem fiecare loc
+   din aplicație, deducem mărimea literei din clasa de înălțime primită. */
+const SIZES: Record<string, string> = {
+  "h-3": "0.75rem",
+  "h-3.5": "0.875rem",
+  "h-4": "1rem",
+  "h-4.5": "1.125rem",
+  "h-5": "1.25rem",
+  "h-6": "1.5rem",
+  "h-7": "1.75rem",
+  "h-8": "2rem",
+};
+
+function fontSizeFrom(className: string): string {
+  const arbitrar = className.match(/h-\[([^\]]+)\]/);
+  if (arbitrar) return arbitrar[1];
+
+  for (const token of className.split(/\s+/)) {
+    if (SIZES[token]) return SIZES[token];
+  }
+  return "1.5rem";
+}
+
+/** Construiește o iconiță pornind de la numele simbolului Google. */
+function symbol(name: string, displayName: string) {
+  const Icon = ({ className = "", style }: IconProps) => (
+    <span
+      className={`mi ${className}`}
+      style={{ fontSize: fontSizeFrom(className), ...style }}
+      aria-hidden="true"
+    >
+      {name}
+    </span>
   );
-  Wrapped.displayName = displayName;
-  return Wrapped;
+  Icon.displayName = displayName;
+  return Icon;
 }
 
 /* ---------------------------------------------------- Publicuri / servicii */
 
-export const IconAdults = tune(UserRound, "IconAdults");
-export const IconTeens = tune(PersonStanding, "IconTeens");
-export const IconChildren = tune(Baby, "IconChildren");
-export const IconParents = tune(HeartHandshake, "IconParents");
-export const IconGroup = tune(UsersRound, "IconGroup");
-export const IconSandtray = tune(Shapes, "IconSandtray");
+export const IconAdults = symbol("person", "IconAdults");
+export const IconTeens = symbol("diversity_3", "IconTeens");
+export const IconChildren = symbol("child_care", "IconChildren");
+export const IconParents = symbol("family_restroom", "IconParents");
+export const IconGroup = symbol("groups", "IconGroup");
+export const IconSandtray = symbol("toys", "IconSandtray");
 
 /* ------------------------------------------------------------------ Format */
 
-export const IconOffice = tune(Armchair, "IconOffice");
-export const IconOnline = tune(Video, "IconOnline");
+export const IconOffice = symbol("chair", "IconOffice");
+export const IconOnline = symbol("videocam", "IconOnline");
 
 /* ----------------------------------------------------------------- Contact */
 
-export const IconPhone = tune(Phone, "IconPhone");
-export const IconMail = tune(Mail, "IconMail");
-export const IconLocation = tune(MapPin, "IconLocation");
-export const IconClock = tune(Clock, "IconClock");
+export const IconPhone = symbol("call", "IconPhone");
+export const IconMail = symbol("mail", "IconMail");
+export const IconLocation = symbol("location_on", "IconLocation");
+export const IconClock = symbol("schedule", "IconClock");
 
 /* ------------------------------------------------------------------ Diverse */
 
-export const IconArrow = tune(ArrowRight, "IconArrow");
-export const IconPlus = tune(Plus, "IconPlus");
-export const IconCheck = tune(Check, "IconCheck");
-export const IconCompass = tune(Compass, "IconCompass");
-export const IconCalendar = tune(CalendarDays, "IconCalendar");
-export const IconUser = tune(UserRound, "IconUser");
+export const IconArrow = symbol("arrow_forward", "IconArrow");
+export const IconPlus = symbol("add", "IconPlus");
+export const IconCheck = symbol("check", "IconCheck");
+export const IconCompass = symbol("explore", "IconCompass");
+export const IconCalendar = symbol("calendar_month", "IconCalendar");
+export const IconUser = symbol("account_circle", "IconUser");
+export const IconQuote = symbol("format_quote", "IconQuote");
+export const IconStar = symbol("star", "IconStar");
+export const IconPrice = symbol("payments", "IconPrice");
+export const IconContract = symbol("description", "IconContract");
+export const IconSign = symbol("draw", "IconSign");
+export const IconDownload = symbol("download", "IconDownload");
+export const IconSend = symbol("send", "IconSend");
+export const IconExternal = symbol("north_east", "IconExternal");
 
 /* -------------------------------------------------------------------- Social
 
-   Lucide a scos marcajele de brand din motive de marcă înregistrată. Pentru
-   acestea se folosesc formele oficiale ale platformelor, ca peste tot.        */
+   Material Symbols nu conține marcaje de brand — pentru acestea se folosesc
+   formele oficiale ale platformelor.                                        */
 
-type BrandProps = SVGProps<SVGSVGElement>;
+type BrandProps = React.SVGProps<SVGSVGElement>;
 
 export const IconFacebook = (p: BrandProps) => (
   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden {...p}>

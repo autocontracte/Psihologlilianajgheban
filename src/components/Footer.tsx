@@ -24,7 +24,7 @@ export function Footer() {
     <footer className="grain relative overflow-hidden bg-ink pt-20 pb-10">
       <div
         aria-hidden
-        className="pointer-events-none absolute -top-32 left-1/2 h-72 w-[40rem] -translate-x-1/2 rounded-full bg-periwinkle/15 blur-3xl"
+        className="pointer-events-none absolute -top-32 left-1/2 h-72 w-[40rem] -translate-x-1/2 rounded-none bg-periwinkle/15 blur-3xl"
       />
 
       <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
@@ -49,7 +49,7 @@ export function Footer() {
                     target="_blank"
                     rel="noreferrer"
                     aria-label={label}
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-cream/20 text-cream/70 transition-all duration-400 hover:border-periwinkle hover:bg-periwinkle hover:text-cream"
+                    className="flex h-10 w-10 items-center justify-center rounded-none border border-cream/20 text-cream/70 transition-all duration-400 hover:border-periwinkle hover:bg-periwinkle hover:text-cream"
                   >
                     <Icon className="h-4 w-4" />
                   </a>
@@ -119,7 +119,7 @@ export function Footer() {
               </li>
             </ul>
 
-            <div className="mt-7 rounded-[1.25rem] border border-cream/12 bg-cream/[0.04] p-5">
+            <div className="mt-7 rounded-none border border-cream/12 bg-cream/[0.04] p-5">
               <p className="font-sans text-[0.78rem] leading-relaxed text-cream/55">
                 În situații de criză sau urgență psihiatrică, sună la{" "}
                 <span className="text-cream">112</span>.

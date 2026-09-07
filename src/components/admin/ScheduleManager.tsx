@@ -14,7 +14,7 @@ export type Window = {
 export type Blocked = { id: string; date: string; reason: string | null };
 
 const input =
-  "rounded-[1rem] border border-ink/15 bg-cream-warm px-4 py-2.5 font-sans text-[0.85rem] text-ink focus:border-periwinkle focus:outline-none focus:ring-4 focus:ring-periwinkle/12";
+  "rounded-none border border-ink/15 bg-cream-warm px-4 py-2.5 font-sans text-[0.85rem] text-ink focus:border-periwinkle focus:outline-none focus:ring-4 focus:ring-periwinkle/12";
 
 export function ScheduleManager({
   windows,
@@ -67,12 +67,12 @@ export function ScheduleManager({
       {(error || notice) && (
         <div className="space-y-3">
           {error && (
-            <p className="rounded-[1rem] bg-clay-pale px-4 py-3 font-sans text-[0.82rem] text-clay">
+            <p className="rounded-none bg-clay-pale px-4 py-3 font-sans text-[0.82rem] text-clay">
               {error}
             </p>
           )}
           {notice && (
-            <p className="rounded-[1rem] bg-periwinkle-pale px-4 py-3 font-sans text-[0.82rem] text-periwinkle">
+            <p className="rounded-none bg-periwinkle-pale px-4 py-3 font-sans text-[0.82rem] text-periwinkle">
               {notice}
             </p>
           )}
@@ -89,7 +89,7 @@ export function ScheduleManager({
 
         <div className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {byDay.map((d) => (
-            <div key={d.name} className="rounded-[1.5rem] bg-cream p-5">
+            <div key={d.name} className="rounded-none bg-cream p-5">
               <p className="font-sans text-[0.75rem] tracking-[0.02em] text-ink-muted">
                 {d.name}
               </p>
@@ -130,7 +130,7 @@ export function ScheduleManager({
         </div>
 
         {/* Adăugare interval */}
-        <div className="mt-6 rounded-[1.5rem] bg-cream p-6">
+        <div className="mt-6 rounded-none bg-cream p-6">
           <p className="font-sans text-[0.75rem] tracking-[0.02em] text-ink-muted">
             Adaugă un interval
           </p>
@@ -180,7 +180,7 @@ export function ScheduleManager({
                   body: JSON.stringify({ weekday, startTime, endTime }),
                 })
               }
-              className="rounded-pill bg-periwinkle px-6 py-2.5 font-sans text-[0.8rem] tracking-[0.02em] text-cream transition-colors duration-400 hover:bg-ink disabled:opacity-60"
+              className="rounded-none bg-periwinkle px-6 py-2.5 font-sans text-[0.8rem] tracking-[0.02em] text-cream transition-colors duration-400 hover:bg-ink disabled:opacity-60"
             >
               Adaugă
             </button>
@@ -196,7 +196,7 @@ export function ScheduleManager({
           anulează automat ședințele deja stabilite în ziua respectivă.
         </p>
 
-        <div className="mt-6 rounded-[1.5rem] bg-cream p-6">
+        <div className="mt-6 rounded-none bg-cream p-6">
           <div className="flex flex-wrap items-end gap-3">
             <label className="flex flex-col gap-1.5">
               <span className="font-sans text-[0.7rem] text-ink-soft">Data</span>
@@ -237,7 +237,7 @@ export function ScheduleManager({
                   setBlockReason("");
                 }
               }}
-              className="rounded-pill bg-periwinkle px-6 py-2.5 font-sans text-[0.8rem] tracking-[0.02em] text-cream transition-colors duration-400 hover:bg-ink disabled:opacity-60"
+              className="rounded-none bg-periwinkle px-6 py-2.5 font-sans text-[0.8rem] tracking-[0.02em] text-cream transition-colors duration-400 hover:bg-ink disabled:opacity-60"
             >
               Blochează ziua
             </button>

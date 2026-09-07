@@ -16,7 +16,7 @@ type Answers = Record<string, string>;
 type UploadedFile = { id: string; fileName: string; size: number };
 
 const field =
-  "w-full rounded-[1.1rem] border border-ink/15 bg-cream-warm px-5 py-3.5 font-sans text-[0.92rem] text-ink placeholder:text-ink-muted transition-all duration-300 focus:border-periwinkle focus:bg-cream focus:outline-none focus:ring-4 focus:ring-periwinkle/12";
+  "w-full rounded-none border border-ink/15 bg-cream-warm px-5 py-3.5 font-sans text-[0.92rem] text-ink placeholder:text-ink-muted transition-all duration-300 focus:border-periwinkle focus:bg-cream focus:outline-none focus:ring-4 focus:ring-periwinkle/12";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -82,7 +82,7 @@ function Choice({
           onClick={() => onPick(o.v)}
           aria-pressed={value === o.v}
           className={[
-            "rounded-pill border-2 px-5 py-2.5 font-sans text-[0.88rem] transition-all duration-300",
+            "rounded-none border-2 px-5 py-2.5 font-sans text-[0.88rem] transition-all duration-300",
             value === o.v
               ? "border-periwinkle bg-periwinkle text-cream"
               : "border-ink/15 bg-cream-warm text-ink-soft hover:border-ink/40 hover:text-ink",
@@ -159,7 +159,7 @@ export function BriefForm({
         onClick={() => set("paleta", String(p.n), true)}
         aria-pressed={chosen}
         className={[
-          "overflow-hidden rounded-[1.35rem] border-2 text-left transition-all duration-300",
+          "overflow-hidden rounded-none border-2 text-left transition-all duration-300",
           chosen
             ? "border-periwinkle shadow-[0_14px_34px_-18px_rgba(103,120,175,0.7)]"
             : "border-ink/15 hover:border-ink/40",
@@ -171,7 +171,7 @@ export function BriefForm({
               {p.n}
             </span>
             <span
-              className="flex h-6 w-6 items-center justify-center rounded-full border-2 transition-all duration-300"
+              className="flex h-6 w-6 items-center justify-center rounded-none border-2 transition-all duration-300"
               style={{
                 borderColor: chosen ? p.accent : `${p.ink}33`,
                 background: chosen ? p.accent : "transparent",
@@ -186,7 +186,7 @@ export function BriefForm({
             {[p.bg, p.ink, p.accent, p.second, p.line].map((c, i) => (
               <span
                 key={i}
-                className="h-9 flex-1 rounded-[0.4rem]"
+                className="h-9 flex-1 rounded-none"
                 style={{ background: c, border: "1px solid rgba(0,0,0,.07)" }}
               />
             ))}
@@ -211,13 +211,13 @@ export function BriefForm({
 
             <div className="mt-4 flex flex-wrap items-center gap-2.5">
               <span
-                className="rounded-pill px-3.5 py-1.5 font-sans text-[0.7rem]"
+                className="rounded-none px-3.5 py-1.5 font-sans text-[0.7rem]"
                 style={{ background: p.accent, color: p.btnText }}
               >
                 Programează o ședință
               </span>
               <span
-                className="rounded-pill border px-3.5 py-1.5 font-sans text-[0.7rem]"
+                className="rounded-none border px-3.5 py-1.5 font-sans text-[0.7rem]"
                 style={{ borderColor: p.second, color: p.ink }}
               >
                 Servicii
@@ -282,7 +282,7 @@ export function BriefForm({
                 onClick={() => set("font", String(f.n), true)}
                 aria-pressed={chosen}
                 className={[
-                  "rounded-[1.35rem] border-2 bg-cream-warm p-6 text-left transition-all duration-300",
+                  "rounded-none border-2 bg-cream-warm p-6 text-left transition-all duration-300",
                   chosen
                     ? "border-periwinkle shadow-[0_14px_34px_-18px_rgba(103,120,175,0.7)]"
                     : "border-ink/15 hover:border-ink/40",
@@ -294,7 +294,7 @@ export function BriefForm({
                   </span>
                   <span
                     className={[
-                      "flex h-6 w-6 items-center justify-center rounded-full border-2 transition-all duration-300",
+                      "flex h-6 w-6 items-center justify-center rounded-none border-2 transition-all duration-300",
                       chosen
                         ? "border-periwinkle bg-periwinkle text-cream"
                         : "border-ink/20",
@@ -372,7 +372,7 @@ export function BriefForm({
 
           {a.contract === "da" && (
             <div className="mt-5">
-              <label className="inline-flex cursor-pointer items-center gap-3 rounded-pill border-2 border-dashed border-ink/25 px-6 py-3 font-sans text-[0.87rem] text-ink-soft transition-colors hover:border-periwinkle hover:text-periwinkle">
+              <label className="inline-flex cursor-pointer items-center gap-3 rounded-none border-2 border-dashed border-ink/25 px-6 py-3 font-sans text-[0.87rem] text-ink-soft transition-colors hover:border-periwinkle hover:text-periwinkle">
                 <input
                   type="file"
                   accept=".pdf,.doc,.docx,.odt,.jpg,.jpeg,.png"
@@ -389,7 +389,7 @@ export function BriefForm({
               </label>
 
               {uploadError && (
-                <p className="mt-3 rounded-[0.9rem] bg-clay-pale px-4 py-2.5 font-sans text-[0.82rem] text-clay">
+                <p className="mt-3 rounded-none bg-clay-pale px-4 py-2.5 font-sans text-[0.82rem] text-clay">
                   {uploadError}
                 </p>
               )}
@@ -399,7 +399,7 @@ export function BriefForm({
                   {files.map((f) => (
                     <li
                       key={f.id}
-                      className="flex items-center gap-3 rounded-[0.9rem] bg-sage-pale px-4 py-2.5 font-sans text-[0.85rem] text-ink"
+                      className="flex items-center gap-3 rounded-none bg-sage-pale px-4 py-2.5 font-sans text-[0.85rem] text-ink"
                     >
                       <IconCheck
                         className="h-4 w-4 shrink-0 text-sage"
@@ -483,7 +483,7 @@ export function BriefForm({
                 placeholder="adresa@email.ro"
                 className={`${field} mt-3 max-w-md`}
               />
-              <p className="mt-4 rounded-[1rem] border border-sage/30 bg-sage-pale/50 px-5 py-4 font-sans text-[0.83rem] leading-[1.7] text-ink-soft">
+              <p className="mt-4 rounded-none border border-sage/30 bg-sage-pale/50 px-5 py-4 font-sans text-[0.83rem] leading-[1.7] text-ink-soft">
                 <span className="text-ink">
                   Nu trimite parole sau chei de acces
                 </span>{" "}
@@ -525,13 +525,13 @@ export function BriefForm({
                   onClick={() => set("seo_varianta", o.v, true)}
                   aria-pressed={chosen}
                   className={[
-                    "rounded-[1.35rem] border-2 p-6 text-left transition-all duration-300",
+                    "rounded-none border-2 p-6 text-left transition-all duration-300",
                     chosen
                       ? "border-periwinkle bg-periwinkle-pale/40"
                       : "border-ink/15 bg-cream-warm hover:border-ink/40",
                   ].join(" ")}
                 >
-                  <span className="inline-flex rounded-pill bg-cream px-3 py-1 font-sans text-[0.72rem] text-ink-soft">
+                  <span className="inline-flex rounded-none bg-cream px-3 py-1 font-sans text-[0.72rem] text-ink-soft">
                     {o.tag}
                   </span>
                   <p className="mt-3.5 font-display text-[1.1rem] text-ink">
@@ -611,9 +611,9 @@ export function BriefForm({
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, ease }}
-        className="rounded-[1.75rem] border border-ink/10 bg-cream p-10 text-center sm:p-14"
+        className="rounded-none border border-ink/10 bg-cream p-10 text-center sm:p-14"
       >
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-sage-pale text-sage">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-none bg-sage-pale text-sage">
           <IconCheck className="h-7 w-7" strokeWidth={1.8} />
         </div>
         <h2 className="mt-7 font-display text-2xl text-ink sm:text-3xl">
@@ -640,7 +640,7 @@ export function BriefForm({
   return (
     <div>
       {startedBefore && step === firstUnanswered && firstUnanswered > 0 && (
-        <p className="mb-4 rounded-[1.25rem] border border-sage/30 bg-sage-pale/50 px-6 py-3.5 text-center font-sans text-[0.87rem] text-ink-soft">
+        <p className="mb-4 rounded-none border border-sage/30 bg-sage-pale/50 px-6 py-3.5 text-center font-sans text-[0.87rem] text-ink-soft">
           Bine ai revenit — continuăm de unde ai rămas.
         </p>
       )}
@@ -665,7 +665,7 @@ export function BriefForm({
                 aria-label={`Întrebarea ${i + 1}`}
                 aria-current={i === step}
                 className={[
-                  "h-1.5 flex-1 rounded-pill transition-all duration-400",
+                  "h-1.5 flex-1 rounded-none transition-all duration-400",
                   i === step
                     ? "bg-periwinkle"
                     : filled
@@ -684,10 +684,10 @@ export function BriefForm({
         initial={{ opacity: 0, x: 16 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.32, ease }}
-        className="rounded-[1.75rem] border border-ink/10 bg-cream p-7 sm:p-9"
+        className="rounded-none border border-ink/10 bg-cream p-7 sm:p-9"
       >
         <div className="flex items-start gap-4">
-          <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-[0.55rem] bg-ink font-sans text-[0.85rem] text-cream">
+          <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-none bg-ink font-sans text-[0.85rem] text-cream">
             {step + 1}
           </span>
           <div className="min-w-0 flex-1">
@@ -718,7 +718,7 @@ export function BriefForm({
         <button
           type="button"
           onClick={() => (isLast ? setDone(true) : setStep((s) => s + 1))}
-          className="group inline-flex items-center gap-2.5 rounded-pill bg-periwinkle px-7 py-3.5 font-sans text-[0.85rem] text-cream transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-ink"
+          className="group inline-flex items-center gap-2.5 rounded-none bg-periwinkle px-7 py-3.5 font-sans text-[0.85rem] text-cream transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-ink"
         >
           {isLast ? "Am terminat" : "Continuă"}
           <IconArrow className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1" />

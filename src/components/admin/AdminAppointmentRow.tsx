@@ -80,7 +80,7 @@ export function AdminAppointmentRow({ a }: { a: AdminAppointment }) {
   return (
     <article
       className={[
-        "rounded-[1.75rem] bg-cream p-6 transition-opacity",
+        "rounded-none bg-cream p-6 transition-opacity",
         a.isPast && a.status !== "CONFIRMED" ? "opacity-70" : "",
       ].join(" ")}
     >
@@ -88,15 +88,15 @@ export function AdminAppointmentRow({ a }: { a: AdminAppointment }) {
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2.5">
             <span
-              className={`rounded-pill px-3.5 py-1.5 font-sans text-[0.75rem] tracking-[0.02em] ${STATUS_STYLE[a.status]}`}
+              className={`rounded-none px-3.5 py-1.5 font-sans text-[0.75rem] tracking-[0.02em] ${STATUS_STYLE[a.status]}`}
             >
               {STATUS_LABEL[a.status]}
             </span>
-            <span className="rounded-pill bg-ink/6 px-3 py-1.5 font-sans text-[0.75rem] tracking-[0.02em] text-ink-soft">
+            <span className="rounded-none bg-ink/6 px-3 py-1.5 font-sans text-[0.75rem] tracking-[0.02em] text-ink-soft">
               {FORMAT_LABEL[a.format]}
             </span>
             {!a.hasAccount && (
-              <span className="rounded-pill bg-clay-pale px-3 py-1.5 font-sans text-[0.75rem] tracking-[0.02em] text-clay">
+              <span className="rounded-none bg-clay-pale px-3 py-1.5 font-sans text-[0.75rem] tracking-[0.02em] text-clay">
                 Fără cont
               </span>
             )}
@@ -127,7 +127,7 @@ export function AdminAppointmentRow({ a }: { a: AdminAppointment }) {
           </div>
 
           {a.notes && (
-            <div className="mt-4 rounded-[1rem] bg-cream-warm px-4 py-3">
+            <div className="mt-4 rounded-none bg-cream-warm px-4 py-3">
               <p className="font-sans text-[0.75rem] tracking-[0.02em] text-ink-muted">
                 De la client
               </p>
@@ -138,7 +138,7 @@ export function AdminAppointmentRow({ a }: { a: AdminAppointment }) {
           )}
 
           {a.adminNote && !noteOpen && (
-            <div className="mt-3 rounded-[1rem] bg-periwinkle-pale/50 px-4 py-3">
+            <div className="mt-3 rounded-none bg-periwinkle-pale/50 px-4 py-3">
               <p className="font-sans text-[0.75rem] tracking-[0.02em] text-periwinkle">
                 Nota mea
               </p>
@@ -157,7 +157,7 @@ export function AdminAppointmentRow({ a }: { a: AdminAppointment }) {
               type="button"
               disabled={busy}
               onClick={() => patch({ status: next })}
-              className={`rounded-pill border px-4 py-2 font-sans text-[0.78rem] tracking-[0.02em] transition-all duration-400 disabled:opacity-50 ${ACTION_STYLE[next]}`}
+              className={`rounded-none border px-4 py-2 font-sans text-[0.78rem] tracking-[0.02em] transition-all duration-400 disabled:opacity-50 ${ACTION_STYLE[next]}`}
             >
               {ACTION_LABEL[next]}
             </button>
@@ -165,7 +165,7 @@ export function AdminAppointmentRow({ a }: { a: AdminAppointment }) {
           <button
             type="button"
             onClick={() => setNoteOpen((v) => !v)}
-            className="rounded-pill px-4 py-2 font-sans text-[0.78rem] tracking-[0.02em] text-ink-muted transition-colors duration-300 hover:text-ink"
+            className="rounded-none px-4 py-2 font-sans text-[0.78rem] tracking-[0.02em] text-ink-muted transition-colors duration-300 hover:text-ink"
           >
             {a.adminNote ? "Editează nota" : "Adaugă notă"}
           </button>
@@ -180,14 +180,14 @@ export function AdminAppointmentRow({ a }: { a: AdminAppointment }) {
             value={note}
             onChange={(e) => setNote(e.target.value)}
             placeholder="Notă internă — vizibilă doar pentru tine."
-            className="w-full resize-none rounded-[1.25rem] border border-ink/15 bg-cream-warm px-5 py-3.5 font-sans text-[0.87rem] text-ink placeholder:text-ink-muted focus:border-periwinkle focus:outline-none focus:ring-4 focus:ring-periwinkle/12"
+            className="w-full resize-none rounded-none border border-ink/15 bg-cream-warm px-5 py-3.5 font-sans text-[0.87rem] text-ink placeholder:text-ink-muted focus:border-periwinkle focus:outline-none focus:ring-4 focus:ring-periwinkle/12"
           />
           <div className="mt-3 flex gap-3">
             <button
               type="button"
               disabled={busy}
               onClick={() => patch({ adminNote: note })}
-              className="rounded-pill bg-periwinkle px-5 py-2.5 font-sans text-[0.78rem] tracking-[0.02em] text-cream transition-colors duration-400 hover:bg-ink disabled:opacity-60"
+              className="rounded-none bg-periwinkle px-5 py-2.5 font-sans text-[0.78rem] tracking-[0.02em] text-cream transition-colors duration-400 hover:bg-ink disabled:opacity-60"
             >
               {busy ? "Se salvează…" : "Salvează"}
             </button>
@@ -206,7 +206,7 @@ export function AdminAppointmentRow({ a }: { a: AdminAppointment }) {
       )}
 
       {error && (
-        <p className="mt-4 rounded-[1rem] bg-clay-pale px-4 py-3 font-sans text-[0.8rem] text-clay">
+        <p className="mt-4 rounded-none bg-clay-pale px-4 py-3 font-sans text-[0.8rem] text-clay">
           {error}
         </p>
       )}

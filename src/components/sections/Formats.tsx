@@ -40,7 +40,7 @@ export function Formats() {
               <StaggerItem key={item.title}>
                 <article
                   className={[
-                    "lift group relative h-full overflow-hidden rounded-[2.5rem] p-9 lg:p-11",
+                    "lift group relative h-full overflow-hidden rounded-none p-9 lg:p-11",
                     accent === "periwinkle"
                       ? "bg-periwinkle-pale/55"
                       : "bg-sage-pale/60",
@@ -48,7 +48,7 @@ export function Formats() {
                 >
                   <div
                     className={[
-                      "flex h-16 w-16 items-center justify-center rounded-[1.35rem] bg-cream transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105",
+                      "flex h-16 w-16 items-center justify-center rounded-none bg-cream transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105",
                       accent === "periwinkle" ? "text-periwinkle" : "text-sage",
                     ].join(" ")}
                   >
@@ -68,7 +68,7 @@ export function Formats() {
                       <li key={p} className="flex items-start gap-3">
                         <span
                           className={[
-                            "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-cream",
+                            "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-none bg-cream",
                             accent === "periwinkle"
                               ? "text-periwinkle"
                               : "text-sage",

@@ -10,6 +10,8 @@ import { Formats } from "@/components/sections/Formats";
 import { TestsTeaser } from "@/components/sections/TestsTeaser";
 import { Faq } from "@/components/sections/Faq";
 import { Contact } from "@/components/sections/Contact";
+import { Gallery } from "@/components/sections/Gallery";
+import { Reviews } from "@/components/sections/Reviews";
 
 export default function Home() {
   return (
@@ -20,9 +22,11 @@ export default function Home() {
         <Welcome />
         <Audiences />
         <Services />
+        <Gallery />
         <About />
         <Approach />
         <Formats />
+        <Reviews />
         <TestsTeaser />
         <Faq />
         <Contact />

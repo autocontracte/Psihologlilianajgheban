@@ -57,7 +57,7 @@ export default async function AdminHome() {
           <Link
             key={s.label}
             href={s.href}
-            className="lift rounded-[1.75rem] bg-cream p-6 transition-shadow"
+            className="lift rounded-none bg-cream p-6 transition-shadow"
           >
             <p className="font-sans text-[0.74rem] tracking-[0.02em] text-ink-muted">
               {s.label}
@@ -72,7 +72,7 @@ export default async function AdminHome() {
         <h2 className="font-display text-2xl text-ink">Programul de azi</h2>
         <div className="mt-6">
           {todayList.length === 0 ? (
-            <p className="rounded-[1.5rem] bg-cream px-6 py-8 text-center font-sans text-[0.88rem] text-ink-soft">
+            <p className="rounded-none bg-cream px-6 py-8 text-center font-sans text-[0.88rem] text-ink-soft">
               Nicio ședință programată astăzi.
             </p>
           ) : (
@@ -80,7 +80,7 @@ export default async function AdminHome() {
               {todayList.map((a) => (
                 <div
                   key={a.id}
-                  className="flex flex-wrap items-center gap-4 rounded-[1.5rem] bg-cream p-5"
+                  className="flex flex-wrap items-center gap-4 rounded-none bg-cream p-5"
                 >
                   <span className="font-display text-2xl text-periwinkle">
                     {formatTime(a.startsAt)}
@@ -100,7 +100,7 @@ export default async function AdminHome() {
                     </p>
                   </div>
                   <span
-                    className={`rounded-pill px-3.5 py-1.5 font-sans text-[0.75rem] tracking-[0.02em] ${STATUS_STYLE[a.status as Status]}`}
+                    className={`rounded-none px-3.5 py-1.5 font-sans text-[0.75rem] tracking-[0.02em] ${STATUS_STYLE[a.status as Status]}`}
                   >
                     {STATUS_LABEL[a.status as Status]}
                   </span>
@@ -125,7 +125,7 @@ export default async function AdminHome() {
 
         <div className="mt-6">
           {upcoming.length === 0 ? (
-            <p className="rounded-[1.5rem] bg-cream px-6 py-8 text-center font-sans text-[0.88rem] text-ink-soft">
+            <p className="rounded-none bg-cream px-6 py-8 text-center font-sans text-[0.88rem] text-ink-soft">
               Nu există programări viitoare.
             </p>
           ) : (
@@ -133,7 +133,7 @@ export default async function AdminHome() {
               {upcoming.map((a) => (
                 <div
                   key={a.id}
-                  className="flex flex-wrap items-center justify-between gap-4 rounded-[1.5rem] bg-cream p-5"
+                  className="flex flex-wrap items-center justify-between gap-4 rounded-none bg-cream p-5"
                 >
                   <div className="min-w-0">
                     <p className="font-sans text-[0.92rem] text-ink">
@@ -144,7 +144,7 @@ export default async function AdminHome() {
                     </p>
                   </div>
                   <span
-                    className={`rounded-pill px-3.5 py-1.5 font-sans text-[0.75rem] tracking-[0.02em] ${STATUS_STYLE[a.status as Status]}`}
+                    className={`rounded-none px-3.5 py-1.5 font-sans text-[0.75rem] tracking-[0.02em] ${STATUS_STYLE[a.status as Status]}`}
                   >
                     {STATUS_LABEL[a.status as Status]}
                   </span>
