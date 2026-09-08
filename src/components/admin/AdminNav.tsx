@@ -9,6 +9,7 @@ const LINKS = [
   { href: "/admin/program", label: "Program și zile libere" },
   { href: "/admin/clienti", label: "Clienți" },
   { href: "/admin/plati", label: "Plăți și facturi" },
+  { href: "/admin/contracte", label: "Contracte" },
   { href: "/admin/chestionar", label: "Chestionar" },
 ];
 

@@ -23,6 +23,7 @@ model User {
   createdAt    DateTime      @default(now())
   sessions     Session[]
   appointments Appointment[]
+  contracts    Contract[]
 }
 
 /// Sesiuni păstrate în baza de date, ca să poată fi revocate.
@@ -59,23 +60,24 @@ model Service {
 /// să nu își facă cont — atunci datele de contact stau în câmpurile `guest*`.
 /// Exact una dintre cele două variante este completată.
 model Appointment {
-  id         String   @id @default(cuid())
+  id         String     @id @default(cuid())
   userId     String?
-  user       User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user       User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
   guestName  String?
   guestEmail String?
   guestPhone String?
   serviceId  String
-  service    Service  @relation(fields: [serviceId], references: [id])
+  service    Service    @relation(fields: [serviceId], references: [id])
   startsAt   DateTime
   endsAt     DateTime
-  format     String   @default("CABINET")
-  status     String   @default("PENDING")
+  format     String     @default("CABINET")
+  status     String     @default("PENDING")
   notes      String?
   adminNote  String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
   payments   Payment[]
+  contracts  Contract[]
 
   @@index([startsAt])
   @@index([userId])
@@ -156,24 +158,109 @@ model Payment {
 /// facturare, se salvează aici datele necesare, cu status DRAFT — nu se pierde
 /// nimic, iar la conectare pot fi emise retroactiv.
 model Invoice {
-  id        String   @id @default(cuid())
-  paymentId String?  @unique
-  payment   Payment? @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+  id        String    @id @default(cuid())
+  paymentId String?   @unique
+  payment   Payment?  @relation(fields: [paymentId], references: [id], onDelete: SetNull)
   /// NONE | SMARTBILL | FGO | SAGA
-  provider  String   @default("NONE")
+  provider  String    @default("NONE")
   series    String?
   number    String?
   /// Linkul către factura de la furnizor, dacă există.
   url       String?
   /// DRAFT | ISSUED | FAILED
-  status    String   @default("DRAFT")
+  status    String    @default("DRAFT")
   issuedAt  DateTime?
   /// Mesajul de eroare, dacă emiterea a eșuat.
   error     String?
   /// Datele trimise, păstrate pentru depanare și pentru reemitere.
   payload   String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   @@index([status])
+}
+
+/**
+ * ============================================================================
+ * Contracte
+ * Psihologul trimite un contract dintr-un șablon PDF completabil. Clientul
+ * primește un link cu token, completează datele și semnează cu degetul sau cu
+ * mouse-ul. Sistemul completează șablonul, lipește semnătura peste linia
+ * punctată, aplatizează PDF-ul și îl arhivează.
+ * ⚠️ Datele completate conțin CNP și istoric medical — date sensibile în
+ * sensul GDPR. De aceea PDF-ul generat NU ajunge niciodată în `public/`, ci
+ * în `uploads/contracte/`, și se descarcă doar cu token sau ca administrator.
+ * ==========================================================================
+ */
+model Contract {
+  id     String @id @default(cuid())
+  /**
+   * Din link. 32 de octeți aleatori — nu poate fi ghicit sau enumerat.
+   */
+  token  String @unique
+  /**
+   * ADULT | MINOR — decide șablonul și câte semnături sunt cerute.
+   */
+  type   String
+  /**
+   * Numărul de pe contract, crescător pe cabinet.
+   */
+  number Int
+  /**
+   * SENT | SIGNED | CANCELLED
+   */
+  status String @default("SENT")
+
+  /**
+   * Cui i-a fost trimis linkul.
+   */
+  sentToName  String
+  sentToEmail String
+  /**
+   * Prețul scris în contract, în bani (28000 = 280 lei).
+   */
+  price       Int
+
+  /**
+   * Legături opționale, ca să apară contractul lângă client și programare.
+   */
+  userId        String?
+  user          User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  appointmentId String?
+  appointment   Appointment? @relation(fields: [appointmentId], references: [id], onDelete: SetNull)
+
+  /**
+   * Ce a completat clientul, ca JSON — șablonul se poate schimba fără
+   * migrare. Conține date sensibile.
+   */
+  data       String?
+  /**
+   * Semnăturile, PNG în base64. La minor sunt două: mama și tata.
+   */
+  signature1 String?
+  signature2 String?
+
+  /**
+   * Fișierul final, relativ la `uploads/`.
+   */
+  pdfPath String?
+  /**
+   * SHA-256 al PDF-ului, ca să se poată dovedi că nu a fost modificat.
+   */
+  pdfHash String?
+
+  /**
+   * Urmă pentru probă: de unde și cu ce a semnat clientul.
+   */
+  signedIp    String?
+  signedAgent String?
+
+  sentAt    DateTime  @default(now())
+  signedAt  DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([status])
+  @@index([sentToEmail])
+  @@index([userId])
 }
