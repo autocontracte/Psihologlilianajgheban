@@ -351,6 +351,30 @@ Creează întâi directorul: `mkdir -p ~/backups`.
 Virtualmin poate include `/home/psiholog` în backup-urile lui obișnuite
 (**Backup and Restore → Scheduled Backups**), ceea ce acoperă și baza de date.
 
+### Ce nu e în baza de date
+
+`~/app/uploads/` nu e în `dev.db` și trebuie salvat separat:
+
+| Folder | Ce conține |
+|---|---|
+| `uploads/contracte/` | contractele semnate, ca PDF |
+| `uploads/` (restul) | documentele încărcate din chestionar |
+
+Contractele semnate există **doar** ca fișiere acolo. Baza de date reține cine
+a semnat și când, dar nu și documentul: dacă folderul se pierde, contractele
+nu se mai pot regenera identic, fiindcă amprenta SHA-256 de pe pagina de
+dovadă nu ar mai corespunde.
+
+Backup-ul Virtualmin peste `/home/psiholog` le acoperă. Dacă folosești doar
+crontab-ul de mai sus, adaugă și:
+
+```
+15 3 * * * tar czf /home/psiholog/backups/uploads-$(date +\%F).tgz -C /home/psiholog/app uploads && find /home/psiholog/backups -name 'uploads-*.tgz' -mtime +30 -delete
+```
+
+⚠️ Copiile conțin CNP-uri și istoric medical. Ține-le tot pe server sau
+criptate, nu pe un disc extern nesecurizat.
+
 ---
 
 ## Când ceva nu merge

@@ -241,6 +241,55 @@ Pentru volume mari se poate trece pe PostgreSQL: schimbi `provider` în
 
 ---
 
+## Contracte semnate online
+
+Psihologul pregătește contractul din **Admin → Contracte**, trimite linkul,
+clientul completează datele și semnează cu degetul sau cu mouse-ul. Contractul
+se întoarce completat, semnat și arhivat.
+
+Șabloanele sunt chiar PDF-urile completabile ale cabinetului, în
+`contracte/sabloane/`. Nu sunt reconstruite: se completează câmpurile lor
+reale, iar semnătura se așază peste linia de sub „Semnătura:”.
+
+| Fișier | Ce face |
+|---|---|
+| `src/lib/contracts/sabloane.ts` | ce câmpuri are fiecare contract și unde cad semnăturile |
+| `src/lib/contracts/validare.ts` | verificările, inclusiv cifra de control a CNP-ului |
+| `src/lib/contracts/completare.ts` | completarea PDF-ului și pagina de dovadă |
+| `src/lib/contracts/index.ts` | crearea, semnarea și arhivarea |
+
+### Dacă se schimbă contractul
+
+Înlocuiește PDF-ul în `contracte/sabloane/` și actualizează `sabloane.ts`.
+Pozițiile semnăturilor sunt în puncte PDF, cu originea în stânga-jos; se pot
+măsura căutând linia orizontală de sub „Semnătura:”.
+
+Numele câmpurilor din PDF trebuie să rămână cele din `sabloane.ts` — sau
+invers. Orice câmp necunoscut e ignorat, deci o nepotrivire nu strică
+generarea, doar lasă locul gol.
+
+### Ce trebuie știut
+
+- **Diacriticele.** Câmpurile șablonului foloseau o codificare care nu știe
+  „ș” și „ț”. Fără fontul din `contracte/fonturi/`, orice adresă din București
+  ar arunca eroare. Fontul e DejaVu Sans, licență permisivă, inclus în repo.
+- **Semnătura desenată** e o semnătură electronică simplă: valabilă, dar cu
+  valoare de probă mai slabă decât una calificată. De aceea fiecare contract
+  primește la final o pagină cu cine a semnat, când, de la ce IP și cu ce
+  dispozitiv, plus amprenta SHA-256 a paginilor semnate.
+- **Contractele conțin CNP și istoric medical.** Nu ajung niciodată în
+  `public/` — stau în `uploads/contracte/` și se descarcă doar cu tokenul din
+  link sau ca administrator. Vezi și secțiunea de copii de siguranță din
+  [deploy/virtualmin.md](deploy/virtualmin.md).
+- **Numerotarea** e continuă pe cabinet, nu pe tip de contract.
+
+### Ce lipsește
+
+Trimiterea automată pe email. Până atunci linkul se copiază din panou și se
+trimite pe WhatsApp sau pe mail.
+
+---
+
 ## Ce urmează
 
 ### Testele vocaționale
