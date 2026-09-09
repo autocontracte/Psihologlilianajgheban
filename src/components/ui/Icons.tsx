@@ -85,7 +85,6 @@ export const IconCheck = symbol("check", "IconCheck");
 export const IconCompass = symbol("explore", "IconCompass");
 export const IconCalendar = symbol("calendar_month", "IconCalendar");
 export const IconUser = symbol("account_circle", "IconUser");
-export const IconQuote = symbol("format_quote", "IconQuote");
 export const IconStar = symbol("star", "IconStar");
 export const IconPrice = symbol("payments", "IconPrice");
 export const IconContract = symbol("description", "IconContract");

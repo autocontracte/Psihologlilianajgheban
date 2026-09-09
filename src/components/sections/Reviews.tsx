@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import { REVIEWS } from "@/content/site";
 import { Reveal } from "../ui/Reveal";
-import { IconArrow, IconQuote } from "../ui/Icons";
+import { IconArrow } from "../ui/Icons";
 import { ActionButtons } from "../ui/ActionButtons";
 
 /** Mesajele primite, ca imagini, într-o bandă care se derulează lateral. */
@@ -102,10 +102,9 @@ export function Reviews() {
           ))}
         </div>
 
-        <p className="mt-4 flex items-center gap-2 font-sans text-[0.85rem] text-ink-muted">
-          <IconQuote className="h-4 w-4" />
-          Publicate cu acordul persoanelor care le-au scris.
-        </p>
+        {/* Aici era o notă despre acord, cu o iconiță de ghilimele care se
+            citea ca un „99". Nota spunea a doua oară exact ce spune deja
+            subtitlul secțiunii, așa că a plecat cu totul. */}
 
         <ActionButtons className="mt-14" />
       </div>

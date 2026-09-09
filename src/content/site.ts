@@ -367,21 +367,20 @@ export const PRICE = {
 export const PHOTOS = {
   hero: "/foto/cabinet-camera-1.jpg",
   despre: "/foto/liliana-fotoliu.jpg",
+  /* Fiecare poză apare o singură dată. Fișierele primite conțineau aceeași
+     fotografie sub mai multe nume, iar galeria o repeta de trei ori.
+     Descrierile sunt scrise după ce s-a uitat cineva la fotografii. */
   cabinet: [
     { src: "/foto/cabinet-camera-1.jpg", alt: "Camera de consultații, cu canapea și bibliotecă" },
-    { src: "/foto/cabinet-camera-2.jpg", alt: "Spațiul de lucru al cabinetului" },
-    { src: "/foto/cabinet-camera-3.jpg", alt: "Colțul de lectură din cabinet" },
+    { src: "/foto/cabinet-camera-2.jpg", alt: "Canapeaua verde din camera de consultații" },
+    { src: "/foto/cabinet-spatiu-3.jpg", alt: "Fotoliul și biblioteca, din celălalt capăt al camerei" },
+    { src: "/foto/cabinet-spatiu-2.jpg", alt: "Sala pentru ședințe de grup, cu scaunele așezate în cerc" },
     { src: "/foto/cabinet-spatiu-1.jpg", alt: "Baia cabinetului" },
-    { src: "/foto/cabinet-spatiu-2.jpg", alt: "Holul de intrare" },
-    { src: "/foto/cabinet-spatiu-3.jpg", alt: "Spațiul de așteptare" },
-    { src: "/foto/cabinet-spatiu-4.jpg", alt: "Detaliu din cabinet" },
   ],
   portrete: [
     "/foto/liliana-portret-1.jpg",
     "/foto/liliana-portret-2.jpg",
-    "/foto/liliana-portret-3.jpg",
     "/foto/liliana-portret-4.jpg",
-    "/foto/liliana-portret-5.jpg",
   ],
 };
 

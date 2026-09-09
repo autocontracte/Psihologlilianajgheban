@@ -32,7 +32,9 @@ export function Gallery() {
 
         {/* O fotografie mare, restul într-o grilă dreaptă */}
         <div className="mt-14 grid gap-3 lg:grid-cols-2">
-          <Reveal className="lg:row-span-2">
+          {/* Fără `row-span`: pe un singur rând, cele două coloane se întind
+              amândouă cât cea mai înaltă, oricâte poze ar fi în dreapta. */}
+          <Reveal>
             <div className="relative h-72 w-full overflow-hidden bg-cream-deep sm:h-96 lg:h-full lg:min-h-[34rem]">
               <Image
                 src={principala.src}
@@ -44,10 +46,13 @@ export function Gallery() {
             </div>
           </Reveal>
 
-          <div className="grid grid-cols-2 gap-3">
+          {/* Grila din dreapta se întinde cât fotografia mare, ca cele două
+              coloane să se termine la aceeași înălțime indiferent câte poze
+              sunt. */}
+          <div className="grid grid-cols-2 gap-3 lg:h-full lg:auto-rows-fr">
             {restul.map((foto, i) => (
-              <Reveal key={foto.src} delay={Math.min(i * 0.06, 0.3)}>
-                <div className="relative h-40 w-full overflow-hidden bg-cream-deep sm:h-52">
+              <Reveal key={foto.src} delay={Math.min(i * 0.06, 0.3)} className="lg:h-full">
+                <div className="relative h-40 w-full overflow-hidden bg-cream-deep sm:h-52 lg:h-full">
                   <Image
                     src={foto.src}
                     alt={foto.alt}
