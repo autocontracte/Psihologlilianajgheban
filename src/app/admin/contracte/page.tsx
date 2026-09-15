@@ -111,7 +111,14 @@ export default async function AdminContractePage() {
                         Descarcă
                       </a>
                     ) : c.status === "SENT" ? (
-                      <AnuleazaContract id={c.id} token={c.token} />
+                      <AnuleazaContract
+                        id={c.id}
+                        token={c.token}
+                        tip={c.type === "MINOR" ? "MINOR" : "ADULT"}
+                        nume={c.sentToName}
+                        email={c.sentToEmail}
+                        pretLei={Math.round(c.price / 100)}
+                      />
                     ) : null}
                   </div>
                 </div>

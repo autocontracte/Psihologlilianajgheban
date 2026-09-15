@@ -2,9 +2,20 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { EditeazaContract } from "./EditeazaContract";
 
-/** Copiază din nou linkul unui contract netrimis, sau îl anulează. */
-export function AnuleazaContract({ id, token }: { id: string; token: string }) {
+/* Acțiunile pentru un contract încă nesemnat: copiază linkul, editează datele,
+   anulează. Le ținem împreună ca să formeze un grup coerent în card. */
+type Props = {
+  id: string;
+  token: string;
+  tip: "ADULT" | "MINOR";
+  nume: string;
+  email: string;
+  pretLei: number;
+};
+
+export function AnuleazaContract({ id, token, tip, nume, email, pretLei }: Props) {
   const router = useRouter();
   const [confirm, setConfirm] = useState(false);
   const [lucrez, setLucrez] = useState(false);
@@ -23,7 +34,7 @@ export function AnuleazaContract({ id, token }: { id: string; token: string }) {
     await fetch("/api/admin/contracte", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id }),
+      body: JSON.stringify({ id, anuleaza: true }),
     });
     router.refresh();
   }
@@ -57,13 +68,23 @@ export function AnuleazaContract({ id, token }: { id: string; token: string }) {
           </button>
         </div>
       ) : (
-        <button
-          type="button"
-          onClick={() => setConfirm(true)}
-          className="font-sans text-[0.8rem] text-ink-muted underline underline-offset-4 hover:text-clay"
-        >
-          Anulează
-        </button>
+        <div className="flex items-center gap-3">
+          <EditeazaContract
+            id={id}
+            tip={tip}
+            nume={nume}
+            email={email}
+            pretLei={pretLei}
+          />
+          <span className="text-ink/20">·</span>
+          <button
+            type="button"
+            onClick={() => setConfirm(true)}
+            className="font-sans text-[0.8rem] text-ink-muted underline underline-offset-4 hover:text-clay"
+          >
+            Anulează
+          </button>
+        </div>
       )}
     </div>
   );

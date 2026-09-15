@@ -14,8 +14,9 @@ if (existsSync(".env")) process.loadEnvFile(".env");
 const db = new PrismaClient();
 
 /* Prețurile sunt în bani: 28000 = 280 lei.
-   ⚠️ Toate serviciile pornesc de la tariful standard. Evaluările durează 90 de
-   minute — dacă au alt tarif, schimbă-l aici sau direct în baza de date. */
+   Ședința standard e 280, evaluările clinice 500, atelierul experiențial 250.
+   Se schimbă aici și se aplică rulând din nou `npm run db:seed` (actualizează
+   după slug, fără să creeze duplicate). */
 const SERVICES = [
   {
     slug: "psihoterapie-adult",
@@ -36,11 +37,12 @@ const SERVICES = [
   },
   {
     slug: "terapie-copil",
-    name: "Terapie pentru copil",
+    name: "Psihoterapie pentru adolescent și preadolescent",
     duration: 50,
     price: 28000,
     position: 3,
-    description: "Ședință de terapie prin joc și metode potrivite vârstei.",
+    description:
+      "Ședință individuală de psihoterapie pentru preadolescenți și adolescenți.",
   },
   {
     slug: "consiliere-parentala",
@@ -54,7 +56,7 @@ const SERVICES = [
     slug: "evaluare-copil",
     name: "Evaluare clinică psihologică — copil / adolescent",
     duration: 90,
-    price: 28000,
+    price: 50000,
     position: 5,
     description:
       "Evaluarea dezvoltării emoționale și comportamentale, ADHD, dificultăți de învățare.",
@@ -63,7 +65,7 @@ const SERVICES = [
     slug: "evaluare-adult",
     name: "Evaluare clinică psihologică — adult",
     duration: 90,
-    price: 28000,
+    price: 50000,
     position: 6,
     description:
       "Evaluare pentru anxietate, depresie, tulburări afective și de personalitate.",
@@ -72,7 +74,7 @@ const SERVICES = [
     slug: "atelier-sandtray",
     name: "Atelier experiențial (Sandtray)",
     duration: 90,
-    price: 28000,
+    price: 25000,
     position: 7,
     description: "Intervenție experiențială cu nisip și miniaturi.",
   },
@@ -95,7 +97,7 @@ async function main() {
   for (const s of SERVICES) {
     await db.service.upsert({
       where: { slug: s.slug },
-      update: { name: s.name, duration: s.duration, price: s.price, position: s.position },
+      update: { name: s.name, duration: s.duration, price: s.price, position: s.position, description: s.description },
       create: s,
     });
   }
