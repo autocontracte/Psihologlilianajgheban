@@ -28,19 +28,11 @@ const SERVICES = [
       "Ședință individuală de psihoterapie integrativă pentru adulți.",
   },
   {
-    slug: "psihoterapie-adolescent",
-    name: "Psihoterapie — adolescent",
-    duration: 50,
-    price: 28000,
-    position: 2,
-    description: "Ședință individuală pentru adolescenți și preadolescenți.",
-  },
-  {
     slug: "terapie-copil",
     name: "Psihoterapie pentru adolescent și preadolescent",
     duration: 50,
     price: 28000,
-    position: 3,
+    position: 2,
     description:
       "Ședință individuală de psihoterapie pentru preadolescenți și adolescenți.",
   },
@@ -49,7 +41,7 @@ const SERVICES = [
     name: "Consiliere parentală",
     duration: 50,
     price: 28000,
-    position: 4,
+    position: 3,
     description: "Întâlnire dedicată părinților, despre relația cu copilul.",
   },
   {
@@ -57,7 +49,7 @@ const SERVICES = [
     name: "Evaluare clinică psihologică — copil / adolescent",
     duration: 90,
     price: 50000,
-    position: 5,
+    position: 4,
     description:
       "Evaluarea dezvoltării emoționale și comportamentale, ADHD, dificultăți de învățare.",
   },
@@ -66,7 +58,7 @@ const SERVICES = [
     name: "Evaluare clinică psihologică — adult",
     duration: 90,
     price: 50000,
-    position: 6,
+    position: 5,
     description:
       "Evaluare pentru anxietate, depresie, tulburări afective și de personalitate.",
   },
@@ -75,7 +67,7 @@ const SERVICES = [
     name: "Atelier experiențial (Sandtray)",
     duration: 90,
     price: 25000,
-    position: 7,
+    position: 6,
     description: "Intervenție experiențială cu nisip și miniaturi.",
   },
 ];
