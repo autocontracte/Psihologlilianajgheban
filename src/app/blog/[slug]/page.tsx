@@ -42,7 +42,7 @@ export default async function ArticolPage({
       <Nav />
       <main>
         <article className="bg-cream pb-24 pt-36 lg:pt-44">
-          <div className="mx-auto max-w-3xl px-6 lg:px-10">
+          <div className="mx-auto max-w-4xl px-6 lg:px-10">
             <Reveal>
               <Link
                 href="/blog"
@@ -72,7 +72,7 @@ export default async function ArticolPage({
                 <img
                   src={post.coverImage}
                   alt=""
-                  className="max-h-[30rem] w-full border border-ink/10 object-cover"
+                  className="max-h-[34rem] w-full border border-ink/10 object-cover"
                 />
               </div>
             </Reveal>
@@ -80,12 +80,12 @@ export default async function ArticolPage({
 
           <Reveal delay={0.16}>
             <div
-              className="prose-articol mx-auto mt-12 max-w-3xl px-6 lg:px-10"
+              className="prose-articol mx-auto mt-12 max-w-4xl px-6 lg:px-10"
               dangerouslySetInnerHTML={{ __html: html }}
             />
           </Reveal>
 
-          <div className="mx-auto mt-16 max-w-3xl px-6 lg:px-10">
+          <div className="mx-auto mt-16 max-w-4xl px-6 lg:px-10">
             <div className="border-t border-ink/10 pt-8">
               <p className="font-display text-[1.15rem] text-ink">
                 Ai nevoie de sprijin?

@@ -345,11 +345,11 @@ export const CONTACT = {
 /* -------------------------------------------------------------------------- */
 
 export const TESTS = {
-  eyebrow: "În curând",
-  title: "Teste vocaționale gratuite",
+  eyebrow: "Consiliere psihologică",
+  title: "Ghid practic despre divorț",
   description:
-    "Pregătesc o secțiune cu teste vocaționale gratuite, gândite pentru adolescenți și tineri aflați în fața unei alegeri: ce liceu, ce facultate, ce direcție profesională. Rezultatele vor veni însoțite de o interpretare clară, nu doar de un scor.",
-  cta: "Anunță-mă când sunt gata",
+    "Un ghid de psihoeducație despre divorț — prevenție, separare, copii și viața de după. Răspunzi la câteva întrebări despre situația ta și primești o interpretare personală, plus ghidul complet în PDF.",
+  cta: "Vezi ghidul",
 };
 
 /* ============================================================================

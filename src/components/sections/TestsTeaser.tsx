@@ -6,10 +6,10 @@ import { IconCompass } from "../ui/Icons";
 
 export function TestsTeaser() {
   return (
-    <section id="teste" className="relative bg-cream py-20 lg:py-28">
+    <section id="consiliere" className="relative bg-cream py-20 lg:py-28">
       <div className="mx-auto max-w-7xl px-6 lg:px-10">
         <Reveal>
-          <div className="grain relative overflow-hidden rounded-none bg-gradient-to-br from-periwinkle to-[#57679b] px-8 py-14 lg:rounded-none lg:px-16 lg:py-20">
+          <div className="grain relative overflow-hidden rounded-none bg-gradient-to-br from-periwinkle to-sage px-8 py-14 lg:rounded-none lg:px-16 lg:py-20">
             {/* Forme decorative — inelele se rotesc încet, în sensuri opuse */}
             <OrbitRing
               className="-right-16 -top-16"
@@ -51,7 +51,7 @@ export function TestsTeaser() {
               </div>
 
               <div className="lg:justify-self-end">
-                <Button href="/teste" variant="light">
+                <Button href="/consiliere" variant="light">
                   {TESTS.cta}
                 </Button>
               </div>

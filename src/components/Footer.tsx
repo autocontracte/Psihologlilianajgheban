@@ -83,11 +83,28 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+
                 <Link
-                  href="/teste"
+
+                  href="/blog"
+
+                  className="font-sans text-[0.87rem] text-cream/65 transition-colors duration-300 hover:text-periwinkle-light"
+
+                >
+
+                  Blog
+
+                </Link>
+
+              </li>
+              <li>
+
+                <Link
+
+                  href="/consiliere"
                   className="font-sans text-[0.87rem] text-cream/65 transition-colors duration-300 hover:text-periwinkle-light"
                 >
-                  Teste vocaționale
+                  Consiliere psihologică
                 </Link>
               </li>
             </ul>

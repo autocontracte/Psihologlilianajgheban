@@ -297,3 +297,48 @@ model BlogPost {
   @@index([status])
   @@index([publishedAt])
 }
+
+/**
+ * ============================================================================
+ * Consiliere — ghidul cu interpretare AI
+ * Omul răspunde la un chestionar, lasă emailul, plătește 50 lei și primește
+ * o interpretare personalizată (generată de un model AI, pe baza ghidului) și
+ * ghidul PDF. O comandă ține tot: răspunsuri, email, plată, interpretare.
+ * Datele sunt sensibile (situație personală), de aceea accesul e prin token.
+ * ==========================================================================
+ */
+model GuideOrder {
+  id             String    @id @default(cuid())
+  /**
+   * Din link. 32 de octeți aleatori — nu poate fi ghicit.
+   */
+  token          String    @unique
+  email          String?
+  /**
+   * Răspunsurile la chestionar, ca JSON.
+   */
+  answers        String    @default("{}")
+  /**
+   * STARTED | PAID
+   */
+  status         String    @default("STARTED")
+  /**
+   * În bani: 5000 = 50 lei.
+   */
+  amount         Int       @default(5000)
+  currency       String    @default("RON")
+  /**
+   * Interpretarea generată de AI.
+   */
+  interpretation String?
+  /**
+   * Id-ul sesiunii Stripe, ca să legăm plata.
+   */
+  paymentRef     String?
+  paidAt         DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([status])
+  @@index([email])
+}

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { platileSuntActive, stripe } from "@/lib/stripe";
 import { issueInvoiceForPayment } from "@/lib/invoicing";
+import { genereazaSiSalveaza } from "@/lib/consiliere";
 
 /* ----------------------------------------------------------------------------
    Confirmarea plății, direct de la Stripe.
@@ -55,6 +56,25 @@ export async function POST(request: Request) {
         await issueInvoiceForPayment(payment.id);
       } catch (err) {
         console.error("[factura] emitere esuata", err);
+      }
+    }
+
+    /* Aceeași notificare acoperă și cumpărarea ghidului. O găsim după id-ul
+       sesiunii; la confirmare, generăm interpretarea AI. O eroare de AI e
+       prinsă, ca Stripe să nu reia notificarea la nesfârșit — interpretarea
+       se poate regenera oricând din panou. */
+    const order = await db.guideOrder.findFirst({
+      where: { paymentRef: session.id },
+    });
+    if (order && order.status !== "PAID") {
+      await db.guideOrder.update({
+        where: { id: order.id },
+        data: { status: "PAID", paidAt: new Date() },
+      });
+      try {
+        await genereazaSiSalveaza(order.token);
+      } catch (err) {
+        console.error("[consiliere] interpretare esuata", err);
       }
     }
   }
