@@ -88,15 +88,19 @@ export function ChestionarConsiliere({ platesteActiv }: { platesteActiv: boolean
     setPas((p) => Math.min(p + 1, vizibile.length));
   }
 
-  async function plateste() {
-    setEroare("");
+  function emailValid() {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim())) {
       setEroare("Scrie o adresă de e-mail validă, ca să primești ghidul.");
-      return;
+      return false;
     }
+    return true;
+  }
+
+  async function plateste() {
+    setEroare("");
+    if (!emailValid()) return;
     setTrimit(true);
     try {
-      // salvează emailul întâi
       await fetch(`/api/consiliere/${token}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -106,6 +110,26 @@ export function ChestionarConsiliere({ platesteActiv }: { platesteActiv: boolean
       const json = await res.json();
       if (!res.ok) throw new Error(json.error ?? "Plata nu a putut fi pornită.");
       window.location.href = json.url;
+    } catch (err) {
+      setEroare(err instanceof Error ? err.message : "A apărut o eroare.");
+      setTrimit(false);
+    }
+  }
+
+  // În perioada de testare (fără Stripe): finalizează gratuit și du la rezultat.
+  async function primesteGratuit() {
+    setEroare("");
+    if (!emailValid()) return;
+    setTrimit(true);
+    try {
+      const res = await fetch(`/api/consiliere/${token}/gratuit`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error ?? "Nu am putut finaliza.");
+      window.location.href = `/consiliere/rezultat/${token}`;
     } catch (err) {
       setEroare(err instanceof Error ? err.message : "A apărut o eroare.");
       setTrimit(false);
@@ -175,6 +199,7 @@ export function ChestionarConsiliere({ platesteActiv }: { platesteActiv: boolean
             platesteActiv={platesteActiv}
             trimit={trimit}
             onPlateste={plateste}
+            onGratuit={primesteGratuit}
           />
         ) : (
           <IntrebareCard
@@ -313,6 +338,7 @@ function EcranEmail({
   platesteActiv,
   trimit,
   onPlateste,
+  onGratuit,
 }: {
   email: string;
   setEmail: (v: string) => void;
@@ -320,6 +346,7 @@ function EcranEmail({
   platesteActiv: boolean;
   trimit: boolean;
   onPlateste: () => void;
+  onGratuit: () => void;
 }) {
   const completate = INTREBARI.filter((q) => {
     const v = raspunsuri[q.id];
@@ -369,10 +396,21 @@ function EcranEmail({
             {trimit ? "Se deschide plata…" : "Plătește 50 lei"}
           </button>
         ) : (
-          <p className="mt-5 border-l-2 border-sage bg-sage-pale px-5 py-3.5 font-sans text-[0.85rem] text-ink-soft">
-            Plata online se activează în curând. Răspunsurile tale sunt salvate —
-            revino peste puțin timp ca să finalizezi.
-          </p>
+          <div className="mt-5">
+            <div className="border-l-2 border-sage bg-sage-pale px-5 py-3 font-sans text-[0.83rem] leading-relaxed text-ink-soft">
+              În perioada de testare, primești interpretarea și ghidul{" "}
+              <span className="font-semibold text-ink">gratuit</span>. Plata de 50
+              lei se va activa în curând.
+            </div>
+            <button
+              type="button"
+              onClick={onGratuit}
+              disabled={trimit}
+              className="mt-3 w-full bg-periwinkle px-8 py-4 font-sans text-[0.95rem] text-cream transition-colors hover:bg-ink disabled:opacity-60"
+            >
+              {trimit ? "Se pregătește…" : "Primește gratuit interpretarea și ghidul"}
+            </button>
+          </div>
         )}
       </div>
     </div>

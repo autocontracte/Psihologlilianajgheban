@@ -1,56 +1,40 @@
 import { TESTS } from "@/content/site";
 import { Reveal } from "../ui/Reveal";
-import { OrbitRing } from "../ui/OrbitFrame";
 import { Button } from "../ui/Button";
-import { IconCompass } from "../ui/Icons";
 
+/* Mini-hero pentru secțiunea de consiliere — o fotografie alb-negru, cu un
+   voal întunecat peste care stă textul, în spiritul copertei ghidului. */
 export function TestsTeaser() {
   return (
     <section id="consiliere" className="relative bg-cream py-20 lg:py-28">
       <div className="mx-auto max-w-7xl px-6 lg:px-10">
         <Reveal>
-          <div className="grain relative overflow-hidden rounded-none bg-gradient-to-br from-periwinkle to-sage px-8 py-14 lg:rounded-none lg:px-16 lg:py-20">
-            {/* Forme decorative — inelele se rotesc încet, în sensuri opuse */}
-            <OrbitRing
-              className="-right-16 -top-16"
-              size="16rem"
-              accent="cream"
-              duration={48}
-              dashed
+          <div className="relative flex min-h-[23rem] items-center overflow-hidden lg:min-h-[27rem]">
+            {/* Fotografia alb-negru */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/foto/consiliere-hero.jpg"
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover"
             />
-            <OrbitRing
-              className="-right-8 -top-8"
-              size="11rem"
-              accent="cream"
-              duration={34}
-              reverse
-            />
-            <div
-              aria-hidden
-              className="pointer-events-none absolute -bottom-24 -left-10 h-72 w-72 rounded-none bg-cream/[0.07]"
-            />
+            {/* Voalul întunecat, mai dens la stânga, ca textul să fie lizibil */}
+            <div className="absolute inset-0 bg-gradient-to-r from-ink/90 via-ink/65 to-ink/25" />
+            <div className="absolute inset-0 bg-ink/15" />
 
-            <div className="relative grid items-center gap-10 lg:grid-cols-[1.4fr_1fr]">
-              <div>
-                <div className="flex items-center gap-3">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-none bg-cream/15 text-cream">
-                    <IconCompass className="h-5 w-5" />
-                  </span>
-                  <span className="rounded-none bg-cream/15 px-4 py-1.5 font-sans text-[0.74rem] tracking-[0.02em] text-cream">
-                    {TESTS.eyebrow}
-                  </span>
-                </div>
+            <div className="relative max-w-2xl px-8 py-14 lg:px-16 lg:py-20">
+              <span className="inline-flex bg-cream/15 px-4 py-1.5 font-sans text-[0.74rem] tracking-[0.02em] text-cream backdrop-blur-sm">
+                {TESTS.eyebrow}
+              </span>
 
-                <h2 className="mt-7 font-display text-3xl leading-tight text-cream sm:text-4xl lg:text-[3rem]">
-                  {TESTS.title}
-                </h2>
+              <h2 className="mt-6 font-display text-3xl leading-[1.08] text-cream sm:text-4xl lg:text-[3.1rem]">
+                {TESTS.title}
+              </h2>
 
-                <p className="mt-5 max-w-xl font-sans text-[0.92rem] leading-[1.9] text-cream/75">
-                  {TESTS.description}
-                </p>
-              </div>
+              <p className="mt-5 max-w-xl font-sans text-[0.92rem] leading-[1.9] text-cream/80">
+                {TESTS.description}
+              </p>
 
-              <div className="lg:justify-self-end">
+              <div className="mt-8">
                 <Button href="/consiliere" variant="light">
                   {TESTS.cta}
                 </Button>
