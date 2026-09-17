@@ -4,10 +4,11 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { getCurrentUser } from "@/lib/auth";
 
-/* Imaginile din articole sunt conținut public, așa că se salvează în
-   `public/blog-media/` și se servesc direct la /blog-media/<nume>. Numele e
+/* Imaginile din articole se salvează în uploads/blog/ (scriabil la runtime,
+   spre deosebire de public/, pe care Next nu-l servește pentru fișiere
+   adăugate după build) și se servesc prin ruta /blog-media/<nume>. Numele e
    generat de noi — cel original nu atinge niciodată calea de pe disc. */
-const DIR = join(process.cwd(), "public", "blog-media");
+const DIR = join(process.cwd(), "uploads", "blog");
 const MAX = 8 * 1024 * 1024;
 const TIPURI = new Map([
   ["image/jpeg", "jpg"],
