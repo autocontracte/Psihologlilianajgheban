@@ -55,6 +55,7 @@ export const NAV = [
   { label: "Acasă", href: "/#acasa" },
   { label: "Despre mine", href: "/#despre" },
   { label: "Servicii", href: "/#servicii" },
+  { label: "Consiliere", href: "/consiliere" },
   { label: "Cabinet", href: "/#cabinet" },
   { label: "Recenzii", href: "/#recenzii" },
   { label: "Abordare", href: "/#abordare" },

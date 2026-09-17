@@ -75,12 +75,12 @@ export function Nav() {
           </Link>
 
           {/* Meniu desktop */}
-          <nav className="hidden items-center gap-7 xl:gap-9 lg:flex">
+          <nav className="hidden items-center gap-4 xl:gap-7 lg:flex">
             {NAV.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="nav-link font-sans text-[1rem] text-ink-soft transition-colors duration-300 hover:text-ink"
+                className="nav-link font-sans text-[0.92rem] text-ink-soft transition-colors duration-300 hover:text-ink"
               >
                 {item.label}
               </Link>
