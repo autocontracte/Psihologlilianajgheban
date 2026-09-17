@@ -59,6 +59,7 @@ export const NAV = [
   { label: "Recenzii", href: "/#recenzii" },
   { label: "Abordare", href: "/#abordare" },
   { label: "Întrebări", href: "/#intrebari" },
+  { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/#contact" },
 ] as const;
 

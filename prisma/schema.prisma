@@ -264,3 +264,36 @@ model Contract {
   @@index([sentToEmail])
   @@index([userId])
 }
+
+/**
+ * ============================================================================
+ * Blog
+ * Articole scrise din panoul de administrare, cu un editor vizual (tip
+ * „mini WordPress"). Conținutul e HTML, dar e curățat pe server înainte de
+ * salvare — vezi lib/blog.ts — ca să nu poată intra script-uri.
+ * ==========================================================================
+ */
+model BlogPost {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  title       String
+  excerpt     String?
+  /**
+   * HTML curățat, produs de editor.
+   */
+  content     String    @default("")
+  /**
+   * Calea imaginii de copertă (în /blog-media/…), sau gol.
+   */
+  coverImage  String?
+  /**
+   * DRAFT | PUBLISHED
+   */
+  status      String    @default("DRAFT")
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([status])
+  @@index([publishedAt])
+}
