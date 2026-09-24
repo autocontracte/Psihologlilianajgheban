@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useLayoutEffect, useRef, useState } from "react";
 import { motion, useReducedMotion, useScroll, useSpring } from "framer-motion";
-import { SERVICES, PRICE } from "@/content/site";
+import { SERVICES } from "@/content/site";
 import { Reveal } from "../ui/Reveal";
 import { ActionButtons } from "../ui/ActionButtons";
 import { Lumina } from "../ui/Lumina";
@@ -281,11 +281,7 @@ export function Services() {
                 <h3 className="mt-2 font-display text-3xl text-ink sm:text-4xl">O discuție, fără nicio obligație</h3>
                 <p className="mt-4 font-sans text-[0.95rem] leading-[1.85] text-ink-soft">
                   Nu trebuie să știi dinainte ce serviciu ți se potrivește. Îl alegem împreună, după
-                  prima întâlnire.{" "}
-                  <span className="text-ink">
-                    {PRICE.standard} {PRICE.currency}:
-                  </span>{" "}
-                  {PRICE.note.charAt(0).toLowerCase() + PRICE.note.slice(1)}
+                  prima întâlnire.
                 </p>
                 <ActionButtons className="mt-8 lg:justify-center" />
               </Reveal>
