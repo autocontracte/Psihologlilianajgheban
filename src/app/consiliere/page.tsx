@@ -4,9 +4,10 @@ import { Footer } from "@/components/Footer";
 import { Reveal } from "@/components/ui/Reveal";
 import { ChestionarConsiliere } from "@/components/consiliere/ChestionarConsiliere";
 import { platileSuntActive } from "@/lib/stripe";
+import { Lumina } from "@/components/ui/Lumina";
 
 export const metadata: Metadata = {
-  title: "Consiliere psihologică — Ghid despre divorț",
+  title: "Consiliere psihologică: ghid despre divorț",
   description:
     "Răspunzi la câteva întrebări și primești o interpretare personalizată, sprijinită pe Ghidul practic despre divorț, plus ghidul complet în PDF.",
 };
@@ -20,7 +21,7 @@ const beneficii = [
   {
     icon: "draw",
     titlu: "O interpretare personală",
-    text: "Pe baza răspunsurilor tale, o reflecție caldă și clară — nu un scor, ci o perspectivă.",
+    text: "Pe baza răspunsurilor tale, o reflecție caldă și clară. Nu un scor, ci o perspectivă.",
   },
   {
     icon: "schedule",
@@ -34,6 +35,7 @@ export default function ConsilierePage() {
     <>
       <Nav />
       <main>
+        <Lumina din="dreapta" />
         <section className="grain relative overflow-hidden bg-cream pt-40 pb-16 lg:pt-48 lg:pb-20">
           <div
             aria-hidden
@@ -51,9 +53,9 @@ export default function ConsilierePage() {
               </h1>
             </Reveal>
             <Reveal delay={0.16}>
-              <p className="mx-auto mt-8 max-w-xl font-sans text-[0.95rem] leading-[1.9] text-ink-soft">
+              <p className="relative mx-auto mt-8 max-w-xl font-sans text-[0.95rem] leading-[1.9] text-ink-soft">
                 Divorțul e un proces, nu un moment. Acest ghid te ajută să
-                înțelegi ce se întâmplă cu tine și cu cei dragi — și îți oferă o
+                înțelegi ce se întâmplă cu tine și cu cei dragi și îți oferă o
                 interpretare personală, pornind de la situația ta.
               </p>
             </Reveal>
@@ -61,7 +63,7 @@ export default function ConsilierePage() {
         </section>
 
         <section className="bg-cream pb-10">
-          <div className="mx-auto max-w-5xl px-6 lg:px-10">
+          <div className="relative mx-auto max-w-5xl px-6 lg:px-10">
             <div className="grid gap-5 sm:grid-cols-3">
               {beneficii.map((b) => (
                 <Reveal key={b.titlu}>
@@ -79,7 +81,7 @@ export default function ConsilierePage() {
         </section>
 
         <section className="bg-cream pb-24 lg:pb-32">
-          <div className="mx-auto max-w-3xl px-6 lg:px-10">
+          <div className="relative mx-auto max-w-3xl px-6 lg:px-10">
             <ChestionarConsiliere platesteActiv={platileSuntActive} />
             <p className="mt-6 text-center font-sans text-[0.78rem] leading-relaxed text-ink-muted">
               Interpretarea e o reflecție de psihoeducație și nu înlocuiește o

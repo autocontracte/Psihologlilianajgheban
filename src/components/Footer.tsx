@@ -7,6 +7,8 @@ import {
   IconMail,
   IconPhone,
 } from "./ui/Icons";
+import { Logo } from "./ui/Logo";
+import { Val } from "./ui/Val";
 
 const socials = [
   { key: "facebook", Icon: IconFacebook, label: "Facebook" },
@@ -21,17 +23,21 @@ export function Footer() {
   );
 
   return (
+    <>
+      {/* Valul spre footer — pe fiecare pagină, peste marginea de jos a conținutului */}
+      <Val culoare="var(--color-ink)" varianta={2} />
     <footer className="grain relative overflow-hidden bg-ink pt-20 pb-10">
       <div
         aria-hidden
-        className="pointer-events-none absolute -top-32 left-1/2 h-72 w-[40rem] -translate-x-1/2 rounded-none bg-periwinkle/15 blur-3xl"
+        className="pointer-events-none absolute left-1/2 top-[10%] h-[28rem] w-[48rem] -translate-x-1/2"
+        style={{ background: "radial-gradient(closest-side, color-mix(in srgb, var(--color-periwinkle) 16%, transparent), transparent)" }}
       />
 
       <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
         <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr]">
           {/* Identitate */}
           <div>
-            <p className="font-display text-2xl text-cream">{SITE.name}</p>
+            <Logo ton="deschis" marime={72} />
             <p className="mt-2 font-sans text-[0.75rem] tracking-[0.02em] text-periwinkle-light">
               {SITE.role}
             </p>
@@ -167,5 +173,6 @@ export function Footer() {
         </div>
       </div>
     </footer>
+    </>
   );
 }

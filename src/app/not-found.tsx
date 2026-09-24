@@ -1,12 +1,14 @@
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/Button";
+import { Lumina } from "@/components/ui/Lumina";
 
 export default function NotFound() {
   return (
     <>
       <Nav />
       <main className="grain relative flex min-h-[80vh] items-center overflow-hidden bg-cream pt-32">
+        <Lumina din="dreapta" />
         <div
           aria-hidden
           className="pointer-events-none absolute -right-32 top-0 h-96 w-96 rounded-none bg-periwinkle-pale/60 blur-3xl"
@@ -18,7 +20,7 @@ export default function NotFound() {
           <h1 className="mt-6 font-display text-3xl leading-tight text-ink sm:text-5xl">
             Pagina nu a fost găsită
           </h1>
-          <p className="mx-auto mt-6 max-w-md font-sans text-[0.93rem] leading-[1.9] text-ink-soft">
+          <p className="relative mx-auto mt-6 max-w-md font-sans text-[0.93rem] leading-[1.9] text-ink-soft">
             Se pare că adresa căutată nu mai există sau a fost mutată. Te poți
             întoarce la pagina principală.
           </p>

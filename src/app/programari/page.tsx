@@ -4,11 +4,12 @@ import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { BookingFlow } from "@/components/booking/BookingFlow";
 import { Reveal } from "@/components/ui/Reveal";
-import { OrbitRing } from "@/components/ui/OrbitFrame";
 import { getCurrentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { SITE } from "@/content/site";
 import { IconArrow, IconCalendar, IconClock, IconOffice } from "@/components/ui/Icons";
+import { Lumina } from "@/components/ui/Lumina";
+import { Val } from "@/components/ui/Val";
 
 export const metadata: Metadata = {
   title: "Programări",
@@ -32,18 +33,12 @@ export default async function ProgramariPage() {
     <>
       <Nav />
       <main>
+        <Lumina din="dreapta" />
         {/* Antet */}
         <section className="grain relative overflow-hidden bg-cream pt-40 pb-16 lg:pt-48 lg:pb-20">
           <div
             aria-hidden
             className="pointer-events-none absolute -right-32 -top-24 h-[30rem] w-[30rem] rounded-none bg-periwinkle-pale/60 blur-3xl"
-          />
-          <OrbitRing
-            className="-left-28 top-32 hidden lg:block"
-            size="22rem"
-            accent="sage"
-            duration={62}
-            dashed
           />
 
           <div className="relative mx-auto max-w-4xl px-6 text-center lg:px-10">
@@ -59,7 +54,7 @@ export default async function ProgramariPage() {
               </h1>
             </Reveal>
             <Reveal delay={0.16}>
-              <p className="mx-auto mt-7 max-w-xl font-sans text-[0.95rem] leading-[1.9] text-ink-soft">
+              <p className="relative mx-auto mt-7 max-w-xl font-sans text-[0.95rem] leading-[1.9] text-ink-soft">
                 Alegi serviciul, ziua și ora care ți se potrivesc, iar eu îți
                 confirm programarea. Dacă preferi să vorbim întâi, sună-mă la{" "}
                 <a
@@ -75,8 +70,9 @@ export default async function ProgramariPage() {
         </section>
 
         {/* Conținut */}
+        <Val culoare="var(--color-cream-deep)" />
         <section className="relative bg-cream-deep py-16 lg:py-24">
-          <div className="mx-auto max-w-3xl px-6 lg:px-10">
+          <div className="relative mx-auto max-w-3xl px-6 lg:px-10">
             <Reveal>
               <div className="mb-9 flex flex-wrap items-center justify-between gap-4 rounded-none bg-cream px-6 py-4">
                 {user ? (
@@ -150,8 +146,8 @@ function AccountBenefits() {
         <h2 className="font-display text-xl text-ink sm:text-2xl">
           Vrei să îți faci și cont?
         </h2>
-        <p className="mx-auto mt-3 max-w-md font-sans text-[0.88rem] leading-[1.85] text-ink-soft">
-          Nu e obligatoriu — programarea de mai sus funcționează și fără. Contul
+        <p className="relative mx-auto mt-3 max-w-md font-sans text-[0.88rem] leading-[1.85] text-ink-soft">
+          Nu e obligatoriu: programarea de mai sus funcționează și fără. Contul
           îți e util dacă vii la mai multe ședințe.
         </p>
 

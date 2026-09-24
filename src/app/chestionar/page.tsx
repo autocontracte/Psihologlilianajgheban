@@ -13,7 +13,6 @@ import {
 } from "next/font/google";
 import { db } from "@/lib/db";
 import { BriefForm } from "@/components/brief/BriefForm";
-import { OrbitRing } from "@/components/ui/OrbitFrame";
 import { SITE } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -66,13 +65,6 @@ export default async function ChestionarPage() {
         <div
           aria-hidden
           className="pointer-events-none absolute -right-40 top-0 h-[32rem] w-[32rem] rounded-none bg-periwinkle-pale/50 blur-3xl"
-        />
-        <OrbitRing
-          className="-left-32 top-56 hidden lg:block"
-          size="26rem"
-          accent="sage"
-          duration={70}
-          dashed
         />
 
         <div className="relative mx-auto max-w-3xl px-5 sm:px-6">

@@ -24,8 +24,8 @@ export function ActionButtons({
 
   const secondary =
     variant === "dark"
-      ? "border-cream/40 text-cream hover:border-cream hover:bg-cream hover:text-ink"
-      : "border-ink/25 text-ink hover:border-ink hover:bg-ink hover:text-cream";
+      ? "border-cream/30 bg-cream/[0.06] text-cream backdrop-blur-md hover:border-cream hover:bg-cream hover:text-ink"
+      : "glass-btn text-ink hover:border-ink hover:bg-ink hover:text-cream";
 
   const base =
     "inline-flex items-center justify-center gap-2.5 px-7 py-3.5 font-sans text-[0.95rem] transition-colors duration-400";

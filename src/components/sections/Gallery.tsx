@@ -2,6 +2,7 @@ import Image from "next/image";
 import { PHOTOS } from "@/content/site";
 import { Reveal } from "../ui/Reveal";
 import { ActionButtons } from "../ui/ActionButtons";
+import { Lumina } from "../ui/Lumina";
 
 /** Fotografiile cabinetului. Un om care caută terapie vrea să vadă unde intră. */
 export function Gallery() {
@@ -9,7 +10,8 @@ export function Gallery() {
 
   return (
     <section id="cabinet" className="relative overflow-hidden bg-cream py-24 lg:py-32">
-      <div className="mx-auto max-w-7xl px-6 lg:px-10">
+      <Lumina din="stanga" />
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
         <div className="max-w-2xl">
           <Reveal>
             <p className="font-sans text-[0.95rem] text-periwinkle">Cabinetul</p>

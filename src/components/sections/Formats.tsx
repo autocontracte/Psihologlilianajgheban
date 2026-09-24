@@ -2,6 +2,8 @@ import { FORMATS } from "@/content/site";
 import { ICONS, type IconName, IconCheck } from "../ui/Icons";
 import { Reveal, Stagger, StaggerItem } from "../ui/Reveal";
 import { ActionButtons } from "../ui/ActionButtons";
+import { Pete } from "../ui/Pete";
+import { Lumina } from "../ui/Lumina";
 
 export function Formats() {
   return (
@@ -9,9 +11,11 @@ export function Formats() {
       id="format"
       className="relative overflow-hidden bg-cream py-28 lg:py-36"
     >
-      <div className="mx-auto max-w-7xl px-6 lg:px-10">
+      <Lumina din="stanga" />
+      <Pete varianta={3} />
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
         {/* Antet */}
-        <div className="mx-auto max-w-2xl text-center">
+        <div className="relative mx-auto max-w-2xl text-center">
           <Reveal>
             <p className="font-sans text-[0.78rem] tracking-[0.02em] text-sage">
               {FORMATS.eyebrow}
@@ -41,15 +45,15 @@ export function Formats() {
               <StaggerItem key={item.title}>
                 <article
                   className={[
-                    "lift group relative h-full overflow-hidden rounded-none p-9 lg:p-11",
+                    "glass lift group relative h-full overflow-hidden rounded-none p-9 lg:p-11",
                     accent === "periwinkle"
-                      ? "bg-periwinkle-pale/55"
-                      : "bg-sage-pale/60",
+                      ? "!bg-periwinkle-pale/35"
+                      : "!bg-sage-pale/45",
                   ].join(" ")}
                 >
                   <div
                     className={[
-                      "flex h-16 w-16 items-center justify-center rounded-none bg-cream transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105",
+                      "flex h-16 w-16 items-center justify-center rounded-none bg-white/70 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105",
                       accent === "periwinkle" ? "text-periwinkle" : "text-sage",
                     ].join(" ")}
                   >

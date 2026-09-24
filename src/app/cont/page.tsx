@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { Reveal } from "@/components/ui/Reveal";
-import { OrbitRing } from "@/components/ui/OrbitFrame";
 import {
   AppointmentList,
   type ClientAppointment,
@@ -17,6 +16,7 @@ import { platileSuntActive } from "@/lib/stripe";
 import { formatDateLong, formatTime } from "@/lib/tz";
 import type { Format, Status } from "@/lib/types";
 import { IconArrow } from "@/components/ui/Icons";
+import { Lumina } from "@/components/ui/Lumina";
 
 export const metadata: Metadata = {
   title: "Contul meu",
@@ -84,16 +84,10 @@ export default async function ContPage() {
     <>
       <Nav />
       <main className="grain relative min-h-screen overflow-hidden bg-cream pt-36 pb-24 lg:pt-44">
+        <Lumina din="dreapta" />
         <div
           aria-hidden
           className="pointer-events-none absolute -right-40 top-10 h-[30rem] w-[30rem] rounded-none bg-periwinkle-pale/50 blur-3xl"
-        />
-        <OrbitRing
-          className="-left-32 top-40 hidden lg:block"
-          size="24rem"
-          accent="sage"
-          duration={66}
-          dashed
         />
 
         <div className="relative mx-auto max-w-3xl px-6 lg:px-10">

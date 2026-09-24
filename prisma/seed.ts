@@ -20,7 +20,7 @@ const db = new PrismaClient();
 const SERVICES = [
   {
     slug: "psihoterapie-adult",
-    name: "Psihoterapie individuală — adult",
+    name: "Psihoterapie individuală pentru adulți",
     duration: 50,
     price: 28000,
     position: 1,
@@ -46,7 +46,7 @@ const SERVICES = [
   },
   {
     slug: "evaluare-copil",
-    name: "Evaluare clinică psihologică — copil / adolescent",
+    name: "Evaluare clinică psihologică pentru copii și adolescenți",
     duration: 90,
     price: 50000,
     position: 4,
@@ -55,7 +55,7 @@ const SERVICES = [
   },
   {
     slug: "evaluare-adult",
-    name: "Evaluare clinică psihologică — adult",
+    name: "Evaluare clinică psihologică pentru adulți",
     duration: 90,
     price: 50000,
     position: 5,

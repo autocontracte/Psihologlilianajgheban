@@ -5,6 +5,7 @@ import { Footer } from "@/components/Footer";
 import { Reveal, Stagger, StaggerItem } from "@/components/ui/Reveal";
 import { articolePublicate } from "@/lib/blog";
 import { formatDateLong } from "@/lib/tz";
+import { Lumina } from "@/components/ui/Lumina";
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -19,6 +20,7 @@ export default async function BlogPage() {
     <>
       <Nav />
       <main>
+        <Lumina din="dreapta" />
         <section className="grain relative overflow-hidden bg-cream pt-40 pb-16 lg:pt-48 lg:pb-20">
           <div
             aria-hidden
@@ -36,7 +38,7 @@ export default async function BlogPage() {
               </h1>
             </Reveal>
             <Reveal delay={0.16}>
-              <p className="mx-auto mt-8 max-w-xl font-sans text-[0.95rem] leading-[1.9] text-ink-soft">
+              <p className="relative mx-auto mt-8 max-w-xl font-sans text-[0.95rem] leading-[1.9] text-ink-soft">
                 Articole despre relații, emoții, parenting și pașii mărunți prin
                 care ne îngrijim de noi. Scrise pe îndelete, fără grabă.
               </p>
@@ -45,9 +47,9 @@ export default async function BlogPage() {
         </section>
 
         <section className="bg-cream pb-24 lg:pb-32">
-          <div className="mx-auto max-w-6xl px-6 lg:px-10">
+          <div className="relative mx-auto max-w-6xl px-6 lg:px-10">
             {posts.length === 0 ? (
-              <p className="mx-auto max-w-md text-center font-sans text-[0.95rem] text-ink-soft">
+              <p className="relative mx-auto max-w-md text-center font-sans text-[0.95rem] text-ink-soft">
                 Primele articole apar în curând.
               </p>
             ) : (

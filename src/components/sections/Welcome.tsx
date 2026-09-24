@@ -1,28 +1,16 @@
 import { WELCOME } from "@/content/site";
 import { Reveal } from "../ui/Reveal";
-import { OrbitRing } from "../ui/OrbitFrame";
+import { Lumina } from "../ui/Lumina";
 
 export function Welcome() {
   return (
     <section className="grain relative overflow-hidden bg-ink py-28 lg:py-36">
-      {/* Halou decorativ, cu inele care se rotesc lent în jurul citatului */}
+      <Lumina varianta="noapte" din="stanga" />
+      {/* Halou decorativ, static — inelele rotitoare de aici oboseau privirea */}
       <div
         aria-hidden
-        className="pointer-events-none absolute left-1/2 top-0 h-96 w-[46rem] -translate-x-1/2 -translate-y-1/2 rounded-none bg-periwinkle/20 blur-3xl"
-      />
-      <OrbitRing
-        className="left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 sm:block"
-        size="34rem"
-        accent="cream"
-        duration={70}
-        dashed
-      />
-      <OrbitRing
-        className="left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 lg:block"
-        size="46rem"
-        accent="cream"
-        duration={95}
-        reverse
+        className="pointer-events-none absolute left-1/2 top-[12%] h-[36rem] w-[56rem] -translate-x-1/2"
+        style={{ background: "radial-gradient(closest-side, color-mix(in srgb, var(--color-periwinkle) 22%, transparent), transparent)" }}
       />
 
       <div className="relative mx-auto max-w-4xl px-6 text-center lg:px-10">
@@ -42,10 +30,10 @@ export function Welcome() {
         </Reveal>
 
         <Reveal delay={0.2}>
-          <div className="mx-auto mt-12 h-px w-20 bg-gradient-to-r from-transparent via-periwinkle-light to-transparent" />
+          <div className="relative mx-auto mt-12 h-px w-20 bg-gradient-to-r from-transparent via-periwinkle-light to-transparent" />
         </Reveal>
 
-        <div className="mx-auto mt-12 max-w-2xl space-y-6">
+        <div className="relative mx-auto mt-12 max-w-2xl space-y-6">
           {WELCOME.body.map((p, i) => (
             <Reveal key={i} delay={0.25 + i * 0.1}>
               <p className="font-sans text-[0.95rem] leading-[1.95] text-cream/70">

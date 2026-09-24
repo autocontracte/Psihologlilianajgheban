@@ -1,13 +1,15 @@
 import { TESTS } from "@/content/site";
 import { Reveal } from "../ui/Reveal";
 import { Button } from "../ui/Button";
+import { Lumina } from "../ui/Lumina";
 
 /* Mini-hero pentru secțiunea de consiliere — o fotografie alb-negru, cu un
    voal întunecat peste care stă textul, în spiritul copertei ghidului. */
 export function TestsTeaser() {
   return (
     <section id="consiliere" className="relative bg-cream py-20 lg:py-28">
-      <div className="mx-auto max-w-7xl px-6 lg:px-10">
+      <Lumina din="dreapta" />
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
         <Reveal>
           <div className="relative flex min-h-[23rem] items-center overflow-hidden lg:min-h-[27rem]">
             {/* Fotografia alb-negru */}

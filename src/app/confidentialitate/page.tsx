@@ -50,7 +50,7 @@ const sections: LegalSection[] = [
     heading: "5. Confidențialitatea actului psihologic",
     paragraphs: [
       "Informațiile discutate în cadrul ședințelor de psihoterapie sau evaluare sunt confidențiale și protejate de secretul profesional, conform Codului deontologic al profesiei de psiholog din România.",
-      "Excepțiile sunt strict cele prevăzute de lege — în special situațiile în care există un risc real și iminent pentru siguranța ta sau a altei persoane.",
+      "Excepțiile sunt strict cele prevăzute de lege, în special situațiile în care există un risc real și iminent pentru siguranța ta sau a altei persoane.",
     ],
   },
   {

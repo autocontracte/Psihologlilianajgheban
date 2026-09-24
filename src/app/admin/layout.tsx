@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -30,12 +31,10 @@ export default async function AdminLayout({
       <header className="sticky top-0 z-40 border-b border-ink/10 bg-cream/90 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-4 lg:px-10">
           <div className="flex items-center gap-8">
-            <Link href="/admin" className="flex flex-col leading-none">
-              <span className="font-display text-lg text-ink">
-                Panou de administrare
-              </span>
-              <span className="mt-1 font-sans text-[0.72rem] tracking-[0.02em] text-ink-muted">
-                Liliana Jgheban
+            <Link href="/admin" className="flex items-center gap-3 leading-none">
+              <Image src="/logo.svg" alt="" width={36} height={36} unoptimized />
+              <span className="flex flex-col">
+                <span className="font-display text-lg text-ink">Panou de administrare</span>
               </span>
             </Link>
           </div>

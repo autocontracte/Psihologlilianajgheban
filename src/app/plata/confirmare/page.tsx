@@ -46,7 +46,7 @@ export default async function ConfirmarePlata({
           <p className="mt-4 font-sans text-[0.95rem] leading-[1.9] text-ink-soft">
             {payment ? (
               <>
-                {payment.appointment.service.name} —{" "}
+                {payment.appointment.service.name},{" "}
                 {(payment.amount / 100).toFixed(0)} lei.{" "}
                 {platit
                   ? "Primești factura pe email."

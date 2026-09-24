@@ -21,6 +21,7 @@ function IconWhatsApp({ className }: { className?: string }) {
 /* Butonul e pentru vizitatorii site-ului. Pe chestionar și în panou nu are ce
    căuta — acolo numărul afișat ar fi chiar al Lilianei. */
 const HIDDEN_ON = ["/chestionar", "/admin", "/cont"];
+/* Butonul stă deasupra Anei (asistenta din colțul de jos). */
 
 export function WhatsAppButton() {
   const pathname = usePathname();
@@ -51,7 +52,7 @@ export function WhatsAppButton() {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.6, y: 20 }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="fixed bottom-6 right-6 z-40 flex items-center gap-3 lg:bottom-8 lg:right-8"
+          className="fixed bottom-[5.5rem] right-4 z-40 flex items-center gap-3 sm:right-6 lg:bottom-[6.75rem] lg:right-8"
         >
           <AnimatePresence>
             {hinted && (

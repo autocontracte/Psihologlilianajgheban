@@ -5,24 +5,16 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { NAV, SITE } from "@/content/site";
 import { IconArrow, IconUser } from "./ui/Icons";
+import { Logo } from "./ui/Logo";
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
-  /* Numele apare deja mare în hero. Cât timp ești acolo, l-am afișa de două
-     ori pe același ecran, așa că în bara de sus îl arătăm abia după ce hero-ul
-     a ieșit din câmpul vizual. */
-  const [pastHero, setPastHero] = useState(false);
-
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY;
       setScrolled(y > 40);
-
-      const hero = document.getElementById("acasa");
-      const prag = hero ? hero.offsetHeight - 120 : window.innerHeight * 0.7;
-      setPastHero(y > prag);
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -49,33 +41,27 @@ export function Nav() {
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
         className={[
           "fixed inset-x-0 top-0 z-50 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+          // Marginea rămâne mereu transparentă sau albă: fără culoare explicită,
+          // la întoarcerea sus trecea prin culoarea textului și apărea o bară neagră.
           scrolled
-            ? "bg-cream/85 py-3 shadow-[0_10px_40px_-24px_rgba(56,62,82,0.45)] backdrop-blur-xl"
-            : "bg-transparent py-6",
+            ? "glass !border-x-0 !border-t-0 py-3"
+            : "border-b border-transparent bg-transparent py-6",
         ].join(" ")}
       >
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 lg:px-10">
+        {/* Trei coloane: logo în stânga, meniul la mijloc, acțiunile în dreapta */}
+        <div className="mx-auto grid max-w-7xl grid-cols-[1fr_auto] items-center gap-6 px-6 lg:grid-cols-[1fr_auto_1fr] lg:px-10">
           {/* Logo */}
           <Link
             href="/#acasa"
             onClick={() => setOpen(false)}
-            className={[
-              "group flex flex-col leading-none transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
-              pastHero || open
-                ? "translate-y-0 opacity-100"
-                : "pointer-events-none -translate-y-1 opacity-0",
-            ].join(" ")}
+            aria-label="Liliana Jgheban, prima pagină"
+            className="flex items-center justify-self-start transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-105"
           >
-            <span className="font-display text-lg tracking-tight text-ink transition-colors duration-500 group-hover:text-periwinkle sm:text-xl">
-              Liliana Jgheban
-            </span>
-            <span className="mt-1 font-sans text-[0.72rem] tracking-[0.02em] text-ink-muted">
-              Psiholog · Psihoterapeut
-            </span>
+            <Logo marime={scrolled ? 50 : 60} className="transition-all duration-500" />
           </Link>
 
           {/* Meniu desktop */}
-          <nav className="hidden items-center gap-4 xl:gap-7 lg:flex">
+          <nav className="hidden items-center gap-6 xl:gap-9 lg:flex">
             {NAV.map((item) => (
               <Link
                 key={item.href}
@@ -85,6 +71,10 @@ export function Nav() {
                 {item.label}
               </Link>
             ))}
+          </nav>
+
+          {/* Acțiuni */}
+          <div className="hidden items-center justify-self-end gap-4 lg:flex">
             {/* Cont — iconiță, cu etichetă la hover */}
             <Link
               href="/cont"
@@ -103,7 +93,7 @@ export function Nav() {
               Programare
               <IconArrow className="h-3.5 w-3.5 transition-transform duration-500 group-hover:translate-x-1" />
             </Link>
-          </nav>
+          </div>
 
           {/* Buton meniu mobil */}
           <button
@@ -111,7 +101,7 @@ export function Nav() {
             onClick={() => setOpen((v) => !v)}
             aria-label={open ? "Închide meniul" : "Deschide meniul"}
             aria-expanded={open}
-            className="relative z-50 flex h-11 w-11 items-center justify-center rounded-none border border-ink/15 transition-colors duration-300 hover:border-ink/40 lg:hidden"
+            className="relative z-50 flex h-11 w-11 items-center justify-center justify-self-end rounded-none border border-ink/15 transition-colors duration-300 hover:border-ink/40 lg:hidden"
           >
             <span className="sr-only">Meniu</span>
             <div className="flex w-5 flex-col items-end gap-[5px]">
@@ -147,7 +137,7 @@ export function Nav() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
-            className="fixed inset-0 z-40 bg-cream lg:hidden"
+            className="glass-strong fixed inset-0 z-40 !border-0 lg:hidden"
           >
             <div className="flex h-full flex-col justify-center px-8">
               <nav className="flex flex-col gap-1">

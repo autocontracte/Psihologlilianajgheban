@@ -359,7 +359,7 @@ function EcranEmail({
         Aproape gata
       </h2>
       <p className="mt-2 font-sans text-[0.9rem] leading-relaxed text-ink-soft">
-        Ai completat {completate} răspunsuri. Lasă adresa de e-mail — acolo
+        Ai completat {completate} răspunsuri. Lasă adresa de e-mail, acolo
         primești ghidul și interpretarea, ca să le ai și mai târziu.
       </p>
 

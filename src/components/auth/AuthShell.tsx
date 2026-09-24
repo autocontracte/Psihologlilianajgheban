@@ -2,8 +2,8 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { Nav } from "../Nav";
 import { Footer } from "../Footer";
-import { OrbitFrame, OrbitRing } from "../ui/OrbitFrame";
 import { Reveal } from "../ui/Reveal";
+import { Lumina } from "../ui/Lumina";
 
 export function AuthShell({
   eyebrow,
@@ -22,6 +22,7 @@ export function AuthShell({
     <>
       <Nav />
       <main className="grain relative flex min-h-screen items-center overflow-hidden bg-cream px-6 pt-36 pb-24 lg:pt-40">
+        <Lumina din="stanga" />
         {/* Accente decorative */}
         <div
           aria-hidden
@@ -30,13 +31,6 @@ export function AuthShell({
         <div
           aria-hidden
           className="pointer-events-none absolute -right-32 bottom-0 h-[26rem] w-[26rem] rounded-none bg-sage-pale/50 blur-3xl"
-        />
-        <OrbitRing
-          className="-right-24 top-24 hidden lg:block"
-          size="20rem"
-          accent="periwinkle"
-          duration={58}
-          dashed
         />
 
         <div className="relative mx-auto w-full max-w-md">
@@ -48,24 +42,18 @@ export function AuthShell({
               <h1 className="mt-4 font-display text-4xl leading-tight text-ink sm:text-5xl">
                 {title}
               </h1>
-              <p className="mx-auto mt-4 max-w-sm font-sans text-[0.88rem] leading-[1.85] text-ink-soft">
+              <p className="relative mx-auto mt-4 max-w-sm font-sans text-[0.88rem] leading-[1.85] text-ink-soft">
                 {subtitle}
               </p>
             </div>
           </Reveal>
 
           <Reveal delay={0.12}>
-            <OrbitFrame
-              accent="periwinkle"
-              inset="-1rem"
-              radius="3rem"
-              duration={24}
-              tilt={2.5}
-            >
+            <div className="relative">
               <div className="rounded-none bg-cream-warm p-8 shadow-[0_30px_70px_-40px_rgba(56,62,82,0.45)] sm:p-10">
                 {children}
               </div>
-            </OrbitFrame>
+            </div>
           </Reveal>
 
           <Reveal delay={0.2}>

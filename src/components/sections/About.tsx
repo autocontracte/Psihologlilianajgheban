@@ -5,8 +5,9 @@ import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion
 import { useRef } from "react";
 import { ABOUT, PHOTOS } from "@/content/site";
 import { Reveal } from "../ui/Reveal";
-import { OrbitFrame } from "../ui/OrbitFrame";
 import { IconCheck } from "../ui/Icons";
+import { Pete } from "../ui/Pete";
+import { Lumina } from "../ui/Lumina";
 
 export function About() {
   const ref = useRef<HTMLElement>(null);
@@ -23,18 +24,13 @@ export function About() {
       id="despre"
       className="relative overflow-hidden bg-cream py-28 lg:py-36"
     >
-      <div className="mx-auto grid max-w-7xl items-center gap-14 px-6 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20 lg:px-10">
+      <Lumina din="dreapta" />
+      <Pete varianta={3} />
+      <div className="relative mx-auto grid max-w-7xl items-center gap-14 px-6 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20 lg:px-10">
         {/* ------------------------------------------------------ Imagine */}
         <motion.div style={{ y }} className="relative mx-auto w-full max-w-sm lg:max-w-none">
           <Reveal direction="right" duration={1}>
-            <OrbitFrame
-              accent="sage"
-              inset="-1.5rem"
-              radius="3.5rem"
-              duration={22}
-              tilt={3.5}
-              reverse
-            >
+            <div className="relative">
               {/* Pată de culoare în spate */}
               <div
                 aria-hidden
@@ -50,7 +46,7 @@ export function About() {
                   className="h-full w-full object-cover"
                 />
               </div>
-            </OrbitFrame>
+            </div>
           </Reveal>
         </motion.div>
 
@@ -84,7 +80,7 @@ export function About() {
 
           {/* Formare & acreditări */}
           <Reveal delay={0.45}>
-            <div className="mt-11 rounded-none border border-ink/10 bg-cream-warm p-8">
+            <div className="glass mt-11 rounded-none p-8">
               <p className="font-sans text-[0.74rem] tracking-[0.02em] text-ink-muted">
                 Formare și competențe
               </p>

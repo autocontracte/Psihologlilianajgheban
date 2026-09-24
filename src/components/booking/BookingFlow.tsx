@@ -237,7 +237,7 @@ export function BookingFlow({
               Programarea a fost înregistrată
             </h2>
             <p className="mx-auto mt-4 max-w-md font-sans text-[0.92rem] leading-[1.9] text-ink-soft">
-              {service?.name} —{" "}
+              {service?.name},{" "}
               {dayLabel(date, { weekday: "long", day: "numeric", month: "long" })}
               , ora {time}.{" "}
               {loggedIn
@@ -354,7 +354,7 @@ export function BookingFlow({
                   Ce fel de întâlnire îți dorești?
                 </h2>
                 <p className="mt-2 font-sans text-[0.85rem] text-ink-soft">
-                  Dacă nu ești sigur, alege psihoterapie individuală — putem
+                  Dacă nu ești sigur, alege psihoterapie individuală, putem
                   ajusta la prima ședință.
                 </p>
 
@@ -707,7 +707,7 @@ export function BookingFlow({
                     maxLength={2000}
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
-                    placeholder="Câteva rânduri despre ce te aduce în terapie. Poți lăsa gol — vorbim la prima întâlnire."
+                    placeholder="Câteva rânduri despre ce te aduce în terapie. Poți lăsa gol, vorbim la prima întâlnire."
                     className="w-full resize-none rounded-none border border-ink/15 bg-cream-warm px-5 py-3.5 font-sans text-[0.9rem] text-ink placeholder:text-ink-muted transition-all duration-300 focus:border-periwinkle focus:bg-cream focus:outline-none focus:ring-4 focus:ring-periwinkle/12"
                   />
                 </div>

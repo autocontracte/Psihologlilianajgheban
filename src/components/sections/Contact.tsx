@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
 import { CONTACT, SITE } from "@/content/site";
 import { Reveal } from "../ui/Reveal";
+import { Pete } from "../ui/Pete";
 import {
   IconArrow,
   IconClock,
@@ -11,11 +12,12 @@ import {
   IconMail,
   IconPhone,
 } from "../ui/Icons";
+import { Lumina } from "../ui/Lumina";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
 const inputClass =
-  "w-full rounded-none border border-ink/15 bg-cream-warm px-5 py-3.5 font-sans text-[0.9rem] text-ink placeholder:text-ink-muted transition-all duration-300 focus:border-periwinkle focus:bg-cream focus:outline-none focus:ring-4 focus:ring-periwinkle/12";
+  "w-full rounded-none border border-ink/12 bg-white/55 px-5 py-3.5 font-sans text-[0.9rem] text-ink placeholder:text-ink-muted transition-all duration-300 focus:border-periwinkle focus:bg-white/80 focus:outline-none focus:ring-4 focus:ring-periwinkle/12";
 
 export function Contact() {
   const [status, setStatus] = useState<Status>("idle");
@@ -54,7 +56,9 @@ export function Contact() {
       id="contact"
       className="relative overflow-hidden bg-cream-deep py-28 lg:py-36"
     >
-      <div className="mx-auto max-w-7xl px-6 lg:px-10">
+      <Lumina din="dreapta" />
+      <Pete varianta={2} />
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
         <div className="grid gap-14 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
           {/* ------------------------------------------------ Date contact */}
           <div>
@@ -158,7 +162,7 @@ export function Contact() {
 
           {/* ----------------------------------------------------- Formular */}
           <Reveal direction="left" delay={0.1}>
-            <div className="rounded-none bg-cream p-8 shadow-[0_30px_70px_-40px_rgba(56,62,82,0.4)] lg:p-11">
+            <div className="glass rounded-none p-8 lg:p-11">
               {status === "sent" ? (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
@@ -257,8 +261,8 @@ export function Contact() {
                       Ce te aduce aici
                     </label>
                     <select id="subject" name="subject" className={inputClass}>
-                      <option>Psihoterapie individuală — adult</option>
-                      <option>Psihoterapie — adolescent</option>
+                      <option>Psihoterapie individuală pentru adulți</option>
+                      <option>Psihoterapie pentru adolescenți</option>
                       <option>Terapie pentru copil</option>
                       <option>Consiliere parentală</option>
                       <option>Evaluare clinică psihologică</option>

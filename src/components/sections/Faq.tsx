@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { FAQ } from "@/content/site";
 import { Reveal } from "../ui/Reveal";
+import { Pete } from "../ui/Pete";
+import { Lumina } from "../ui/Lumina";
+import { AnaPanou } from "../ana/AnaPanou";
 
 export function Faq() {
   const [open, setOpen] = useState<number | null>(0);
@@ -11,10 +14,13 @@ export function Faq() {
   return (
     <section
       id="intrebari"
-      className="grain relative overflow-hidden bg-cream-deep py-28 lg:py-36"
+      className="grain relative overflow-clip bg-cream-deep py-28 lg:py-36"
     >
-      <div className="relative mx-auto max-w-4xl px-6 lg:px-10">
-        <div className="text-center">
+      <Lumina din="stanga" />
+      <Pete varianta={1} />
+      {/* overflow-clip, nu hidden: altfel panoul Anei nu mai poate sta „sticky" */}
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
+        <div className="max-w-2xl">
           <Reveal>
             <p className="font-sans text-[0.78rem] tracking-[0.02em] text-periwinkle">
               {FAQ.eyebrow}
@@ -26,18 +32,21 @@ export function Faq() {
             </h2>
           </Reveal>
           <Reveal delay={0.14}>
-            <div className="rule-soft mx-auto mt-7" />
+            <div className="rule-soft mt-7" />
           </Reveal>
         </div>
 
-        <div className="mt-14 space-y-3.5 lg:mt-16">
+        {/* Stânga: întrebările clasice (pentru oameni și pentru Google).
+            Dreapta: Ana, care rămâne pe ecran cât derulezi prin întrebări. */}
+        <div className="mt-14 grid items-start gap-10 lg:mt-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-12 xl:grid-cols-[minmax(0,1fr)_minmax(0,28rem)]">
+        <div className="space-y-3.5">
           {FAQ.items.map((item, i) => {
             const isOpen = open === i;
             return (
               <Reveal key={item.q} delay={Math.min(i * 0.05, 0.3)}>
                 <div
                   className={[
-                    "overflow-hidden rounded-none bg-cream transition-shadow duration-500",
+                    "glass overflow-hidden rounded-none transition-shadow duration-500",
                     isOpen
                       ? "shadow-[0_20px_50px_-28px_rgba(56,62,82,0.45)]"
                       : "",
@@ -47,7 +56,7 @@ export function Faq() {
                     type="button"
                     onClick={() => setOpen(isOpen ? null : i)}
                     aria-expanded={isOpen}
-                    className="flex w-full items-center justify-between gap-6 px-7 py-6 text-left transition-colors duration-300 hover:bg-cream-warm lg:px-8"
+                    className="flex w-full items-center justify-between gap-6 px-7 py-6 text-left transition-colors duration-300 hover:bg-white/35 lg:px-8"
                   >
                     <span
                       className={[
@@ -77,28 +86,30 @@ export function Faq() {
                     </span>
                   </button>
 
-                  <AnimatePresence initial={false}>
-                    {isOpen && (
-                      <motion.div
-                        key="content"
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{
-                          height: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
-                          opacity: { duration: 0.3 },
-                        }}
-                      >
-                        <p className="px-7 pb-7 font-sans text-[0.88rem] leading-[1.9] text-ink-soft lg:px-8">
-                          {item.a}
-                        </p>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                  {/* Răspunsul stă mereu în pagină (îl citește și Google); doar se pliază. */}
+                  <motion.div
+                    initial={false}
+                    animate={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }}
+                    transition={{
+                      height: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
+                      opacity: { duration: 0.3 },
+                    }}
+                    className="overflow-hidden"
+                    aria-hidden={!isOpen}
+                  >
+                    <p className="px-7 pb-7 font-sans text-[0.88rem] leading-[1.9] text-ink-soft lg:px-8">
+                      {item.a}
+                    </p>
+                  </motion.div>
                 </div>
               </Reveal>
             );
           })}
+        </div>
+
+        <Reveal delay={0.1} className="lg:sticky lg:top-28">
+          <AnaPanou />
+        </Reveal>
         </div>
       </div>
     </section>

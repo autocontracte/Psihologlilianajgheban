@@ -1,6 +1,7 @@
 import { Nav } from "./Nav";
 import { Footer } from "./Footer";
 import { Reveal } from "./ui/Reveal";
+import { Lumina } from "./ui/Lumina";
 
 export type LegalSection = {
   heading: string;
@@ -23,6 +24,7 @@ export function LegalPage({
     <>
       <Nav />
       <main>
+        <Lumina din="dreapta" />
         <section className="grain relative overflow-hidden bg-cream pt-40 pb-16 lg:pt-48">
           <div
             aria-hidden
@@ -51,7 +53,7 @@ export function LegalPage({
         </section>
 
         <section className="bg-cream pb-28 lg:pb-36">
-          <div className="mx-auto max-w-3xl px-6 lg:px-10">
+          <div className="relative mx-auto max-w-3xl px-6 lg:px-10">
             <div className="space-y-10">
               {sections.map((s, i) => (
                 <Reveal key={s.heading} delay={Math.min(i * 0.05, 0.3)}>
