@@ -5,7 +5,7 @@ import { IconSend } from "../ui/Icons";
 import { AnaFace } from "./AnaFace";
 import { AnaMesaje } from "./AnaMesaje";
 import { NotaAna, useAnaMood } from "./Ana";
-import { ANA_MAX, useAna } from "./useAna";
+import { useAna } from "./useAna";
 import { useNavigheaza } from "./useNavigheaza";
 
 /**
@@ -44,12 +44,7 @@ export function AnaPanou({ className = "" }: { className?: string }) {
             Sau, mai ușor, <em className="text-periwinkle">întreabă-mă pe mine</em>
           </p>
           <p className="mt-1 font-sans text-[0.8rem] text-ink-muted">
-            Ana · asistenta virtuală a cabinetului
-            {aInceput && (
-              <span className="ml-2 tabular-nums text-periwinkle">
-                {intrebari}/{ANA_MAX}
-              </span>
-            )}
+            Ana, asistenta virtuală a cabinetului
           </p>
         </div>
       </div>

@@ -7,7 +7,7 @@ import { IconSend } from "../ui/Icons";
 import { useNavigheaza } from "./useNavigheaza";
 import { AnaFace, type AnaMood } from "./AnaFace";
 import { AnaMesaje } from "./AnaMesaje";
-import { ANA_MAX, useAna } from "./useAna";
+import { useAna } from "./useAna";
 
 /* ----------------------------------------------------------------------------
    Ana — asistenta virtuală, în colțul din dreapta jos.
@@ -37,7 +37,7 @@ export function useAnaMood(draft: string): AnaMood {
 
 export function Ana() {
   const pathname = usePathname();
-  const { busy, gata, intrebari, ramase, trimite } = useAna();
+  const { busy, gata, ramase, trimite } = useAna();
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState("");
   const [indemn, setIndemn] = useState<string | null>(null);
@@ -194,7 +194,7 @@ export function Ana() {
             style={{ transformOrigin: "bottom right" }}
             className="glass-strong fixed inset-x-3 bottom-[5.5rem] z-[46] flex h-[min(36rem,calc(100svh-7.5rem))] flex-col sm:inset-x-auto sm:right-6 sm:w-[24rem] lg:bottom-[6.75rem] lg:right-8"
           >
-            <AntetAna mood={mood} intrebari={intrebari} onClose={() => setOpen(false)} />
+            <AntetAna mood={mood} onClose={() => setOpen(false)} />
 
             <div ref={bodyRef} className="flex-1 overflow-y-auto px-4 py-4" aria-live="polite">
               <AnaMesaje onGo={mergi} />
@@ -239,12 +239,10 @@ export function Ana() {
 
 export function AntetAna({
   mood,
-  intrebari,
   onClose,
   inchideEticheta = "Închide",
 }: {
   mood: AnaMood;
-  intrebari: number;
   onClose: () => void;
   inchideEticheta?: string;
 }) {
@@ -255,12 +253,6 @@ export function AntetAna({
         <p className="font-display text-[1.1rem] leading-none text-ink">Ana</p>
         <p className="mt-1 font-sans text-[0.74rem] text-ink-muted">Asistenta virtuală a cabinetului</p>
       </div>
-      <span
-        title="Întrebări puse în conversația asta"
-        className="shrink-0 bg-periwinkle-pale/70 px-2.5 py-1 font-sans text-[0.72rem] tabular-nums text-periwinkle"
-      >
-        {intrebari}/{ANA_MAX}
-      </span>
       <button
         type="button"
         onClick={onClose}

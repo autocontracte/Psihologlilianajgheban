@@ -307,7 +307,7 @@ function CasetaHero() {
             transition={{ duration: 0.35, ease }}
             className="flex min-h-0 flex-1 flex-col"
           >
-            <AntetAna mood={mood} intrebari={intrebari} onClose={inchide} inchideEticheta="Înapoi la prezentare" />
+            <AntetAna mood={mood} onClose={inchide} inchideEticheta="Înapoi la prezentare" />
             <div ref={listaRef} className="min-h-0 flex-1 overflow-y-auto px-5 py-4 sm:px-6" aria-live="polite">
               <AnaMesaje onGo={navigheaza} faraSalut />
             </div>
