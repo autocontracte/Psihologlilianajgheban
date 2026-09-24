@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import { clientIp } from "@/lib/request";
+import { CABINET_EMAIL, trimiteEmail } from "@/lib/email";
 
 /* ----------------------------------------------------------------------------
    Rută pentru formularul de contact.
 
-   În acest moment mesajul este validat și scris în log-ul serverului.
-   PENTRU PRODUCȚIE: conectează un serviciu de email (Resend, SMTP, Nodemailer)
-   în locul marcat mai jos cu „TODO livrare”.
+   Mesajul este validat, trimis pe email la cabinet (prin SMTP, vezi
+   src/lib/email.ts) și scris în log-ul serverului.
    -------------------------------------------------------------------------- */
 
 const MAX_LEN = {
@@ -98,19 +98,14 @@ export async function POST(request: Request) {
     );
   }
 
-  /* TODO livrare — înlocuiește cu trimiterea reală a emailului.
+  // „Răspunde” din căsuța cabinetului merge direct la omul care a scris
+  await trimiteEmail({
+    to: CABINET_EMAIL,
+    replyTo: email,
+    subject: `Mesaj nou de la ${name} — ${subject || "contact site"}`,
+    text: `Nume: ${name}\nEmail: ${email}\nTelefon: ${phone || "-"}\n\n${message}`,
+  });
 
-     Exemplu cu Resend:
-       import { Resend } from "resend";
-       const resend = new Resend(process.env.RESEND_API_KEY);
-       await resend.emails.send({
-         from: "Site <no-reply@psihologlilianajgheban.ro>",
-         to: process.env.CONTACT_EMAIL!,
-         replyTo: email,
-         subject: `Mesaj nou de la ${name} — ${subject || "contact site"}`,
-         text: `Nume: ${name}\nEmail: ${email}\nTelefon: ${phone}\n\n${message}`,
-       });
-  */
   console.log("[contact] mesaj nou", {
     name,
     email,

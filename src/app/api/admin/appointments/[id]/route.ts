@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { isStatus } from "@/lib/types";
+import { emailStatusProgramare } from "@/lib/emailProgramari";
 
 /** PATCH — administratorul schimbă statusul sau adaugă o notă internă. */
 export async function PATCH(
@@ -57,8 +58,10 @@ export async function PATCH(
     include: { service: true, user: true },
   });
 
-  /* TODO livrare — anunță clientul pe email când programarea e confirmată
-     sau anulată. */
+  // Clientul află doar când statusul chiar s-a schimbat, nu la fiecare notă internă
+  if (data.status && data.status !== existing.status) {
+    await emailStatusProgramare(updated, data.status);
+  }
 
   return NextResponse.json({ ok: true, appointment: updated });
 }

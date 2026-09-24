@@ -146,22 +146,15 @@ notificare. Vezi secțiunea următoare.
 
 ## Activarea formularelor
 
-Formularele validează datele și sunt gata de folosit, dar deocamdată doar
-**scriu mesajul în log-ul serverului**. Ca să ajungă pe email:
+Emailurile pleacă prin SMTP (Zoho), din `src/lib/email.ts`:
 
-1. Creează un cont pe [Resend](https://resend.com) și verifică domeniul.
-2. Copiază `.env.example` în `.env.production` și completează `RESEND_API_KEY`
-   și `CONTACT_EMAIL`.
-3. Instalează pachetul și decomentează blocul marcat `TODO livrare` din:
-   - `src/app/api/contact/route.ts`
-   - `src/app/api/programari/route.ts`
+- formularul de contact → la `CONTACT_EMAIL`, cu „Răspunde” către cel care a scris;
+- programare nouă → confirmare de primire clientului + înștiințare cabinetului;
+- programare confirmată / anulată din panou → email clientului.
 
-```bash
-npm install resend
-```
-
-Ambele rute au deja validare, limitare de trafic (5 cereri / IP / 10 minute)
-și capcană anti-spam.
+Cât timp `SMTP_HOST`, `SMTP_USER` și `SMTP_PASSWORD` lipsesc din `.env`,
+nimic nu se trimite — mesajele apar doar în log, iar formularele merg normal.
+Expeditorul (`MAIL_FROM`) trebuie să fie pe domeniul verificat în Zoho.
 
 ---
 

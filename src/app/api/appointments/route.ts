@@ -5,6 +5,7 @@ import { clientIp } from "@/lib/request";
 import { isSlotBookable } from "@/lib/slots";
 import { addMinutes, zonedToUtc } from "@/lib/tz";
 import { isFormat } from "@/lib/types";
+import { emailProgramareNoua } from "@/lib/emailProgramari";
 
 /** GET — programările utilizatorului autentificat. */
 export async function GET() {
@@ -193,15 +194,15 @@ export async function POST(request: Request) {
           status: "PENDING",
           notes: notes || null,
         },
-        include: { service: true },
+        include: { service: true, user: true },
       });
     });
 
     // Cota se consumă abia acum, când chiar s-a creat o programare
     if (!user) recordGuestBooking(guestIp);
 
-    /* TODO livrare — trimite email de confirmare clientului și înștiințare
-       către cabinet. Vezi README, secțiunea „Activarea formularelor". */
+    await emailProgramareNoua(created);
+
     console.log("[programare] creată", {
       id: created.id,
       client: user?.email ?? `${guestName} <${guestEmail}> (fără cont)`,
