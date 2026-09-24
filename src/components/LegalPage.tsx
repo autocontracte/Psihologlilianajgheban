@@ -41,9 +41,6 @@ export function LegalPage({
                 {title}
               </h1>
             </Reveal>
-            <Reveal delay={0.14}>
-              <div className="rule-soft mt-7" />
-            </Reveal>
             <Reveal delay={0.2}>
               <p className="mt-7 font-sans text-[0.93rem] leading-[1.9] text-ink-soft">
                 {intro}

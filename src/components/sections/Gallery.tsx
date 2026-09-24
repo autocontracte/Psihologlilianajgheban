@@ -18,11 +18,8 @@ export function Gallery() {
           </Reveal>
           <Reveal delay={0.08}>
             <h2 className="mt-4 font-display text-4xl leading-tight text-ink sm:text-5xl">
-              Locul în care ne vedem
+              Locul în care <em className="not-italic text-periwinkle">ne vedem</em>
             </h2>
-          </Reveal>
-          <Reveal delay={0.14}>
-            <div className="rule-soft mt-6" />
           </Reveal>
           <Reveal delay={0.2}>
             <p className="mt-6 font-sans text-[1rem] leading-[1.85] text-ink-soft">

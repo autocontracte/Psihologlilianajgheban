@@ -5,11 +5,13 @@ import type { ReactNode } from "react";
 
 type Direction = "up" | "down" | "left" | "right" | "none";
 
+/* Tot ce apare pe site apare doar printr-un fade — fără alunecări. Direcția
+   rămâne în API (e folosită peste tot), dar nu mai mută nimic. */
 const offset: Record<Direction, { x: number; y: number }> = {
-  up: { x: 0, y: 28 },
-  down: { x: 0, y: -28 },
-  left: { x: 32, y: 0 },
-  right: { x: -32, y: 0 },
+  up: { x: 0, y: 0 },
+  down: { x: 0, y: 0 },
+  left: { x: 0, y: 0 },
+  right: { x: 0, y: 0 },
   none: { x: 0, y: 0 },
 };
 
@@ -17,7 +19,7 @@ export function Reveal({
   children,
   direction = "up",
   delay = 0,
-  duration = 0.75,
+  duration = 1.1,
   className,
   once = true,
 }: {
@@ -56,11 +58,10 @@ const staggerParent: Variants = {
 };
 
 const staggerChild: Variants = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0 },
   show: {
     opacity: 1,
-    y: 0,
-    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 1, ease: [0.22, 1, 0.36, 1] },
   },
 };
 

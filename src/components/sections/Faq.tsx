@@ -7,6 +7,7 @@ import { Reveal } from "../ui/Reveal";
 import { Pete } from "../ui/Pete";
 import { Lumina } from "../ui/Lumina";
 import { AnaPanou } from "../ana/AnaPanou";
+import { Accent } from "../ui/Accent";
 
 export function Faq() {
   const [open, setOpen] = useState<number | null>(0);
@@ -28,11 +29,8 @@ export function Faq() {
           </Reveal>
           <Reveal delay={0.08}>
             <h2 className="mt-5 font-display text-4xl leading-tight text-ink sm:text-5xl">
-              {FAQ.title}
+              <Accent text={FAQ.title} />
             </h2>
-          </Reveal>
-          <Reveal delay={0.14}>
-            <div className="rule-soft mt-7" />
           </Reveal>
         </div>
 

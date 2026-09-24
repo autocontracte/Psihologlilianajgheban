@@ -29,10 +29,6 @@ export function Welcome() {
           </blockquote>
         </Reveal>
 
-        <Reveal delay={0.2}>
-          <div className="relative mx-auto mt-12 h-px w-20 bg-gradient-to-r from-transparent via-periwinkle-light to-transparent" />
-        </Reveal>
-
         <div className="relative mx-auto mt-12 max-w-2xl space-y-6">
           {WELCOME.body.map((p, i) => (
             <Reveal key={i} delay={0.25 + i * 0.1}>

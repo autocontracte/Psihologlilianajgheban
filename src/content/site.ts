@@ -67,7 +67,7 @@ export const NAV = [
   { label: "Acasă", href: "/#acasa" },
   { label: "Despre mine", href: "/#despre" },
   { label: "Servicii", href: "/#servicii" },
-  { label: "Ghid", href: "/consiliere" },
+  { label: "Evaluare gratuită", href: "/evaluare-gratuita" },
   { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/#contact" },
 ] as const;
@@ -97,7 +97,7 @@ export const WELCOME = {
 
 export const AUDIENCES = {
   eyebrow: "Pentru cine",
-  title: "Cui mă adresez",
+  title: "Cui mă *adresez*",
   subtitle:
     "Fiecare vârstă are nevoie de un alt limbaj. Adaptez metodele de lucru la omul din fața mea, fie că e un adult, un adolescent, un copil sau un părinte îngrijorat.",
   items: [
@@ -243,7 +243,7 @@ export const AUDIENCES = {
 
 export const SERVICES = {
   eyebrow: "Servicii",
-  title: "Cum putem lucra împreună",
+  title: "Cum putem lucra *împreună*",
   subtitle:
     "De la psihoterapie individuală la evaluare clinică și intervenții de grup. Alegem împreună forma potrivită pentru tine.",
   items: [
@@ -331,7 +331,7 @@ export const SERVICES = {
 
 export const FORMATS = {
   eyebrow: "Format",
-  title: "Terapie în cabinet, în București, sau online",
+  title: "Terapie în cabinet, în București, sau *online*",
   subtitle:
     "Alegi varianta care ți se potrivește. Ambele au aceeași structură, aceeași durată și aceeași confidențialitate.",
   items: [
@@ -364,7 +364,7 @@ export const FORMATS = {
 
 export const ABOUT = {
   eyebrow: "Despre mine",
-  title: "Bună, sunt Liliana",
+  title: "Bună, sunt *Liliana*",
   /* ⚠️ Nu adăuga informații care nu pot fi susținute documentar. */
   paragraphs: [
     "Sunt psiholog clinician și psihoterapeut integrativ. Lucrez cu adulți, adolescenți și copii și am însoțit oameni aflați în momente foarte diferite ale vieții: anxietate și epuizare, pierderi și despărțiri, traume, dar și perioade în care pur și simplu nu mai știau încotro să meargă.",
@@ -389,7 +389,7 @@ export const ABOUT = {
 
 export const APPROACH = {
   eyebrow: "Abordare",
-  title: "Cum lucrez",
+  title: "Cum *lucrez*",
   subtitle:
     "Nu există un drum unic. Îl construim împreună, pornind de la ce ai nevoie tu.",
   steps: [
@@ -441,7 +441,7 @@ export const APPROACH = {
 
 export const FAQ = {
   eyebrow: "Întrebări frecvente",
-  title: "Ce e bine să știi înainte de prima ședință",
+  title: "Ce e bine să știi înainte de *prima ședință*",
   items: [
     {
       q: "Cât costă o ședință de psihoterapie?",
@@ -498,19 +498,23 @@ export const FAQ = {
 
 export const CONTACT = {
   eyebrow: "Contact",
-  title: "Primul pas e cel mai greu",
+  title: "Primul pas e *cel mai greu*",
   subtitle:
     "Dacă te gândești de ceva vreme să mergi la psiholog, scrie-mi. Nu trebuie să știi de la început ce vrei să spui.",
 };
 
 /* -------------------------------------------------------------------------- */
 
+/* Secțiunea de pe prima pagină care duce la evaluarea psihologică gratuită.
+   Ghidul despre divorț are pagina lui (/consiliere) și se poate cumpăra și
+   din rezultatul evaluării. */
 export const TESTS = {
-  eyebrow: "Consiliere psihologică",
-  title: "Ghid practic despre divorț",
+  eyebrow: "Evaluare psihologică gratuită",
+  title: "Cum stai, de fapt, cu *relația ta*?",
   description:
-    "Un ghid de psihoeducație despre divorț: prevenție, separare, copii și viața de după. Răspunzi la câteva întrebări despre situația ta și primești o interpretare personală, plus ghidul complet în PDF.",
-  cta: "Vezi ghidul",
+    "Pentru momentele în care relația doare: certuri, gânduri de despărțire, un divorț în curs sau unul care încă apasă. Răspunzi la câteva întrebări și primești gratuit, pe loc, o interpretare personală și pași concreți.",
+  cta: "Începe evaluarea gratuită",
+  href: "/evaluare-gratuita",
 };
 
 /* ============================================================================
@@ -546,7 +550,7 @@ export const PHOTOS = {
     ⚠️ Înainte de publicare, asigură-te că ai acordul scris al fiecăruia. */
 export const REVIEWS = {
   eyebrow: "Ce spun oamenii",
-  title: "Mesaje primite după terapie",
+  title: "Mesaje primite *după terapie*",
   subtitle:
     "Câteva dintre mesajele primite de-a lungul timpului, publicate cu acordul celor care le-au scris.",
   images: [

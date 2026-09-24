@@ -2,6 +2,7 @@ import { TESTS } from "@/content/site";
 import { Reveal } from "../ui/Reveal";
 import { Button } from "../ui/Button";
 import { Lumina } from "../ui/Lumina";
+import { Accent } from "../ui/Accent";
 
 /* Mini-hero pentru secțiunea de consiliere — o fotografie alb-negru, cu un
    voal întunecat peste care stă textul, în spiritul copertei ghidului. */
@@ -29,7 +30,7 @@ export function TestsTeaser() {
               </span>
 
               <h2 className="mt-6 font-display text-3xl leading-[1.08] text-cream sm:text-4xl lg:text-[3.1rem]">
-                {TESTS.title}
+                <Accent text={TESTS.title} className="text-periwinkle-light" />
               </h2>
 
               <p className="mt-5 max-w-xl font-sans text-[0.92rem] leading-[1.9] text-cream/80">
@@ -37,7 +38,7 @@ export function TestsTeaser() {
               </p>
 
               <div className="mt-8">
-                <Button href="/consiliere" variant="light">
+                <Button href={TESTS.href} variant="light">
                   {TESTS.cta}
                 </Button>
               </div>

@@ -17,7 +17,7 @@ export async function POST(
   const comanda = await db.guideOrder.findUnique({ where: { id } });
   if (!comanda) return NextResponse.json({ error: "Comanda nu există." }, { status: 404 });
 
-  const rezultat = await genereazaSiSalveaza(comanda.token);
+  const rezultat = await genereazaSiSalveaza(comanda.token, true);
   if (!rezultat.ok) return NextResponse.json({ error: rezultat.error }, { status: 502 });
   return NextResponse.json({ ok: true });
 }

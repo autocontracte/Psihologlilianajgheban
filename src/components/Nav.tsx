@@ -36,8 +36,8 @@ export function Nav() {
   return (
     <>
       <motion.header
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
         className={[
           "fixed inset-x-0 top-0 z-50 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
@@ -113,7 +113,7 @@ export function Nav() {
                 className="block h-[1.5px] w-5 rounded-none bg-ink"
               />
               <motion.span
-                animate={open ? { opacity: 0, x: 8 } : { opacity: 1, x: 0 }}
+                animate={open ? { opacity: 0 } : { opacity: 1 }}
                 transition={{ duration: 0.3 }}
                 className="block h-[1.5px] w-3.5 rounded-none bg-ink"
               />
@@ -144,8 +144,8 @@ export function Nav() {
                 {NAV.map((item, i) => (
                   <motion.div
                     key={item.href}
-                    initial={{ opacity: 0, y: 24 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
                     transition={{
                       delay: 0.1 + i * 0.07,
                       duration: 0.6,
@@ -164,8 +164,8 @@ export function Nav() {
               </nav>
 
               <motion.div
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 transition={{ delay: 0.55, duration: 0.6 }}
                 className="mt-10 flex flex-col gap-4"
               >

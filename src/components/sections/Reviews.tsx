@@ -6,6 +6,7 @@ import { REVIEWS } from "@/content/site";
 import { Reveal } from "../ui/Reveal";
 import { ActionButtons } from "../ui/ActionButtons";
 import { CaruselInfinit } from "../ui/CaruselInfinit";
+import { Accent } from "../ui/Accent";
 
 /* ----------------------------------------------------------------------------
    Recenziile: capturile mesajelor primite, într-un carusel infinit care curge
@@ -53,9 +54,8 @@ export function Reviews() {
             <div className="max-w-2xl">
               <p className="font-sans text-[0.95rem] text-periwinkle">{REVIEWS.eyebrow}</p>
               <h2 className="mt-4 font-display text-4xl leading-tight text-ink sm:text-5xl">
-                {REVIEWS.title}
+                <Accent text={REVIEWS.title} />
               </h2>
-              <div className="rule-soft mt-6" />
               <p className="mt-6 font-sans text-[1rem] leading-[1.85] text-ink-soft">
                 {REVIEWS.subtitle}
               </p>

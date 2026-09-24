@@ -86,8 +86,8 @@ export function AppointmentList({
       {appointments.map((a, i) => (
         <motion.article
           key={a.id}
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: Math.min(i * 0.06, 0.3), ease: [0.22, 1, 0.36, 1] }}
           className="rounded-none bg-cream p-6 shadow-[0_18px_44px_-32px_rgba(56,62,82,0.5)]"
         >

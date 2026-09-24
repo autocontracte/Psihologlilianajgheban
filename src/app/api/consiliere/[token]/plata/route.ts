@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { platileSuntActive, stripe } from "@/lib/stripe";
-import { getComanda } from "@/lib/consiliere";
+import { eEvaluareGratuita, getComanda } from "@/lib/consiliere";
 import { SITE } from "@/content/site";
 
 /** POST — pornește plata de 50 lei pentru ghid. Suma vine din baza de date. */
@@ -16,6 +16,10 @@ export async function POST(
   const { token } = await params;
   const comanda = await getComanda(token);
   if (!comanda) return NextResponse.json({ error: "Comanda nu există." }, { status: 404 });
+  // O evaluare gratuită se plătește doar după ce devine comandă de ghid (/api/evaluare/[token]/ghid)
+  if (eEvaluareGratuita(comanda)) {
+    return NextResponse.json({ error: "Comanda ghidului nu a fost pornită." }, { status: 400 });
+  }
   if (comanda.status === "PAID") {
     return NextResponse.json({ error: "Ghidul e deja plătit." }, { status: 409 });
   }

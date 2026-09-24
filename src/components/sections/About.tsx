@@ -8,6 +8,7 @@ import { Reveal } from "../ui/Reveal";
 import { IconCheck } from "../ui/Icons";
 import { Pete } from "../ui/Pete";
 import { Lumina } from "../ui/Lumina";
+import { Accent } from "../ui/Accent";
 
 export function About() {
   const ref = useRef<HTMLElement>(null);
@@ -60,12 +61,8 @@ export function About() {
 
           <Reveal delay={0.08}>
             <h2 className="mt-5 font-display text-4xl leading-tight text-ink sm:text-5xl lg:text-[3.4rem]">
-              {ABOUT.title}
+              <Accent text={ABOUT.title} />
             </h2>
-          </Reveal>
-
-          <Reveal delay={0.14}>
-            <div className="rule-soft mt-7" />
           </Reveal>
 
           <div className="mt-8 space-y-5">

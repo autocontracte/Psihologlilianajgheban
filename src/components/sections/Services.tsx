@@ -8,6 +8,7 @@ import { Reveal } from "../ui/Reveal";
 import { ActionButtons } from "../ui/ActionButtons";
 import { Lumina } from "../ui/Lumina";
 import { IconArrow } from "../ui/Icons";
+import { Accent } from "../ui/Accent";
 
 /* ----------------------------------------------------------------------------
    Serviciile, ca o hartă: „drumul tău".
@@ -51,10 +52,10 @@ function Oprire({
   return (
     <motion.span
       data-oprire
-      initial={{ scale: 0.7, backgroundColor: "rgba(243,244,238,1)", color: "rgb(110,133,103)" }}
-      whileInView={{ scale: 1, backgroundColor: "rgb(110,133,103)", color: "rgb(243,244,238)" }}
+      initial={{ backgroundColor: "rgba(243,244,238,1)", color: "rgb(110,133,103)" }}
+      whileInView={{ backgroundColor: "rgb(110,133,103)", color: "rgb(243,244,238)" }}
       viewport={{ once: true, margin: "0px 0px -28% 0px" }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
       className={[
         "relative z-[2] flex shrink-0 items-center justify-center border-2 border-periwinkle font-display shadow-[0_0_0_8px_rgba(233,235,225,0.9),0_14px_30px_-12px_rgba(110,133,103,0.6)]",
         final ? "h-16 w-16 text-[1.5rem]" : "h-14 w-14 text-[1.15rem]",
@@ -190,11 +191,8 @@ export function Services() {
           </Reveal>
           <Reveal delay={0.08}>
             <h2 className="mt-5 font-display text-4xl leading-tight text-ink sm:text-5xl lg:text-[3.4rem]">
-              {SERVICES.title}
+              <Accent text={SERVICES.title} />
             </h2>
-          </Reveal>
-          <Reveal delay={0.14}>
-            <div className="rule-soft mx-auto mt-7" />
           </Reveal>
           <Reveal delay={0.2}>
             <p className="mt-7 font-sans text-[0.95rem] leading-[1.9] text-ink-soft">

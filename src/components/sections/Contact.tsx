@@ -13,6 +13,7 @@ import {
   IconPhone,
 } from "../ui/Icons";
 import { Lumina } from "../ui/Lumina";
+import { Accent } from "../ui/Accent";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
@@ -69,11 +70,8 @@ export function Contact() {
             </Reveal>
             <Reveal delay={0.08}>
               <h2 className="mt-5 font-display text-4xl leading-tight text-ink sm:text-5xl">
-                {CONTACT.title}
+                <Accent text={CONTACT.title} />
               </h2>
-            </Reveal>
-            <Reveal delay={0.14}>
-              <div className="rule-soft mt-7" />
             </Reveal>
             <Reveal delay={0.2}>
               <p className="mt-7 max-w-md font-sans text-[0.95rem] leading-[1.9] text-ink-soft">
@@ -165,8 +163,8 @@ export function Contact() {
             <div className="glass rounded-none p-8 lg:p-11">
               {status === "sent" ? (
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
                   transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                   className="flex min-h-[26rem] flex-col items-center justify-center text-center"
                 >

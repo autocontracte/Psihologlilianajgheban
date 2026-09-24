@@ -125,7 +125,6 @@ export default async function ContPage() {
               <h2 className="font-display text-2xl text-ink">
                 Ședințe viitoare
               </h2>
-              <div className="rule-soft mt-5" />
             </Reveal>
             <div className="mt-7">
               <AppointmentList
@@ -146,7 +145,6 @@ export default async function ContPage() {
             <section className="mt-16">
               <Reveal>
                 <h2 className="font-display text-2xl text-ink">Istoric</h2>
-                <div className="rule-soft mt-5" />
               </Reveal>
               <div className="mt-7 opacity-80">
                 <AppointmentList appointments={past} emptyText="" />

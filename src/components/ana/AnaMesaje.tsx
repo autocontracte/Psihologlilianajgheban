@@ -4,6 +4,7 @@ import { SITE } from "@/content/site";
 import { IconCalendar, IconPhone, IconWhatsApp } from "../ui/Icons";
 import { AnaText } from "./AnaText";
 import { SUGESTII, useAna } from "./useAna";
+import { ProgramareAna } from "./ProgramareAna";
 
 const waHref = `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(SITE.whatsappMessage)}`;
 
@@ -20,7 +21,7 @@ export function AnaMesaje({
   /** În hero, salutul e de prisos: omul tocmai a început să scrie. */
   faraSalut?: boolean;
 }) {
-  const { turns, busy, error, gata, intrebari, trimite } = useAna();
+  const { turns, busy, error, gata, intrebari, trimite, programare, deschideProgramare, inchideProgramare } = useAna();
   const vizibile = faraSalut && intrebari > 0 ? turns.slice(1) : faraSalut ? [] : turns;
 
   return (
@@ -50,7 +51,10 @@ export function AnaMesaje({
 
       {error && <p className="bg-clay-pale px-4 py-2.5 font-sans text-[0.82rem] text-clay">{error}</p>}
 
-      {intrebari === 0 && !busy && (
+      {/* Programarea direct în chat */}
+      {programare && !busy && <ProgramareAna onInchide={inchideProgramare} />}
+
+      {intrebari === 0 && !busy && !programare && (
         <div className="flex flex-wrap gap-2 pt-1">
           {SUGESTII.map((s) => (
             <button
@@ -62,6 +66,13 @@ export function AnaMesaje({
               {s}
             </button>
           ))}
+          <button
+            type="button"
+            onClick={deschideProgramare}
+            className="bg-periwinkle px-3.5 py-2 font-sans text-[0.8rem] text-cream transition-colors hover:bg-ink"
+          >
+            Vreau să mă programez
+          </button>
         </div>
       )}
 
@@ -77,7 +88,7 @@ export function AnaMesaje({
           <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
             <button
               type="button"
-              onClick={() => onGo("/programari")}
+              onClick={deschideProgramare}
               className="inline-flex items-center justify-center gap-2 bg-periwinkle px-4 py-3 font-sans text-[0.88rem] text-cream transition-colors hover:bg-ink"
             >
               <IconCalendar className="h-4.5 w-4.5" />

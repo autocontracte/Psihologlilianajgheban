@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { platileSuntActive } from "@/lib/stripe";
-import { getComanda, genereazaSiSalveaza } from "@/lib/consiliere";
+import { eEvaluareGratuita, getComanda, genereazaSiSalveaza } from "@/lib/consiliere";
 
 /* ----------------------------------------------------------------------------
    Finalizare gratuită — doar în perioada de testare.
@@ -25,6 +25,10 @@ export async function POST(
   const { token } = await params;
   const comanda = await getComanda(token);
   if (!comanda) return NextResponse.json({ error: "Comanda nu există." }, { status: 404 });
+  // O evaluare gratuită primește ghidul doar după ce devine comandă de ghid
+  if (eEvaluareGratuita(comanda)) {
+    return NextResponse.json({ error: "Comanda ghidului nu a fost pornită." }, { status: 400 });
+  }
 
   let email = comanda.email;
   try {

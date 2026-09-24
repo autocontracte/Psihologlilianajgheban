@@ -12,12 +12,19 @@ function tokenNou(): string {
   return randomBytes(32).toString("base64url");
 }
 
-/** Creează o comandă nouă (la începutul chestionarului). */
-export async function creeazaComanda() {
+/**
+ * Creează o comandă nouă (la începutul chestionarului).
+ * Evaluarea psihologică gratuită folosește același chestionar, cu suma 0 —
+ * așa se deosebește în admin de o comandă a ghidului.
+ */
+export async function creeazaComanda(suma: number = PRET_GHID_BANI) {
   return db.guideOrder.create({
-    data: { token: tokenNou(), amount: PRET_GHID_BANI },
+    data: { token: tokenNou(), amount: suma },
   });
 }
+
+/** O comandă cu suma 0 e o evaluare gratuită, nu o comandă a ghidului. */
+export const eEvaluareGratuita = (comanda: { amount: number }) => comanda.amount === 0;
 
 export async function getComanda(token: string) {
   return db.guideOrder.findUnique({ where: { token } });
@@ -49,10 +56,15 @@ export async function salveazaComanda(
  * Se cheamă după confirmarea plății (din webhook) sau manual, din admin.
  * Prins în try/catch de apelanți — o eroare de AI nu trebuie să blocheze
  * confirmarea plății.
+ *
+ * Dacă interpretarea există deja (de exemplu, omul a făcut întâi evaluarea
+ * gratuită și apoi a cumpărat ghidul), n-o mai generăm din nou — doar la
+ * cererea explicită din admin (`refa`).
  */
-export async function genereazaSiSalveaza(token: string) {
+export async function genereazaSiSalveaza(token: string, refa = false) {
   const comanda = await db.guideOrder.findUnique({ where: { token } });
   if (!comanda) return { ok: false as const, error: "Comanda nu există." };
+  if (comanda.interpretation && !refa) return { ok: true as const };
 
   let raspunsuri: Raspunsuri = {};
   try {

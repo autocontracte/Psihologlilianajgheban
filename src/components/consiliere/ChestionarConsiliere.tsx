@@ -17,12 +17,22 @@ import {
    Tokenul comenzii stă în localStorage, ca să poți relua.
    -------------------------------------------------------------------------- */
 
-const CHEIE_TOKEN = "consiliere_token";
+/* Ghidul și evaluarea gratuită au fiecare progresul lor salvat. */
+const CHEI_TOKEN = { ghid: "consiliere_token", evaluare: "evaluare_token" } as const;
+type Mod = keyof typeof CHEI_TOKEN;
 
 const stilCamp =
   "w-full rounded-none border border-ink/15 bg-cream-warm px-5 py-3.5 font-sans text-[0.95rem] text-ink placeholder:text-ink-muted transition-all duration-300 focus:border-periwinkle focus:bg-cream focus:outline-none focus:ring-4 focus:ring-periwinkle/12";
 
-export function ChestionarConsiliere({ platesteActiv }: { platesteActiv: boolean }) {
+export function ChestionarConsiliere({
+  platesteActiv = false,
+  mod = "ghid",
+}: {
+  platesteActiv?: boolean;
+  /** `evaluare` — evaluarea psihologică gratuită: interpretare fără plată și fără PDF. */
+  mod?: Mod;
+}) {
+  const CHEIE_TOKEN = CHEI_TOKEN[mod];
   const [token, setToken] = useState<string | null>(null);
   const [raspunsuri, setRaspunsuri] = useState<Raspunsuri>({});
   const [pas, setPas] = useState(0);
@@ -42,7 +52,7 @@ export function ChestionarConsiliere({ platesteActiv }: { platesteActiv: boolean
     setEroare("");
     if (token) { setStart(true); return; }
     try {
-      const res = await fetch("/api/consiliere", { method: "POST" });
+      const res = await fetch(mod === "evaluare" ? "/api/evaluare" : "/api/consiliere", { method: "POST" });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error ?? "Nu am putut începe.");
       localStorage.setItem(CHEIE_TOKEN, json.token);
@@ -136,20 +146,45 @@ export function ChestionarConsiliere({ platesteActiv }: { platesteActiv: boolean
     }
   }
 
+  // Evaluarea gratuită: salvează ce a mai rămas, generează interpretarea și du la rezultat.
+  async function finalizeazaEvaluarea() {
+    setEroare("");
+    if (email.trim() && !/^[^s@]+@[^s@]+.[^s@]{2,}$/.test(email.trim())) {
+      setEroare("Adresa de e-mail nu pare validă. O poți lăsa și goală.");
+      return;
+    }
+    setTrimit(true);
+    try {
+      const res = await fetch(`/api/evaluare/${token}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ answers: raspunsuri, email }),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(json.error ?? "Nu am putut pregăti interpretarea.");
+      // evaluarea s-a încheiat: data viitoare, una nouă
+      localStorage.removeItem(CHEIE_TOKEN);
+      window.location.href = `/evaluare-gratuita/rezultat/${token}`;
+    } catch (err) {
+      setEroare(err instanceof Error ? err.message : "A apărut o eroare.");
+      setTrimit(false);
+    }
+  }
+
   /* ---------- ecranul de intro ---------- */
   if (!start) {
     return (
       <div className="border border-ink/10 bg-cream p-8 text-center sm:p-12">
         <p className="font-sans text-[0.8rem] tracking-[0.02em] text-periwinkle">
-          Ghid + interpretare personalizată
+          {mod === "evaluare" ? "Evaluare gratuită" : "Ghid + interpretare personalizată"}
         </p>
         <h2 className="mt-4 font-display text-[1.9rem] leading-tight text-ink sm:text-[2.3rem]">
           Răspunzi la câteva întrebări, primești o perspectivă
         </h2>
         <p className="mx-auto mt-5 max-w-xl font-sans text-[0.95rem] leading-[1.9] text-ink-soft">
-          Câteva întrebări scurte despre situația ta. Pe baza lor primești o
-          interpretare personală, sprijinită pe „Ghidul practic despre divorț",
-          plus ghidul complet în PDF. Durează câteva minute.
+          {mod === "evaluare"
+            ? "Câteva întrebări scurte despre situația ta. Pe baza lor primești, gratuit, o interpretare personală și câțiva pași concreți. Durează doar câteva minute."
+            : "Câteva întrebări scurte despre situația ta. Pe baza lor primești o interpretare personală, sprijinită pe „Ghidul practic despre divorț\", plus ghidul complet în PDF. Durează câteva minute."}
         </p>
         {eroare && (
           <p className="mx-auto mt-5 max-w-md border-l-2 border-clay bg-clay-pale px-5 py-3 font-sans text-[0.87rem] text-clay">
@@ -161,7 +196,7 @@ export function ChestionarConsiliere({ platesteActiv }: { platesteActiv: boolean
           onClick={incepe}
           className="mt-8 bg-periwinkle px-9 py-4 font-sans text-[0.95rem] text-cream transition-colors hover:bg-ink"
         >
-          Începe
+          {mod === "evaluare" ? "Începe evaluarea" : "Începe"}
         </button>
         <p className="mt-4 font-sans text-[0.8rem] text-ink-muted">
           Răspunsurile se salvează pe măsură ce le dai.
@@ -187,11 +222,13 @@ export function ChestionarConsiliere({ platesteActiv }: { platesteActiv: boolean
 
       <motion.section
         key={pas}
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         transition={{ duration: 0.35 }}
       >
-        {laEmail ? (
+        {laEmail && mod === "evaluare" ? (
+          <EcranFinalEvaluare email={email} setEmail={setEmail} trimit={trimit} onFinalizeaza={finalizeazaEvaluarea} />
+        ) : laEmail ? (
           <EcranEmail
             email={email}
             setEmail={(v) => { setEmail(v); }}
@@ -413,6 +450,51 @@ function EcranEmail({
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+/** Finalul evaluării gratuite: emailul e opțional, interpretarea apare pe loc. */
+function EcranFinalEvaluare({
+  email,
+  setEmail,
+  trimit,
+  onFinalizeaza,
+}: {
+  email: string;
+  setEmail: (v: string) => void;
+  trimit: boolean;
+  onFinalizeaza: () => void;
+}) {
+  return (
+    <div>
+      <h2 className="font-display text-[1.5rem] leading-snug text-ink sm:text-[1.8rem]">Aproape gata</h2>
+      <p className="mt-2 font-sans text-[0.9rem] leading-relaxed text-ink-soft">
+        Interpretarea ta apare imediat, pe pagina următoare. Dacă vrei, lasă și adresa de e-mail,
+        ca Liliana să îți poată scrie. E opțional.
+      </p>
+      <div className="mt-6">
+        <label className="block font-sans text-[0.83rem] text-ink-soft">Adresa de e-mail (opțional)</label>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="nume@exemplu.ro"
+          className={`${stilCamp} mt-2 max-w-md`}
+        />
+      </div>
+      <button
+        type="button"
+        onClick={onFinalizeaza}
+        disabled={trimit}
+        className="mt-8 w-full bg-periwinkle px-8 py-4 font-sans text-[0.95rem] text-cream transition-colors hover:bg-ink disabled:opacity-60 sm:w-auto"
+      >
+        {trimit ? "Se pregătește interpretarea…" : "Vezi interpretarea mea"}
+      </button>
+      <p className="mt-3 font-sans text-[0.78rem] leading-relaxed text-ink-muted">
+        Pregătirea durează câteva secunde. Interpretarea e o reflecție de psihoeducație, nu un
+        diagnostic, și nu înlocuiește o ședință de terapie.
+      </p>
     </div>
   );
 }

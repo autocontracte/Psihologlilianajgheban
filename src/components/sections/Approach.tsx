@@ -2,6 +2,7 @@ import { APPROACH } from "@/content/site";
 import { Reveal, Stagger, StaggerItem } from "../ui/Reveal";
 import { ActionButtons } from "../ui/ActionButtons";
 import { Lumina } from "../ui/Lumina";
+import { Accent } from "../ui/Accent";
 
 export function Approach() {
   return (
@@ -26,7 +27,7 @@ export function Approach() {
           </Reveal>
           <Reveal delay={0.08}>
             <h2 className="mt-5 font-display text-4xl leading-tight text-cream sm:text-5xl">
-              {APPROACH.title}
+              <Accent text={APPROACH.title} className="text-periwinkle-light" />
             </h2>
           </Reveal>
           <Reveal delay={0.16}>

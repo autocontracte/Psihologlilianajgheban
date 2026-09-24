@@ -4,6 +4,7 @@ import { Reveal, Stagger, StaggerItem } from "../ui/Reveal";
 import { ActionButtons } from "../ui/ActionButtons";
 import { Pete } from "../ui/Pete";
 import { Lumina } from "../ui/Lumina";
+import { Accent } from "../ui/Accent";
 
 export function Formats() {
   return (
@@ -23,11 +24,8 @@ export function Formats() {
           </Reveal>
           <Reveal delay={0.08}>
             <h2 className="mt-5 font-display text-4xl leading-tight text-ink sm:text-5xl">
-              {FORMATS.title}
+              <Accent text={FORMATS.title} />
             </h2>
-          </Reveal>
-          <Reveal delay={0.14}>
-            <div className="rule-soft mx-auto mt-7" />
           </Reveal>
           <Reveal delay={0.2}>
             <p className="mt-7 font-sans text-[0.95rem] leading-[1.9] text-ink-soft">

@@ -2,9 +2,10 @@
 
 import { SITE } from "@/content/site";
 import { IconArrow } from "../ui/Icons";
+import { useAna } from "./useAna";
 
 /* Rutele pe care Ana are voie să le dea. Orice alt link rămâne text simplu. */
-const RUTE = ["/programari", "/#", "/consiliere", "/blog"];
+const RUTE = ["/programari", "/#", "/consiliere", "/evaluare-gratuita", "/blog"];
 const waHref = `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(SITE.whatsappMessage)}`;
 
 const buton =
@@ -16,6 +17,7 @@ const buton =
  * îngroșare, pe care modelul le mai scapă.
  */
 export function AnaText({ text, onGo }: { text: string; onGo: (href: string) => void }) {
+  const { deschideProgramare } = useAna();
   // fără îngroșări markdown și fără linii de pauză, chiar dacă modelul le mai scapă
   const curat = text.replace(/\*\*(.+?)\*\*/g, "$1").replace(/\s*[—–]\s*/g, ", ");
   const parti: React.ReactNode[] = [];
@@ -28,7 +30,13 @@ export function AnaText({ text, onGo }: { text: string; onGo: (href: string) => 
     if (m.index > ultim) parti.push(curat.slice(ultim, m.index));
     const [, eticheta, href] = m;
 
-    if (href === "whatsapp" || href.includes("wa.me")) {
+    if (href === "programare") {
+      parti.push(
+        <button key={k++} type="button" onClick={deschideProgramare} className={buton}>
+          {eticheta} <IconArrow className="h-3 w-3" />
+        </button>,
+      );
+    } else if (href === "whatsapp" || href.includes("wa.me")) {
       parti.push(
         <a key={k++} href={waHref} target="_blank" rel="noreferrer" className={buton}>
           {eticheta} <IconArrow className="h-3 w-3" />

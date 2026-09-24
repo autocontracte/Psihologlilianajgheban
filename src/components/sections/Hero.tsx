@@ -11,7 +11,7 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { HERO, PRICE, PHOTOS } from "@/content/site";
 import { IconArrow, IconClock, IconOffice, IconPrice, IconSend } from "../ui/Icons";
 import { AnaFace } from "../ana/AnaFace";
@@ -113,8 +113,8 @@ export function Hero() {
             className="pointer-events-none absolute inset-0 hidden sm:block"
           >
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
               transition={{ duration: 0.9, delay: 0.9, ease: [0.22, 1, 0.36, 1] }}
               className="glass-strong absolute -left-10 top-[16%] flex items-center gap-2.5 px-4 py-3 lg:-left-14"
             >
@@ -122,8 +122,8 @@ export function Hero() {
               <span className="font-sans text-[0.88rem] text-ink">În cabinet și online</span>
             </motion.div>
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
               transition={{ duration: 0.9, delay: 1.05, ease: [0.22, 1, 0.36, 1] }}
               className="glass-strong absolute -right-6 bottom-[12%] px-5 py-3.5 lg:-right-10"
             >
@@ -147,8 +147,8 @@ export function Hero() {
 function Portret() {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40, scale: 0.96 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       transition={{ duration: 1.1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
       className="glass p-2.5 sm:p-3"
     >
@@ -167,186 +167,263 @@ function Portret() {
 }
 
 /* ----------------------------------------------------------------------------
-   Caseta din hero: prezentarea, iar dedesubt bara în care îi scrii Anei.
+   Coloana din stânga a hero-ului: prezentarea, iar dedesubt blocul Anei.
+
+   Cât scrii în bara Anei nu se schimbă nimic — prezentarea rămâne. Când
+   trimiți întrebarea, chatul apare printr-un fade peste toată coloana
+   (prezentare + Ana), care își păstrează înălțimea, deci pagina nu sare.
+   Cu ✕ chatul dispare și prezentarea e din nou acolo.
    -------------------------------------------------------------------------- */
+
+const SUGESTII_HERO = ["Cât costă o ședință?", "Se poate și online?", "Cum decurge prima întâlnire?"];
 
 function CasetaHero() {
   const { busy, gata, intrebari, ramase, trimite, turns } = useAna();
   const [chat, setChat] = useState(false);
-  const [draft, setDraft] = useState("");
-  const [inaltime, setInaltime] = useState<number | null>(null);
-  const casetaRef = useRef<HTMLDivElement>(null);
+  const [bara, setBara] = useState("");
+  const [scris, setScris] = useState("");
+  const [focus, setFocus] = useState(false);
   const listaRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const mood = useAnaMood(draft);
+  const chatInputRef = useRef<HTMLInputElement>(null);
+  const mood = useAnaMood(chat ? scris : bara);
   const navigheaza = useNavigheaza();
   const ease = [0.22, 1, 0.36, 1] as const;
-
-  // Caseta își păstrează înălțimea când devine chat, ca pagina să nu sară
-  useLayoutEffect(() => {
-    if (chat || !casetaRef.current) return;
-    const el = casetaRef.current;
-    const masoara = () => setInaltime(el.getBoundingClientRect().height);
-    masoara();
-    const ro = new ResizeObserver(masoara);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, [chat]);
 
   useEffect(() => {
     listaRef.current?.scrollTo({ top: listaRef.current.scrollHeight, behavior: "smooth" });
   }, [turns, busy, chat]);
 
-  function scrie(v: string) {
-    setDraft(v);
-    if (v.length > 0 && !chat) setChat(true);
-    if (v.length === 0 && chat && intrebari === 0) setChat(false);
-  }
+  useEffect(() => {
+    if (!chat) return;
+    const t = setTimeout(() => chatInputRef.current?.focus(), 350);
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setChat(false);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      clearTimeout(t);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [chat]);
 
-  async function trimiteDraft() {
-    const q = draft;
-    if (!q.trim()) return;
+  async function intreaba(text: string, deUnde: "bara" | "chat") {
+    const q = text.trim();
+    if (!q) return;
     setChat(true);
-    setDraft("");
+    if (deUnde === "bara") setBara("");
+    else setScris("");
     const ok = await trimite(q);
-    if (!ok) setDraft(q);
-    inputRef.current?.focus();
-  }
-
-  function inchide() {
-    setChat(false);
-    setDraft("");
+    // dacă n-a mers, întrebarea rămâne în câmpul din chat, ca omul să o poată retrimite
+    if (!ok) setScris(q);
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 1, delay: 0.1, ease }}
-      ref={casetaRef}
-      className="glass-strong flex flex-col lg:!bg-white/45"
-      style={chat && inaltime ? { height: Math.max(inaltime, 440) } : undefined}
-    >
-      <AnimatePresence mode="wait" initial={false}>
-        {!chat ? (
-          <motion.div
-            key="intro"
-            exit={{ opacity: 0, y: -14, filter: "blur(4px)" }}
-            transition={{ duration: 0.28 }}
-            className="px-6 pb-5 pt-7 sm:px-10 sm:pt-10 lg:px-12 lg:pt-12"
+    <div className="relative">
+      {/* Prezentarea */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.2, delay: 0.1, ease }}
+        aria-hidden={chat || undefined}
+        className="glass-strong px-6 pb-8 pt-7 sm:px-10 sm:pb-10 sm:pt-10 lg:!bg-white/45 lg:px-12 lg:pb-12 lg:pt-12"
+      >
+        {/* Titlul principal. Pentru Google se citește „Liliana Jgheban — Psiholog
+            clinician și psihoterapeut integrativ în București" (numele întâi, apoi
+            ce și unde); pe ecran rândul mic stă deasupra numelui. */}
+        <h1 className="flex flex-col-reverse">
+          <motion.span
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.9, delay: 0.4, ease }}
+            className="mt-3 block font-display text-[2.5rem] font-medium leading-[1.05] tracking-tight text-periwinkle sm:text-6xl lg:text-[4rem]"
           >
-            {/* Titlul principal. Pentru Google se citește „Liliana Jgheban — Psiholog
-                clinician și psihoterapeut integrativ în București" (numele întâi, apoi
-                ce și unde); pe ecran rândul mic stă deasupra numelui. */}
-            <h1 className="flex flex-col-reverse">
-              <motion.span
-                initial={{ opacity: 0, y: 26 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.9, delay: 0.4, ease }}
-                className="mt-3 block font-display text-[2.5rem] font-medium leading-[1.05] tracking-tight text-periwinkle sm:text-6xl lg:text-[4rem]"
-              >
-                {HERO.name}
-                <span className="sr-only">, </span>
-              </motion.span>
-              <motion.span
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.3, ease }}
-                className="block font-sans text-[0.98rem] font-medium text-ink"
-              >
-                {HERO.eyebrow}
-              </motion.span>
-            </h1>
-
-
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.65, ease }}
-              className="mt-6 hidden font-sans text-[1rem] leading-[1.8] text-ink-soft sm:block"
-            >
-              {HERO.intro}
-            </motion.p>
-
-            {/* Pe telefon etichetele de lângă portret nu încap — reperele stau aici */}
-            <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-2 sm:hidden">
-              {[
-                { Icon: IconPrice, text: `${PRICE.standard} ${PRICE.currency} / ședință` },
-                { Icon: IconClock, text: "50 de minute" },
-                { Icon: IconOffice, text: "În cabinet și online" },
-              ].map(({ Icon, text }) => (
-                <li key={text} className="flex items-center gap-2 font-sans text-[0.9rem] text-ink">
-                  <Icon className="h-5 w-5 text-periwinkle" />
-                  {text}
-                </li>
-              ))}
-            </ul>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8, ease }}
-              className="mt-7 flex flex-col gap-3 sm:flex-row"
-            >
-              <Link
-                href={HERO.ctaPrimary.href}
-                className="group inline-flex items-center justify-center gap-2.5 bg-periwinkle px-7 py-3.5 font-sans text-[0.95rem] text-cream shadow-[0_18px_40px_-18px_rgba(110,133,103,0.9)] transition-colors duration-400 hover:bg-ink"
-              >
-                {HERO.ctaPrimary.label}
-                <IconArrow className="h-5 w-5 transition-transform duration-400 group-hover:translate-x-1" />
-              </Link>
-            </motion.div>
-          </motion.div>
-        ) : (
-          <motion.div
-            key="chat"
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 14 }}
-            transition={{ duration: 0.35, ease }}
-            className="flex min-h-0 flex-1 flex-col"
+            {HERO.name}
+            <span className="sr-only">, </span>
+          </motion.span>
+          <motion.span
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.7, delay: 0.3, ease }}
+            className="block font-sans text-[0.98rem] font-medium text-ink"
           >
-            <AntetAna mood={mood} onClose={inchide} inchideEticheta="Înapoi la prezentare" />
-            <div ref={listaRef} className="min-h-0 flex-1 overflow-y-auto px-5 py-4 sm:px-6" aria-live="polite">
-              <AnaMesaje onGo={navigheaza} faraSalut />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            {HERO.eyebrow}
+          </motion.span>
+        </h1>
 
-      {/* Bara de scris — mereu la locul ei, ca focusul să nu se piardă când caseta se transformă */}
+
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.65, ease }}
+          className="mt-6 hidden font-sans text-[1rem] leading-[1.8] text-ink-soft sm:block"
+        >
+          {HERO.intro}
+        </motion.p>
+
+        {/* Pe telefon etichetele de lângă portret nu încap — reperele stau aici */}
+        <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-2 sm:hidden">
+          {[
+            { Icon: IconPrice, text: `${PRICE.standard} ${PRICE.currency} / ședință` },
+            { Icon: IconClock, text: "50 de minute" },
+            { Icon: IconOffice, text: "În cabinet și online" },
+          ].map(({ Icon, text }) => (
+            <li key={text} className="flex items-center gap-2 font-sans text-[0.9rem] text-ink">
+              <Icon className="h-5 w-5 text-periwinkle" />
+              {text}
+            </li>
+          ))}
+        </ul>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.8, ease }}
+          className="mt-7 flex flex-col gap-3 sm:flex-row"
+        >
+          <Link
+            href={HERO.ctaPrimary.href}
+            className="group inline-flex items-center justify-center gap-2.5 bg-periwinkle px-7 py-3.5 font-sans text-[0.95rem] text-cream shadow-[0_18px_40px_-18px_rgba(110,133,103,0.9)] transition-colors duration-400 hover:bg-ink"
+          >
+            {HERO.ctaPrimary.label}
+            <IconArrow className="h-5 w-5 transition-transform duration-400 group-hover:translate-x-1" />
+          </Link>
+        </motion.div>
+      </motion.div>
+
+      {/* Ana — blocul ei, separat, sub prezentare */}
       {!gata && (
-        <div className={chat ? "border-t border-ink/8 px-5 pb-3 pt-3 sm:px-6" : "px-6 pb-7 sm:px-10 sm:pb-10 lg:px-12 lg:pb-12"}>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.2, delay: 0.5, ease }}
+          className="glass-strong mt-4 p-4 sm:p-5 lg:!bg-white/55"
+        >
+          <div className="flex items-center gap-3">
+            <AnaFace size={46} mood={mood} />
+            <div className="min-w-0 flex-1">
+              <p className="font-display text-[1.1rem] leading-tight text-ink">Întreab-o pe Ana</p>
+              <p className="mt-0.5 font-sans text-[0.8rem] text-ink-muted">
+                Asistenta virtuală a cabinetului îți răspunde pe loc.
+              </p>
+            </div>
+            {intrebari > 0 && !chat && (
+              <button
+                type="button"
+                onClick={() => setChat(true)}
+                className="shrink-0 font-sans text-[0.8rem] text-periwinkle underline underline-offset-4 transition-colors hover:text-ink"
+              >
+                Conversația voastră
+              </button>
+            )}
+          </div>
+
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              trimiteDraft();
+              intreaba(bara, "bara");
             }}
-            className="glass-btn flex items-center gap-2 p-1.5 pl-2 transition-shadow focus-within:shadow-[0_0_0_3px_rgba(110,133,103,0.25),0_12px_30px_-20px_rgba(54,60,69,0.45)]"
+            className="glass-btn mt-3 flex items-center gap-2 p-1.5 pl-3 transition-shadow focus-within:shadow-[0_0_0_3px_rgba(110,133,103,0.25),0_12px_30px_-20px_rgba(54,60,69,0.45)]"
           >
-            <AnaFace size={36} mood={mood} />
             <input
-              ref={inputRef}
-              value={draft}
-              onChange={(e) => scrie(e.target.value)}
-              placeholder={chat ? "Scrie o întrebare…" : "Întreab-o pe Ana: prețuri, online, prima ședință…"}
+              value={bara}
+              onChange={(e) => setBara(e.target.value)}
+              onFocus={() => setFocus(true)}
+              onBlur={() => setFocus(false)}
+              placeholder="Prețuri, ședințe online, prima întâlnire…"
               aria-label="Întreab-o pe Ana, asistenta virtuală a cabinetului"
               maxLength={500}
-              className="min-w-0 flex-1 bg-transparent px-1 py-2 font-sans text-[0.93rem] text-ink placeholder:text-ink-muted focus:outline-none"
+              className="min-w-0 flex-1 bg-transparent py-2 font-sans text-[0.93rem] text-ink placeholder:text-ink-muted focus:outline-none"
             />
             <button
               type="submit"
-              disabled={!draft.trim() || busy}
+              disabled={!bara.trim() || busy}
               aria-label="Trimite întrebarea"
               className="flex h-10 w-10 shrink-0 items-center justify-center bg-periwinkle text-cream transition-colors hover:bg-ink disabled:opacity-40"
             >
               <IconSend className="h-4.5 w-4.5" />
             </button>
           </form>
-          {chat && <NotaAna ramase={ramase} />}
-        </div>
+
+          {/* Câteva întrebări gata scrise, cât bara e activă și încă goală */}
+          <AnimatePresence initial={false}>
+            {focus && !bara && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.35, ease }}
+                className="overflow-hidden"
+              >
+                <div className="flex flex-wrap gap-2 pt-3">
+                  {SUGESTII_HERO.map((s) => (
+                    <button
+                      key={s}
+                      type="button"
+                      // mousedown, nu click: altfel bara pierde focusul și sugestiile dispar înainte de click
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        intreaba(s, "bara");
+                      }}
+                      className="bg-white/60 px-3 py-1.5 font-sans text-[0.8rem] text-ink transition-colors hover:bg-periwinkle hover:text-cream"
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
       )}
-    </motion.div>
+
+      {/* Chatul — apare printr-un fade peste toată coloana */}
+      <AnimatePresence>
+        {chat && (
+          <motion.div
+            role="dialog"
+            aria-label="Conversația cu Ana"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5, ease }}
+            className="glass-strong absolute inset-0 z-10 flex min-h-[26rem] flex-col !bg-cream-warm/95"
+          >
+            <AntetAna mood={mood} onClose={() => setChat(false)} inchideEticheta="Închide conversația" />
+            <div ref={listaRef} className="min-h-0 flex-1 overflow-y-auto px-5 py-4 sm:px-6" aria-live="polite">
+              <AnaMesaje onGo={navigheaza} faraSalut />
+            </div>
+            {!gata && (
+              <div className="border-t border-ink/8 px-5 pb-3 pt-3 sm:px-6">
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    intreaba(scris, "chat");
+                  }}
+                  className="glass-btn flex items-center gap-2 p-1.5 pl-3 transition-shadow focus-within:shadow-[0_0_0_3px_rgba(110,133,103,0.25)]"
+                >
+                  <input
+                    ref={chatInputRef}
+                    value={scris}
+                    onChange={(e) => setScris(e.target.value)}
+                    placeholder="Scrie o întrebare…"
+                    aria-label="Întrebarea ta pentru Ana"
+                    maxLength={500}
+                    className="min-w-0 flex-1 bg-transparent py-2 font-sans text-[0.93rem] text-ink placeholder:text-ink-muted focus:outline-none"
+                  />
+                  <button
+                    type="submit"
+                    disabled={!scris.trim() || busy}
+                    aria-label="Trimite"
+                    className="flex h-10 w-10 shrink-0 items-center justify-center bg-periwinkle text-cream transition-colors hover:bg-ink disabled:opacity-40"
+                  >
+                    <IconSend className="h-4.5 w-4.5" />
+                  </button>
+                </form>
+                <NotaAna ramase={ramase} />
+              </div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }

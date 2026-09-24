@@ -225,8 +225,8 @@ export function BookingFlow({
   if (done) {
     return (
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         transition={{ duration: 0.6, ease }}
       >
         <div className="rounded-none bg-cream p-10 text-center shadow-[0_30px_70px_-40px_rgba(56,62,82,0.4)] lg:p-14">
@@ -345,9 +345,9 @@ export function BookingFlow({
             {step === 0 && (
               <motion.div
                 key="s0"
-                initial={{ opacity: 0, x: 24 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -24 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
                 transition={{ duration: 0.4, ease }}
               >
                 <h2 className="font-display text-2xl text-ink">
@@ -396,9 +396,9 @@ export function BookingFlow({
             {step === 1 && (
               <motion.div
                 key="s1"
-                initial={{ opacity: 0, x: 24 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -24 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
                 transition={{ duration: 0.4, ease }}
               >
                 <h2 className="font-display text-2xl text-ink">Alege ziua și ora</h2>
@@ -494,8 +494,8 @@ export function BookingFlow({
                   <AnimatePresence>
                     {showSwipe && (
                       <motion.p
-                        initial={{ opacity: 0, y: -4 }}
-                        animate={{ opacity: 1, y: 0 }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
                         exit={{ opacity: 0, height: 0 }}
                         className="flex items-center gap-2 font-sans text-[0.72rem] text-ink-muted"
                       >
@@ -519,8 +519,8 @@ export function BookingFlow({
                 {/* Ore */}
                 {date && (
                   <motion.div
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
                     transition={{ duration: 0.4, ease }}
                     className="mt-7 border-t border-ink/10 pt-7"
                   >
@@ -573,9 +573,9 @@ export function BookingFlow({
             {step === 2 && (
               <motion.div
                 key="s2"
-                initial={{ opacity: 0, x: 24 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -24 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
                 transition={{ duration: 0.4, ease }}
               >
                 <h2 className="font-display text-2xl text-ink">Ultimele detalii</h2>

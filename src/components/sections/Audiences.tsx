@@ -7,6 +7,7 @@ import { AUDIENCES, SITE } from "@/content/site";
 import { ICONS, IconCalendar, IconPhone, type IconName } from "../ui/Icons";
 import { Reveal } from "../ui/Reveal";
 import { CaruselInfinit } from "../ui/CaruselInfinit";
+import { Accent } from "../ui/Accent";
 
 /* ----------------------------------------------------------------------------
    „Cui mă adresez" — carduri mari, ca pe pagina iPhone de la Apple, într-un
@@ -117,8 +118,8 @@ function Fereastra({ item, deschisa, onInchide }: { item: Item; deschisa: boolea
       <div
         onClick={(e) => e.stopPropagation()}
         className={[
-          "glass-strong relative max-h-[88svh] w-full max-w-2xl overflow-y-auto !bg-cream-warm/95 p-7 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:p-10",
-          deschisa ? "translate-y-0" : "translate-y-8",
+          "glass-strong relative max-h-[88svh] w-full max-w-2xl overflow-y-auto !bg-cream-warm/95 p-7 sm:p-10",
+          // fereastra apare doar prin fade, ca restul site-ului
         ].join(" ")}
       >
         <button
@@ -217,9 +218,8 @@ export function Audiences() {
                 {AUDIENCES.eyebrow}
               </p>
               <h2 className="mt-5 font-display text-4xl leading-tight text-ink sm:text-5xl">
-                {AUDIENCES.title}
+                <Accent text={AUDIENCES.title} />
               </h2>
-              <div className="rule-soft mt-7" />
               <p className="mt-7 font-sans text-[0.95rem] leading-[1.9] text-ink-soft">
                 {AUDIENCES.subtitle}
               </p>

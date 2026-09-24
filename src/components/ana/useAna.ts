@@ -33,9 +33,11 @@ type Stare = {
   /** Răspunsul curge chiar acum (pentru gura care se mișcă). */
   scrie: boolean;
   error: string | null;
+  /** Formularul de programare e deschis în chat. */
+  programare: boolean;
 };
 
-const INITIAL: Stare = { turns: [SALUT], busy: false, scrie: false, error: null };
+const INITIAL: Stare = { turns: [SALUT], busy: false, scrie: false, error: null, programare: false };
 let stare: Stare = INITIAL;
 let incarcat = false;
 const ascultatori = new Set<() => void>();
@@ -106,6 +108,8 @@ async function trimite(text: string): Promise<boolean> {
       });
     }
     if (!raspuns.trim()) throw new Error("Ana nu a putut răspunde acum.");
+    // Ana a propus programarea direct în chat: deschidem formularul
+    if (raspuns.includes("](programare)")) seteaza({ programare: true });
     return true;
   } catch (e) {
     if (!raspuns.trim()) seteaza({ turns: stare.turns.slice(0, -2) });
@@ -129,5 +133,7 @@ export function useAna() {
     /** S-au terminat întrebările: rămân doar programarea și telefonul. */
     gata: ramase === 0 && !s.busy,
     trimite,
+    deschideProgramare: () => seteaza({ programare: true }),
+    inchideProgramare: () => seteaza({ programare: false }),
   };
 }

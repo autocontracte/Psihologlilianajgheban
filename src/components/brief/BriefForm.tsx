@@ -608,8 +608,8 @@ export function BriefForm({
   if (done) {
     return (
       <motion.div
-        initial={{ opacity: 0, scale: 0.96 }}
-        animate={{ opacity: 1, scale: 1 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         transition={{ duration: 0.6, ease }}
         className="rounded-none border border-ink/10 bg-cream p-10 text-center sm:p-14"
       >
@@ -681,8 +681,8 @@ export function BriefForm({
       {/* Întrebarea curentă */}
       <motion.section
         key={current.key}
-        initial={{ opacity: 0, x: 16 }}
-        animate={{ opacity: 1, x: 0 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         transition={{ duration: 0.32, ease }}
         className="rounded-none border border-ink/10 bg-cream p-7 sm:p-9"
       >
