@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { BookingFlow } from "@/components/booking/BookingFlow";
+import { platileSuntActive } from "@/lib/stripe";
 import { Reveal } from "@/components/ui/Reveal";
 import { getCurrentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
@@ -25,7 +26,7 @@ export default async function ProgramariPage() {
     db.service.findMany({
       where: { active: true },
       orderBy: { position: "asc" },
-      select: { id: true, name: true, duration: true, description: true },
+      select: { id: true, name: true, duration: true, description: true, price: true },
     }),
   ]);
 
@@ -106,7 +107,7 @@ export default async function ProgramariPage() {
               </div>
             </Reveal>
 
-            <BookingFlow services={services} loggedIn={!!user} />
+            <BookingFlow services={services} loggedIn={!!user} plataOnline={platileSuntActive} />
 
             {!user && <AccountBenefits />}
           </div>

@@ -1,3 +1,4 @@
+import type { Prisma } from "@prisma/client";
 import { db } from "./db";
 import { addMinutes, toDateStr, toTimeStr, weekdayOf, zonedToUtc } from "./tz";
 
@@ -21,6 +22,17 @@ export type Slot = {
   startsAt: Date;
   available: boolean;
 };
+
+/**
+ * Programările care ocupă ora: cele active, fără cele cu plată online lăsată
+ * neterminată după ce a expirat timpul de plată.
+ */
+export function ocupaOra(): Prisma.AppointmentWhereInput {
+  return {
+    status: { in: ["PENDING", "CONFIRMED"] },
+    NOT: { paymentMethod: "ONLINE", status: "PENDING", holdExpiresAt: { lt: new Date() } },
+  };
+}
 
 function minutesOf(time: string): number {
   const [h, m] = time.split(":").map(Number);
@@ -60,10 +72,17 @@ export async function getSlotsForDate(
   const taken = await db.appointment.findMany({
     where: {
       startsAt: { gte: dayStart, lt: dayEnd },
-      status: { in: ["PENDING", "CONFIRMED"] },
+      ...ocupaOra(),
     },
     select: { startsAt: true, endsAt: true },
   });
+
+  // Evenimentele puse de Liliana direct în Google Calendar ocupă și ele ora
+  const blocate = await db.calendarBlock.findMany({
+    where: { startsAt: { lt: dayEnd }, endsAt: { gt: dayStart } },
+    select: { startsAt: true, endsAt: true },
+  });
+  taken.push(...blocate);
 
   const earliest = Date.now() + BOOKING_LEAD_HOURS * 60 * 60 * 1000;
   const slots: Slot[] = [];

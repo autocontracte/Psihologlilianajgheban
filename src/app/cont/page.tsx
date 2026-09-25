@@ -17,6 +17,8 @@ import { formatDateLong, formatTime } from "@/lib/tz";
 import type { Format, Status } from "@/lib/types";
 import { IconArrow } from "@/components/ui/Icons";
 import { Lumina } from "@/components/ui/Lumina";
+import { AbonamentCalendar } from "@/components/account/AbonamentCalendar";
+import { linkAbonament, linkuriCalendar } from "@/lib/ics";
 
 export const metadata: Metadata = {
   title: "Contul meu",
@@ -31,12 +33,17 @@ export default async function ContPage() {
   if (user.role === "ADMIN") redirect("/admin");
 
   const rows = await db.appointment.findMany({
-    where: { userId: user.id },
+    where: {
+      userId: user.id,
+      // Plățile online abandonate n-au fost niciodată programări
+      NOT: { paymentMethod: "ONLINE", calendarSeq: 0, status: "CANCELLED" },
+    },
     include: { service: true, payments: true },
     orderBy: { startsAt: "asc" },
   });
 
   const now = Date.now();
+  const abonament = linkAbonament(user.id);
 
   const map = (r: (typeof rows)[number]): ClientAppointment => ({
     id: r.id,
@@ -53,6 +60,8 @@ export default async function ContPage() {
       r.startsAt.getTime() - now > CANCEL_LEAD_HOURS * 60 * 60 * 1000,
     /* Butonul de plată apare doar dacă Stripe e configurat și ședința nu e
        anulată — altfel n-ar avea ce face cu el. */
+    calendar:
+      r.status === "PENDING" || r.status === "CONFIRMED" ? linkuriCalendar(r) : null,
     plata: platileSuntActive && r.status !== "CANCELLED"
       ? {
           platita: r.payments.some((p) => p.status === "PAID"),
@@ -139,6 +148,12 @@ export default async function ContPage() {
               </p>
             )}
           </section>
+
+          {abonament && (
+            <section className="mt-12">
+              <AbonamentCalendar url={abonament} />
+            </section>
+          )}
 
           {/* Istoric */}
           {past.length > 0 && (

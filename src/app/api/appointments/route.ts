@@ -2,10 +2,14 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { clientIp } from "@/lib/request";
-import { isSlotBookable } from "@/lib/slots";
+import { isSlotBookable, ocupaOra } from "@/lib/slots";
 import { addMinutes, zonedToUtc } from "@/lib/tz";
 import { isFormat } from "@/lib/types";
 import { emailProgramareNoua } from "@/lib/emailProgramari";
+import { ocupatInGoogle, sincronizeazaProgramarea } from "@/lib/calendarSync";
+import { linkuriCalendar } from "@/lib/ics";
+import { platileSuntActive } from "@/lib/stripe";
+import { HOLD_MIN, pornestePlata } from "@/lib/plataProgramare";
 
 /** GET — programările utilizatorului autentificat. */
 export async function GET() {
@@ -71,6 +75,7 @@ export async function POST(request: Request) {
   const time = String(body.time ?? "");
   const format = String(body.format ?? "CABINET");
   const notes = String(body.notes ?? "").trim();
+  const plataOnline = body.paymentMethod === "ONLINE";
 
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !/^\d{2}:\d{2}$/.test(time)) {
     return NextResponse.json(
@@ -81,6 +86,13 @@ export async function POST(request: Request) {
 
   if (!isFormat(format)) {
     return NextResponse.json({ error: "Format invalid." }, { status: 400 });
+  }
+
+  if (plataOnline && !platileSuntActive) {
+    return NextResponse.json(
+      { error: "Plata online nu este disponibilă acum. Alege plata la cabinet." },
+      { status: 400 },
+    );
   }
 
   if (notes.length > 2000) {
@@ -149,7 +161,7 @@ export async function POST(request: Request) {
   const own = await db.appointment.findFirst({
     where: {
       ...(user ? { userId: user.id } : { guestEmail }),
-      status: { in: ["PENDING", "CONFIRMED"] },
+      ...ocupaOra(),
       startsAt: { lt: endsAt },
       endsAt: { gt: startsAt },
     },
@@ -168,13 +180,21 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: check.reason }, { status: 409 });
   }
 
+  // Google e sincronizat la câteva minute; verificăm chiar acum ora aleasă
+  if (await ocupatInGoogle(startsAt, endsAt)) {
+    return NextResponse.json(
+      { error: "Intervalul tocmai a fost ocupat. Alege altă oră." },
+      { status: 409 },
+    );
+  }
+
   /* Verificarea se reia în tranzacție: între momentul în care clientul a văzut
      orele libere și cel în care a apăsat butonul, slotul poate fi luat. */
   try {
     const created = await db.$transaction(async (tx) => {
       const clash = await tx.appointment.findFirst({
         where: {
-          status: { in: ["PENDING", "CONFIRMED"] },
+          ...ocupaOra(),
           startsAt: { lt: endsAt },
           endsAt: { gt: startsAt },
         },
@@ -193,6 +213,8 @@ export async function POST(request: Request) {
           format,
           status: "PENDING",
           notes: notes || null,
+          paymentMethod: plataOnline ? "ONLINE" : "CABINET",
+          holdExpiresAt: plataOnline ? new Date(Date.now() + HOLD_MIN * 60_000) : null,
         },
         include: { service: true, user: true },
       });
@@ -201,7 +223,30 @@ export async function POST(request: Request) {
     // Cota se consumă abia acum, când chiar s-a creat o programare
     if (!user) recordGuestBooking(guestIp);
 
-    await emailProgramareNoua(created);
+    /* Cu plată online, programarea există abia după plată: emailurile și
+       evenimentul din Google pleacă din webhook-ul Stripe. Până atunci ora e
+       doar ținută. */
+    if (plataOnline) {
+      try {
+        const checkoutUrl = await pornestePlata(created.id, { laProgramare: true });
+        return NextResponse.json({ ok: true, checkoutUrl });
+      } catch (err) {
+        console.error("[programare] plata nu a pornit", err);
+        await db.appointment.update({
+          where: { id: created.id },
+          data: { status: "CANCELLED", holdExpiresAt: null },
+        });
+        return NextResponse.json(
+          { error: "Plata online nu a putut fi pornită. Încearcă din nou sau alege plata la cabinet." },
+          { status: 502 },
+        );
+      }
+    }
+
+    await Promise.all([
+      emailProgramareNoua(created),
+      sincronizeazaProgramarea(created.id),
+    ]);
 
     console.log("[programare] creată", {
       id: created.id,
@@ -210,7 +255,17 @@ export async function POST(request: Request) {
       startsAt: startsAt.toISOString(),
     });
 
-    return NextResponse.json({ ok: true, appointment: created });
+    // Doar ce îi trebuie paginii — `created` conține și contul, cu hash-ul parolei
+    return NextResponse.json({
+      ok: true,
+      appointment: {
+        id: created.id,
+        startsAt: created.startsAt,
+        endsAt: created.endsAt,
+        status: created.status,
+      },
+      calendar: linkuriCalendar(created),
+    });
   } catch (err) {
     if (err instanceof Error && err.message === "SLOT_TAKEN") {
       return NextResponse.json(

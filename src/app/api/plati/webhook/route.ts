@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { platileSuntActive, stripe } from "@/lib/stripe";
 import { issueInvoiceForPayment } from "@/lib/invoicing";
 import { genereazaSiSalveaza } from "@/lib/consiliere";
+import { confirmaDupaPlata } from "@/lib/plataProgramare";
 
 /* ----------------------------------------------------------------------------
    Confirmarea plății, direct de la Stripe.
@@ -56,6 +57,13 @@ export async function POST(request: Request) {
         await issueInvoiceForPayment(payment.id);
       } catch (err) {
         console.error("[factura] emitere esuata", err);
+      }
+
+      // Plătită online → confirmată automat, fără să mai aștepte cabinetul
+      try {
+        await confirmaDupaPlata(payment.appointmentId);
+      } catch (err) {
+        console.error("[plata] confirmare programare esuata", err);
       }
     }
 

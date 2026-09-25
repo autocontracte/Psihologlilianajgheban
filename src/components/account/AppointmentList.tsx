@@ -18,6 +18,8 @@ export type ClientAppointment = {
   canCancel: boolean;
   /** Lipsește dacă plata online nu e activată. */
   plata?: { platita: boolean; suma: number } | null;
+  /** „Adaugă în calendar” — doar pentru ședințele încă active. */
+  calendar?: { google: string; ics: string } | null;
 };
 
 export function AppointmentList({
@@ -105,6 +107,25 @@ export function AppointmentList({
                 {a.dateLabel}, ora {a.timeLabel} · {a.duration} min ·{" "}
                 {FORMAT_LABEL[a.format]}
               </p>
+              {a.calendar && (
+                <p className="mt-3 flex flex-wrap gap-x-4 gap-y-1 font-sans text-[0.8rem]">
+                  <span className="text-ink-muted">Adaugă în calendar:</span>
+                  <a
+                    href={a.calendar.google}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-periwinkle underline underline-offset-4 hover:text-ink"
+                  >
+                    Google
+                  </a>
+                  <a
+                    href={a.calendar.ics}
+                    className="text-periwinkle underline underline-offset-4 hover:text-ink"
+                  >
+                    Apple / Outlook / altul
+                  </a>
+                </p>
+              )}
               {a.notes && (
                 <p className="mt-3 rounded-none bg-cream-warm px-4 py-3 font-sans text-[0.8rem] leading-relaxed text-ink-soft">
                   {a.notes}

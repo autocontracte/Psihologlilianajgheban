@@ -49,6 +49,8 @@ type Mesaj = {
   subject: string;
   text: string;
   replyTo?: string;
+  /** Invitație de calendar (.ics). Gmail/Outlook o arată ca eveniment. */
+  ical?: { method: "REQUEST" | "CANCEL"; content: string };
 };
 
 /** Trimite un email. Nu aruncă niciodată; întoarce dacă a reușit. */
@@ -62,7 +64,20 @@ export async function trimiteEmail(mesaj: Mesaj): Promise<boolean> {
   }
 
   try {
-    await smtp().sendMail({ from: FROM, ...mesaj });
+    const { ical, ...rest } = mesaj;
+    await smtp().sendMail({
+      from: FROM,
+      ...rest,
+      ...(ical
+        ? {
+            icalEvent: {
+              method: ical.method,
+              filename: "sedinta.ics",
+              content: ical.content,
+            },
+          }
+        : {}),
+    });
     return true;
   } catch (err) {
     console.error("[email] trimitere esuata", { to: mesaj.to, subject: mesaj.subject }, err);

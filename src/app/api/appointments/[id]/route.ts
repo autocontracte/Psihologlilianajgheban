@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { CANCEL_LEAD_HOURS } from "@/lib/slots";
+import { sincronizeazaProgramarea } from "@/lib/calendarSync";
+import { emailAnulareDeClient } from "@/lib/emailProgramari";
 
 /** PATCH — clientul își anulează propria programare. */
 export async function PATCH(
@@ -51,10 +53,14 @@ export async function PATCH(
     );
   }
 
-  await db.appointment.update({
+  const anulata = await db.appointment.update({
     where: { id },
-    data: { status: "CANCELLED" },
+    data: { status: "CANCELLED", holdExpiresAt: null, calendarSeq: { increment: 1 } },
+    include: { service: true, user: true },
   });
+
+  // Ora se eliberează și în Google, iar clientul și cabinetul află
+  await Promise.all([sincronizeazaProgramarea(id), emailAnulareDeClient(anulata)]);
 
   return NextResponse.json({ ok: true });
 }

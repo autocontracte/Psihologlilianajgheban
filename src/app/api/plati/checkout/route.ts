@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
-import { platileSuntActive, stripe } from "@/lib/stripe";
-import { SITE } from "@/content/site";
+import { platileSuntActive } from "@/lib/stripe";
+import { pornestePlata } from "@/lib/plataProgramare";
 
 /* ----------------------------------------------------------------------------
    Pornește plata pentru o programare.
@@ -63,44 +63,9 @@ export async function POST(request: Request) {
     );
   }
 
-  const email =
-    appointment.user?.email ?? appointment.guestEmail ?? undefined;
-
   try {
-    const session = await stripe().checkout.sessions.create({
-      mode: "payment",
-      customer_email: email,
-      client_reference_id: appointment.id,
-      line_items: [
-        {
-          quantity: 1,
-          price_data: {
-            currency: "ron",
-            unit_amount: appointment.service.price,
-            product_data: {
-              name: appointment.service.name,
-              description: `Ședință de ${appointment.service.duration} de minute`,
-            },
-          },
-        },
-      ],
-      success_url: `${SITE.url}/plata/confirmare?sesiune={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${SITE.url}/cont`,
-      metadata: { appointmentId: appointment.id },
-    });
-
-    await db.payment.create({
-      data: {
-        appointmentId: appointment.id,
-        provider: "STRIPE",
-        externalId: session.id,
-        amount: appointment.service.price,
-        currency: "RON",
-        status: "PENDING",
-      },
-    });
-
-    return NextResponse.json({ ok: true, url: session.url });
+    const url = await pornestePlata(appointment.id);
+    return NextResponse.json({ ok: true, url });
   } catch (err) {
     console.error("[plata] checkout", err);
     return NextResponse.json(

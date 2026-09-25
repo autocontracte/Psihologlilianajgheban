@@ -25,6 +25,12 @@ export type AdminAppointment = {
   notes: string | null;
   adminNote: string | null;
   isPast: boolean;
+  /** Cum a ales să plătească și dacă a plătit deja. */
+  plata: "ONLINE" | "CABINET";
+  platita: boolean;
+  /** Plată online pornită, încă neterminată — ora e doar ținută. */
+  asteaptaPlata: boolean;
+  inGoogle: boolean;
 };
 
 /** Ce statusuri au sens după cel curent. */
@@ -95,6 +101,24 @@ export function AdminAppointmentRow({ a }: { a: AdminAppointment }) {
             <span className="rounded-none bg-ink/6 px-3 py-1.5 font-sans text-[0.75rem] tracking-[0.02em] text-ink-soft">
               {FORMAT_LABEL[a.format]}
             </span>
+            <span
+              className={`rounded-none px-3 py-1.5 font-sans text-[0.75rem] tracking-[0.02em] ${
+                a.platita ? "bg-sage-pale text-sage" : "bg-ink/6 text-ink-soft"
+              }`}
+            >
+              {a.platita
+                ? "Plătită online"
+                : a.asteaptaPlata
+                  ? "Așteaptă plata online"
+                  : a.plata === "ONLINE"
+                    ? "Plată online"
+                    : "Plată la cabinet"}
+            </span>
+            {a.inGoogle && (
+              <span className="rounded-none bg-periwinkle-pale px-3 py-1.5 font-sans text-[0.75rem] tracking-[0.02em] text-periwinkle">
+                În Google Calendar
+              </span>
+            )}
             {!a.hasAccount && (
               <span className="rounded-none bg-clay-pale px-3 py-1.5 font-sans text-[0.75rem] tracking-[0.02em] text-clay">
                 Fără cont

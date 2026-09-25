@@ -13,7 +13,11 @@ type Service = {
   name: string;
   duration: number;
   description: string | null;
+  /** În bani (28000 = 280 lei). */
+  price: number;
 };
+
+type Plata = "ONLINE" | "CABINET";
 
 type DayInfo = { date: string; free: number; closed: boolean };
 type SlotInfo = { time: string; available: boolean };
@@ -80,10 +84,13 @@ function MeetingNote({ format }: { format: Format }) {
 export function BookingFlow({
   services,
   loggedIn,
+  plataOnline,
 }: {
   services: Service[];
   /** Când e fals, datele de contact se cer în ultimul pas. */
   loggedIn: boolean;
+  /** Dacă Stripe e configurat și se poate plăti cu cardul. */
+  plataOnline: boolean;
 }) {
   const [step, setStep] = useState(0);
   const [done, setDone] = useState(false);
@@ -93,6 +100,19 @@ export function BookingFlow({
   const [time, setTime] = useState("");
   const [format, setFormat] = useState<Format>("CABINET");
   const [notes, setNotes] = useState("");
+  const [plata, setPlata] = useState<Plata>(plataOnline ? "ONLINE" : "CABINET");
+  const [calendarLinks, setCalendarLinks] = useState<{ google: string; ics: string } | null>(
+    null,
+  );
+
+  /* Întors din Stripe fără să plătească: ora a fost deja eliberată, doar îi
+     spunem ce s-a întâmplat. */
+  const [plataAnulata, setPlataAnulata] = useState(false);
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("plata") === "anulata") {
+      setPlataAnulata(true);
+    }
+  }, []);
 
   // Folosite doar pentru programările fără cont
   const [guestName, setGuestName] = useState("");
@@ -136,6 +156,7 @@ export function BookingFlow({
     return () => window.removeEventListener("resize", checkSwipe);
   }, [checkSwipe]);
   const [busy, setBusy] = useState(false);
+  const redirectRef = useRef(false);
   const [error, setError] = useState("");
 
   const service = services.find((s) => s.id === serviceId);
@@ -201,6 +222,7 @@ export function BookingFlow({
           time,
           format,
           notes,
+          paymentMethod: plata,
           ...(loggedIn
             ? {}
             : { name: guestName, email: guestEmail, phone: guestPhone }),
@@ -208,6 +230,15 @@ export function BookingFlow({
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error ?? "Programarea nu a reușit.");
+
+      // Plata online: programarea se confirmă după plată, în pagina Stripe
+      if (json.checkoutUrl) {
+        redirectRef.current = true;
+        window.location.href = json.checkoutUrl;
+        return;
+      }
+
+      setCalendarLinks(json.calendar ?? null);
       setDone(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "A apărut o eroare.");
@@ -217,7 +248,8 @@ export function BookingFlow({
         if (res.ok) setSlots((await res.json()).slots);
       }
     } finally {
-      setBusy(false);
+      // Spre Stripe butonul rămâne blocat, ca să nu se apese de două ori
+      if (!redirectRef.current) setBusy(false);
     }
   }
 
@@ -242,8 +274,34 @@ export function BookingFlow({
               , ora {time}.{" "}
               {loggedIn
                 ? "Îți confirm programarea în cel mai scurt timp, iar până atunci apare în contul tău ca „în așteptare”."
-                : "Te contactez pe telefon sau email ca să confirm programarea, de regulă în aceeași zi lucrătoare."}
+                : "Te contactez pe telefon sau email ca să confirm programarea, de regulă în aceeași zi lucrătoare."}{" "}
+              Plata se face la cabinet.
             </p>
+
+            {calendarLinks && (
+              <div className="mx-auto mt-6 flex max-w-md flex-wrap items-center justify-center gap-2.5">
+                <span className="w-full font-sans text-[0.8rem] text-ink-muted">
+                  Pune ședința în calendar:
+                </span>
+                <a
+                  href={calendarLinks.google}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-none border border-ink/20 px-4 py-2 font-sans text-[0.8rem] text-ink transition-colors hover:border-periwinkle hover:text-periwinkle"
+                >
+                  Google Calendar
+                </a>
+                <a
+                  href={calendarLinks.ics}
+                  className="rounded-none border border-ink/20 px-4 py-2 font-sans text-[0.8rem] text-ink transition-colors hover:border-periwinkle hover:text-periwinkle"
+                >
+                  Apple / Outlook / altul
+                </a>
+                <span className="w-full font-sans text-[0.76rem] text-ink-muted">
+                  Primești și pe email o invitație care se actualizează singură la confirmare.
+                </span>
+              </div>
+            )}
 
             <div className="mx-auto mt-6 max-w-md text-left">
               <MeetingNote format={format} />
@@ -711,9 +769,56 @@ export function BookingFlow({
                     className="w-full resize-none rounded-none border border-ink/15 bg-cream-warm px-5 py-3.5 font-sans text-[0.9rem] text-ink placeholder:text-ink-muted transition-all duration-300 focus:border-periwinkle focus:bg-cream focus:outline-none focus:ring-4 focus:ring-periwinkle/12"
                   />
                 </div>
+
+                {/* Plata */}
+                <div className="mt-7">
+                  <span className="mb-2.5 block font-sans text-[0.74rem] tracking-[0.02em] text-ink-muted">
+                    Cum plătești?
+                  </span>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {(plataOnline ? (["ONLINE", "CABINET"] as const) : (["CABINET"] as const)).map(
+                      (m) => (
+                        <button
+                          key={m}
+                          type="button"
+                          onClick={() => setPlata(m)}
+                          className={[
+                            "rounded-none border px-5 py-4 text-left transition-all duration-400",
+                            plata === m
+                              ? "border-periwinkle bg-periwinkle text-cream"
+                              : "border-ink/12 bg-cream-warm text-ink-soft hover:border-ink/35",
+                          ].join(" ")}
+                        >
+                          <span className="block font-sans text-[0.88rem]">
+                            {m === "ONLINE"
+                              ? `Online, acum${service ? ` · ${(service.price / 100).toFixed(0)} lei` : ""}`
+                              : "La cabinet"}
+                          </span>
+                          <span
+                            className={[
+                              "mt-1 block font-sans text-[0.76rem] leading-relaxed",
+                              plata === m ? "text-cream/80" : "text-ink-muted",
+                            ].join(" ")}
+                          >
+                            {m === "ONLINE"
+                              ? "Cu cardul. Programarea se confirmă imediat."
+                              : "Plătești la ședință. Îți confirm eu programarea."}
+                          </span>
+                        </button>
+                      ),
+                    )}
+                  </div>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
+
+          {plataAnulata && !error && (
+            <p className="mt-6 rounded-none bg-cream-warm px-4 py-3 font-sans text-[0.82rem] text-ink-soft">
+              Plata nu a fost finalizată, așa că ora aleasă a fost eliberată. Poți
+              încerca din nou oricând sau poți alege plata la cabinet.
+            </p>
+          )}
 
           {error && (
             <p className="mt-6 rounded-none bg-clay-pale px-4 py-3 font-sans text-[0.82rem] text-clay">
@@ -749,7 +854,13 @@ export function BookingFlow({
                 disabled={busy || !contactReady}
                 className="group inline-flex items-center gap-2.5 rounded-none bg-sage px-7 py-3.5 font-sans text-[0.7rem] tracking-[0.02em] text-cream transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-ink disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {busy ? "Se trimite…" : "Confirmă programarea"}
+                {busy
+                  ? plata === "ONLINE"
+                    ? "Se deschide plata…"
+                    : "Se trimite…"
+                  : plata === "ONLINE"
+                    ? "Plătește și confirmă"
+                    : "Trimite programarea"}
                 {!busy && (
                   <IconCheck className="h-4 w-4" strokeWidth={2} />
                 )}

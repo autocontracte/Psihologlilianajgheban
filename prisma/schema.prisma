@@ -74,6 +74,17 @@ model Appointment {
   status     String     @default("PENDING")
   notes      String?
   adminNote  String?
+  /// ONLINE — plătește cu cardul la programare, iar plata o confirmă automat.
+  /// CABINET — plătește la ședință; programarea o confirmă Liliana.
+  paymentMethod String   @default("CABINET")
+  /// Până când e ținută ora pentru o plată online neterminată. După acest
+  /// moment ora se eliberează, iar programarea neplătită se anulează.
+  holdExpiresAt DateTime?
+  /// Evenimentul corespunzător din Google Calendar, după prima sincronizare.
+  googleEventId String?  @unique
+  /// Crește la fiecare schimbare vizibilă în calendarul clientului (oră,
+  /// status), ca invitațiile .ics trimise pe email să se actualizeze.
+  calendarSeq   Int      @default(0)
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
   payments   Payment[]
@@ -83,6 +94,29 @@ model Appointment {
   @@index([userId])
   @@index([status])
   @@index([guestEmail])
+}
+
+/// Un eveniment pus direct în Google Calendar (nu de site). Ocupă ora pe site,
+/// ca să nu se poată programa nimeni peste el. Tabela e refăcută la fiecare
+/// sincronizare, deci Google rămâne sursa de adevăr.
+model CalendarBlock {
+  id            String   @id @default(cuid())
+  googleEventId String   @unique
+  title         String
+  startsAt      DateTime
+  endsAt        DateTime
+  allDay        Boolean  @default(false)
+  updatedAt     DateTime @updatedAt
+
+  @@index([startsAt])
+}
+
+/// Starea sincronizării cu Google Calendar (un singur rând, id = "google").
+model CalendarSync {
+  id         String    @id
+  lastRunAt  DateTime?
+  lastOkAt   DateTime?
+  lastError  String?
 }
 
 /// Programul săptămânal recurent. weekday: 0 = duminică … 6 = sâmbătă.
