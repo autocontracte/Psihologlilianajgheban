@@ -1,7 +1,7 @@
 import "server-only";
 
 import { createSign } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { clientOf } from "@/lib/appointments";
 import { TZ } from "@/lib/tz";
 import { FORMAT_LABEL, isFormat } from "@/lib/types";
@@ -22,7 +22,8 @@ import { SITE } from "@/content/site";
 const KEY_FILE = process.env.GOOGLE_SERVICE_ACCOUNT_FILE ?? "";
 const CALENDAR_ID = process.env.GOOGLE_CALENDAR_ID ?? "";
 
-export const googleActiv = Boolean(KEY_FILE && CALENDAR_ID);
+// Fără fișierul cu cheia, sincronizarea stă oprită în liniște (nu umple logul cu erori)
+export const googleActiv = Boolean(KEY_FILE && CALENDAR_ID && existsSync(KEY_FILE));
 
 const API = "https://www.googleapis.com/calendar/v3";
 const SCOPE = "https://www.googleapis.com/auth/calendar";
