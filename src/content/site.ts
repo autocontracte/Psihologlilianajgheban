@@ -3,9 +3,8 @@
    CONȚINUTUL SITE-ULUI — editează totul din acest fișier.
    Nu e nevoie să modifici componentele pentru a schimba texte.
 
-   ⚠️  DE COMPLETAT ÎNAINTE DE LANSARE — vezi secțiunea SITE de mai jos:
-       telefon, email, oraș, adresă cabinet, linkuri social media,
-       precum și datele profesionale din secțiunea DESPRE (credentials).
+   ⚠️  DE COMPLETAT: linkurile de social media (SITE.social) și linkul de
+       Zoom (MEETING.online.link); de verificat denumirile din ABOUT.credentials.
    ========================================================================== */
 
 export const SITE = {
@@ -31,11 +30,22 @@ export const SITE = {
   whatsappMessage:
     "Bună ziua! Aș dori câteva informații despre serviciile dumneavoastră.",
 
-  /* ⚠️ DE COMPLETAT cu datele reale */
   email: "contact@psihologlilianajgheban.ro",
   city: "București",
-  address: "Str. Exemplu nr. 00, București",
-  addressNote: "Adresa exactă îți este comunicată la confirmarea programării.",
+  /** Adresa cabinetului, unde au loc ședințele. */
+  address: "Strada Armenească 10, 030167 București",
+  street: "Strada Armenească 10",
+  postalCode: "030167",
+  mapsUrl: "https://www.google.com/maps/search/?api=1&query=Strada+Armeneasc%C4%83+10%2C+030167+Bucure%C8%99ti",
+  addressNote: "Indicațiile de acces îți sunt trimise odată cu confirmarea programării.",
+
+  /** Datele cabinetului ca firmă: în paginile legale, în subsol și pe facturi. */
+  firma: {
+    denumire: "Jgheban Liliana Maria Cabinet Individual de Psihologie",
+    scurt: "Jgheban Liliana Maria CIP",
+    cif: "47985960",
+    sediu: "Aleea Arh. Petre Antonescu nr. 6, bl. 23, parter, ap. 6, Sector 2, București",
+  },
 
   social: {
     facebook: "",
@@ -619,17 +629,17 @@ export const REVIEWS = {
 /* ============================================================================
    Ce se întâmplă mai departe, în funcție de formatul ales
 
-   ⚠️ DE COMPLETAT: adresa reală a cabinetului și linkul de Zoom. Până atunci,
-   textul spune că detaliile vin la confirmare — ceea ce e oricum adevărat.
+   ⚠️ DE COMPLETAT: linkul de Zoom. Până atunci, textul spune că linkul vine
+   pe email înainte de ședință — ceea ce e oricum adevărat.
    ========================================================================== */
 
 export const MEETING = {
   cabinet: {
     title: "Ne vedem la cabinet",
     /** Lăsat gol → se afișează doar orașul și nota de mai jos. */
-    address: "",
+    address: SITE.address,
     city: SITE.city,
-    note: "Adresa exactă și indicațiile de acces îți sunt trimise odată cu confirmarea programării.",
+    note: "Indicațiile de acces îți sunt trimise odată cu confirmarea programării.",
   },
   online: {
     title: "Ne vedem pe Zoom",

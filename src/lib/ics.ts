@@ -54,7 +54,7 @@ function titlu(p: PentruLink): string {
 }
 
 function locatie(format: string): string {
-  return format === "ONLINE" ? "Online (linkul îl primești pe email)" : `Cabinet, ${SITE.city}`;
+  return format === "ONLINE" ? "Online (linkul îl primești pe email)" : `Cabinet, ${SITE.address}`;
 }
 
 function descriere(p: PentruLink): string {

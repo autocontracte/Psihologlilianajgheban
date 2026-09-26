@@ -4,6 +4,7 @@ import {
   IconFacebook,
   IconInstagram,
   IconLinkedIn,
+  IconLocation,
   IconMail,
   IconPhone,
 } from "./ui/Icons";
@@ -88,31 +89,6 @@ export function Footer() {
                   Programări
                 </Link>
               </li>
-              <li>
-
-                <Link
-
-                  href="/blog"
-
-                  className="font-sans text-[0.87rem] text-cream/65 transition-colors duration-300 hover:text-periwinkle-light"
-
-                >
-
-                  Blog
-
-                </Link>
-
-              </li>
-              <li>
-
-                <Link
-
-                  href="/kit"
-                  className="font-sans text-[0.87rem] text-cream/65 transition-colors duration-300 hover:text-periwinkle-light"
-                >
-                  Kit „Cum stai cu relația ta?”
-                </Link>
-              </li>
             </ul>
           </div>
 
@@ -140,6 +116,17 @@ export function Footer() {
                   {SITE.email}
                 </a>
               </li>
+              <li>
+                <a
+                  href={SITE.mapsUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group flex items-start gap-3 font-sans text-[0.87rem] text-cream/65 transition-colors duration-300 hover:text-periwinkle-light"
+                >
+                  <IconLocation className="mt-0.5 h-4 w-4 shrink-0 text-periwinkle-light" />
+                  {SITE.address}
+                </a>
+              </li>
             </ul>
 
             <div className="mt-7 rounded-none border border-cream/12 bg-cream/[0.04] p-5">
@@ -153,10 +140,21 @@ export function Footer() {
 
         {/* Bară de jos */}
         <div className="mt-16 flex flex-col gap-4 border-t border-cream/12 pt-7 sm:flex-row sm:items-center sm:justify-between">
-          <p className="font-sans text-[0.75rem] text-cream/40">
-            © {year} {SITE.name}. Toate drepturile rezervate.
-          </p>
-          <div className="flex gap-6">
+          <div className="font-sans text-[0.75rem] leading-relaxed text-cream/40">
+            <p>© {year} {SITE.name}. Toate drepturile rezervate.</p>
+            <p className="mt-1">
+              {SITE.firma.scurt} · CIF {SITE.firma.cif} · Sediu: {SITE.firma.sediu}
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-x-6 gap-y-2">
+            <a
+              href="https://anpc.ro/ce-este-sal/"
+              target="_blank"
+              rel="noreferrer"
+              className="font-sans text-[0.75rem] text-cream/40 transition-colors duration-300 hover:text-cream/75"
+            >
+              ANPC · SAL
+            </a>
             <Link
               href="/confidentialitate"
               className="font-sans text-[0.75rem] text-cream/40 transition-colors duration-300 hover:text-cream/75"

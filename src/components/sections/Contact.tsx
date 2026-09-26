@@ -96,8 +96,9 @@ export function Contact() {
                 {
                   Icon: IconLocation,
                   label: "Cabinet",
-                  value: SITE.city,
-                  note: SITE.addressNote,
+                  value: SITE.address,
+                  href: SITE.mapsUrl,
+                  note: "Deschide în Google Maps",
                 },
               ].map(({ Icon, label, value, href, note }, i) => (
                 <Reveal key={label} delay={0.26 + i * 0.07}>
@@ -112,6 +113,7 @@ export function Contact() {
                       {href ? (
                         <a
                           href={href}
+                          {...(href.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}
                           className="mt-1 block font-sans text-[0.95rem] text-ink transition-colors duration-300 hover:text-periwinkle"
                         >
                           {value}

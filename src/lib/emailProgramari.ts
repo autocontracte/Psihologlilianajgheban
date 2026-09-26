@@ -48,6 +48,10 @@ function detalii(p: Programare): NonNullable<ContinutEmail["detalii"]> {
     { eticheta: "Ședința", valoare: p.service.name },
     { eticheta: "Când", valoare: cand(p) },
     { eticheta: "Format", valoare: `${formatul(p)} · ${plata(p)}` },
+    {
+      eticheta: "Unde",
+      valoare: p.format === "ONLINE" ? "Online, linkul îl primești pe email înainte de ședință" : SITE.address,
+    },
   ];
 }
 

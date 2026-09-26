@@ -107,9 +107,14 @@ export default function RootLayout({
                 priceRange: `${PRICE.standard} ${PRICE.currency}`,
                 address: {
                   "@type": "PostalAddress",
+                  streetAddress: SITE.street,
+                  postalCode: SITE.postalCode,
                   addressLocality: SITE.city,
                   addressCountry: "RO",
                 },
+                hasMap: SITE.mapsUrl,
+                legalName: SITE.firma.denumire,
+                taxID: SITE.firma.cif,
                 areaServed: [SITE.city, "România (online)"],
                 openingHoursSpecification: [
                   { "@type": "OpeningHoursSpecification", dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], opens: "10:00", closes: "20:00" },

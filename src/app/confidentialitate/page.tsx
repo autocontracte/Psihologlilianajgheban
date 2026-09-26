@@ -11,75 +11,112 @@ export const metadata: Metadata = metaPagina({
   robots: { index: false, follow: true },
 });
 
-/* ⚠️ ȘABLON — de verificat de un jurist înainte de lansare și de completat cu
-   datele reale ale operatorului (nume complet, CUI/CIF, adresă, telefon). */
+/* Textul descrie ce face site-ul în realitate: ce date cere, unde ajung
+   (furnizorii de mai jos) și cât stau. Dacă se adaugă un serviciu nou care
+   primește date (facturare, statistici etc.), trebuie trecut și aici.
+   ⚠️ Recomandat: o verificare finală făcută de un jurist. */
+const F = SITE.firma;
+
 const sections: LegalSection[] = [
   {
     heading: "1. Cine este operatorul datelor",
     paragraphs: [
-      `Operatorul datelor cu caracter personal colectate prin acest site este ${SITE.name}, cabinet individual de psihologie, cu sediul în ${SITE.city}.`,
-      `Pentru orice întrebare legată de prelucrarea datelor tale, ne poți scrie la ${SITE.email}.`,
+      `Operatorul datelor cu caracter personal este ${F.denumire} (${F.scurt}), CIF ${F.cif}, cu sediul în ${F.sediu}. Ședințele au loc la cabinetul din ${SITE.address} sau online.`,
+      `Pentru orice întrebare despre datele tale ne poți scrie la ${SITE.email} sau ne poți suna la ${SITE.phone}.`,
     ],
   },
   {
     heading: "2. Ce date colectăm",
+    paragraphs: ["Colectăm doar datele de care avem nevoie pentru serviciul pe care îl ceri:"],
+    bullets: [
+      "Programări și contul de client: nume, email, telefon, programările tale (serviciul, data, formatul) și mesajul pe care îl lași la programare. Parola nu o cunoaștem: se păstrează doar sub formă criptată, ireversibil.",
+      "Plata online: plata cu cardul se face prin Stripe. Datele cardului nu ajung la noi; păstrăm doar suma, data și referința plății.",
+      "Contractul de prestări servicii: datele completate în contract (pentru un minor, și datele părinților), semnătura și, ca dovadă a semnării, data, adresa IP și browserul folosit.",
+      "Kitul „Cum stai, de fapt, cu relația ta?”: răspunsurile la test, adresa de email, plata și raportul generat pentru tine.",
+      "Ana, asistenta virtuală: întrebările pe care i le scrii. Te rugăm să nu îi scrii date despre sănătate sau alte informații sensibile.",
+      "Formularul de contact: numele, emailul, telefonul și mesajul tău.",
+      "Date tehnice: jurnalele serverului (adresa IP, pagina accesată, ora), folosite doar pentru securitate și pentru remedierea erorilor.",
+    ],
+  },
+  {
+    heading: "3. De ce folosim datele și pe ce temei",
+    bullets: [
+      "Ca să îți oferim serviciile cerute (programări, ședințe, contract, kitul, răspunsuri la mesaje): executarea contractului sau demersurile de dinaintea lui (art. 6 alin. 1 lit. b GDPR).",
+      "Ca să respectăm obligațiile legale, de exemplu cele financiar-contabile (art. 6 alin. 1 lit. c GDPR).",
+      "Pentru securitatea site-ului și prevenirea abuzurilor: interesul nostru legitim (art. 6 alin. 1 lit. f GDPR).",
+      "Informațiile despre sănătatea psihică discutate în ședințe sunt prelucrate pentru furnizarea serviciilor psihologice, sub obligația de secret profesional (art. 9 alin. 2 lit. h GDPR).",
+    ],
     paragraphs: [
-      "Colectăm doar datele pe care ni le transmiți voluntar prin formularele de pe site:",
+      "Folosim datele doar în scopurile de mai jos. Nu le folosim pentru marketing, nu le vindem și nu facem profilare automată cu efecte asupra ta.",
+    ],
+  },
+  {
+    heading: "4. Cui transmitem datele",
+    paragraphs: [
+      "Datele ajung doar la furnizorii care ne ajută să facem site-ul să funcționeze, fiecare numai cu ce îi este necesar și numai în baza unui contract de prelucrare:",
     ],
     bullets: [
-      "Nume și prenume",
-      "Adresă de email",
-      "Număr de telefon",
-      "Serviciul pentru care ne contactezi și formatul preferat al ședinței",
-      "Conținutul mesajului scris de tine",
+      "Hostinger: serverul pe care rulează site-ul și baza de date.",
+      "Stripe: procesarea plăților cu cardul.",
+      "Resend: trimiterea emailurilor automate (confirmări de programare, linkul către kit).",
+      "Google (Google Calendar): programările apar în calendarul Lilianei, cu numele, telefonul, emailul tău și serviciul ales.",
+      "OpenAI: generează răspunsurile Anei și interpretarea din raportul kitului. Primește textul întrebărilor, respectiv răspunsurile la test, fără numele sau datele tale de contact.",
+      "Cloudflare: redirecționarea emailurilor trimise la adresa cabinetului.",
     ],
   },
   {
-    heading: "3. În ce scop folosim datele",
+    heading: "5. Transferuri în afara Uniunii Europene",
     paragraphs: [
-      "Datele sunt folosite exclusiv pentru a-ți răspunde la mesaj și pentru a stabili o programare. Nu le folosim pentru marketing, nu le vindem și nu le transmitem către terți în scopuri comerciale.",
-      "Temeiul legal al prelucrării este consimțământul tău, exprimat la trimiterea formularului, precum și interesul legitim de a răspunde solicitărilor primite.",
+      "Unii dintre acești furnizori (Stripe, Resend, Google, OpenAI, Cloudflare) sunt companii din Statele Unite. Transferul se face în baza Cadrului UE-SUA privind confidențialitatea datelor sau a clauzelor contractuale standard aprobate de Comisia Europeană.",
     ],
   },
   {
-    heading: "4. Cât timp păstrăm datele",
-    paragraphs: [
-      "Mesajele primite prin formularele site-ului sunt păstrate atât timp cât este necesar pentru a răspunde solicitării, apoi cel mult 12 luni.",
-      "Dacă devii client al cabinetului, datele legate de serviciile psihologice sunt păstrate separat, conform obligațiilor legale și deontologice ale profesiei de psiholog.",
+    heading: "6. Cât timp păstrăm datele",
+    bullets: [
+      "Mesajele din formularul de contact: cât e nevoie ca să îți răspundem, apoi cel mult 12 luni.",
+      "Contul de client: până când ceri ștergerea lui.",
+      "Programările, plățile, contractele și documentele contabile: pe durata colaborării și apoi cât cer legislația financiar-contabilă și normele profesiei de psiholog.",
+      "Kitul: cât timp ai nevoie de acces la raport. Poți cere oricând ștergerea lui.",
+      "Conversația cu Ana nu o păstrăm: stă doar în browserul tău, cât timp e deschisă fila.",
+      "Jurnalele tehnice ale serverului: cel mult câteva luni.",
     ],
   },
   {
-    heading: "5. Confidențialitatea actului psihologic",
+    heading: "7. Confidențialitatea actului psihologic",
     paragraphs: [
       "Informațiile discutate în cadrul ședințelor de psihoterapie sau evaluare sunt confidențiale și protejate de secretul profesional, conform Codului deontologic al profesiei de psiholog din România.",
       "Excepțiile sunt strict cele prevăzute de lege, în special situațiile în care există un risc real și iminent pentru siguranța ta sau a altei persoane.",
     ],
   },
   {
-    heading: "6. Drepturile tale",
-    paragraphs: [
-      "Conform Regulamentului General privind Protecția Datelor (GDPR), ai următoarele drepturi:",
-    ],
+    heading: "8. Drepturile tale",
+    paragraphs: ["Conform Regulamentului General privind Protecția Datelor (GDPR), ai dreptul:"],
     bullets: [
-      "Dreptul de acces la datele tale",
-      "Dreptul la rectificarea datelor inexacte",
-      "Dreptul la ștergerea datelor",
-      "Dreptul la restricționarea prelucrării",
-      "Dreptul la portabilitatea datelor",
-      "Dreptul de opoziție",
-      "Dreptul de a depune plângere la Autoritatea Națională de Supraveghere a Prelucrării Datelor cu Caracter Personal (ANSPDCP)",
+      "să afli ce date avem despre tine și să primești o copie a lor",
+      "să ceri corectarea datelor greșite",
+      "să ceri ștergerea datelor, în limitele obligațiilor legale de păstrare",
+      "să ceri restricționarea prelucrării",
+      "să primești datele într-un format pe care îl poți duce în altă parte (portabilitate)",
+      "să te opui prelucrării bazate pe interesul legitim",
+      "să depui plângere la Autoritatea Națională de Supraveghere a Prelucrării Datelor cu Caracter Personal (ANSPDCP, www.dataprotection.ro)",
     ],
   },
   {
-    heading: "7. Cookie-uri",
+    heading: "9. Cum îți exerciți drepturile",
     paragraphs: [
-      "Site-ul nu folosește cookie-uri de urmărire sau de publicitate. Sunt utilizate doar cookie-urile strict necesare pentru funcționarea corectă a paginilor.",
+      `Scrie-ne la ${SITE.email}. Îți răspundem în cel mult o lună de la primirea cererii. Ca să îți protejăm datele, s-ar putea să te rugăm să confirmi că ești tu.`,
     ],
   },
   {
-    heading: "8. Securitatea datelor",
+    heading: "10. Cookie-uri",
     paragraphs: [
-      "Site-ul folosește conexiune criptată (HTTPS). Aplicăm măsuri tehnice și organizatorice rezonabile pentru a proteja datele împotriva accesului neautorizat, pierderii sau divulgării.",
+      "Site-ul nu folosește cookie-uri de urmărire, de statistici sau de publicitate. Folosim doar un cookie strict necesar, care te ține autentificat în cont. Conversația cu Ana e păstrată în memoria browserului tău (sessionStorage) și dispare când închizi fila.",
+    ],
+  },
+  {
+    heading: "11. Securitatea datelor",
+    paragraphs: [
+      "Site-ul folosește conexiune criptată (HTTPS). Parolele sunt păstrate criptat, ireversibil. Raportul kitului și contractele se deschid doar prin linkuri personale, imposibil de ghicit. Accesul la panoul de administrare e limitat la cabinet.",
     ],
   },
 ];
@@ -88,8 +125,8 @@ export default function ConfidentialitatePage() {
   return (
     <LegalPage
       title="Politica de confidențialitate"
-      updated="august 2026"
-      intro="Această pagină explică ce date cu caracter personal sunt colectate prin acest site, în ce scop sunt folosite și care sunt drepturile tale."
+      updated="septembrie 2026"
+      intro="Această pagină explică ce date cu caracter personal sunt colectate prin acest site, în ce scop sunt folosite, cui ajung și care sunt drepturile tale."
       sections={sections}
     />
   );

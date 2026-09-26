@@ -162,7 +162,7 @@ export function evenimentDinProgramare(p: ProgramarePentruGoogle) {
   return {
     summary: `${p.status === "PENDING" ? "⏳ De confirmat: " : ""}${client.name} — ${p.service.name}`,
     description: descriere,
-    location: p.format === "ONLINE" ? "Online" : `Cabinet, ${SITE.city}`,
+    location: p.format === "ONLINE" ? "Online" : `Cabinet, ${SITE.address}`,
     start: { dateTime: p.startsAt.toISOString(), timeZone: TZ },
     end: { dateTime: p.endsAt.toISOString(), timeZone: TZ },
     colorId: CULOARE[p.status] ?? "5",

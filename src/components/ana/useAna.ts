@@ -17,14 +17,14 @@ const CHEIE = "lj-ana";
 export const SALUT: Replica = {
   role: "assistant",
   content:
-    "Bună, sunt Ana, asistenta virtuală a cabinetului. Te pot lămuri despre ședințe, prețuri, varianta online sau despre cum decurge prima întâlnire. Ce ai vrea să afli?",
+    "Bună, sunt Ana, asistenta virtuală a cabinetului. Poți să-mi spui ce te frământă, în cuvintele tale, sau ce ai vrea să afli despre ședințe. Te ascult.",
 };
 
 export const SUGESTII = [
-  "Cât costă o ședință?",
+  "Am multă anxietate în ultima vreme",
+  "Ne certăm des în cuplu",
   "Cum decurge prima întâlnire?",
-  "Se poate și online?",
-  "Lucrați și cu copii?",
+  "Cât costă o ședință?",
 ];
 
 type Stare = {
