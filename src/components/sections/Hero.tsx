@@ -13,7 +13,7 @@ import {
 } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { HERO, PRICE, PHOTOS } from "@/content/site";
-import { IconArrow, IconClock, IconOffice, IconPrice, IconSend } from "../ui/Icons";
+import { IconArrow, IconOffice, IconSend } from "../ui/Icons";
 import { AnaFace } from "../ana/AnaFace";
 import { AnaMesaje } from "../ana/AnaMesaje";
 import { AntetAna, NotaAna, useAnaMood } from "../ana/Ana";
@@ -98,25 +98,23 @@ export function Hero() {
       />
 
       <div className="relative z-[1] mx-auto grid w-full max-w-7xl items-center gap-8 px-4 pb-10 sm:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,29rem)] lg:gap-16 lg:px-10 lg:pb-0 xl:grid-cols-[minmax(0,1fr)_minmax(0,31rem)]">
-        {/* Liliana, în rama de sticlă (pe telefon, deasupra casetei) */}
+        {/* Liliana, în rama de sticlă (pe telefon, ultima: după Ana și prezentare) */}
         <motion.div
           style={{ y: portretY }}
-          className="relative order-first mx-auto w-full max-w-[16rem] sm:max-w-[19rem] lg:order-last lg:max-w-none"
+          className="relative order-last mx-auto w-full max-w-[26rem] sm:max-w-[22rem] lg:max-w-none"
         >
           <motion.div style={{ x: portretX, y: portretYm }}>
             <Portret />
           </motion.div>
 
-          {/* Etichete de sticlă, pe un plan și mai apropiat */}
-          <motion.div
-            style={{ y: chipY, x: chipX }}
-            className="pointer-events-none absolute inset-0 hidden sm:block"
-          >
+          {/* Etichete de sticlă, pe un plan și mai apropiat. Pe telefon stau
+              pe fotografie; de la tabletă în sus ies în afara ramei. */}
+          <motion.div style={{ y: chipY, x: chipX }} className="pointer-events-none absolute inset-0">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.9, delay: 0.9, ease: [0.22, 1, 0.36, 1] }}
-              className="glass-strong absolute -left-10 top-[16%] flex items-center gap-2.5 px-4 py-3 lg:-left-14"
+              className="glass-strong absolute left-3 top-[10%] flex items-center gap-2.5 px-4 py-3 sm:-left-10 sm:top-[16%] lg:-left-14"
             >
               <IconOffice className="h-5 w-5 text-periwinkle" />
               <span className="font-sans text-[0.88rem] text-ink">În cabinet și online</span>
@@ -125,7 +123,7 @@ export function Hero() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.9, delay: 1.05, ease: [0.22, 1, 0.36, 1] }}
-              className="glass-strong absolute -right-6 bottom-[12%] px-5 py-3.5 lg:-right-10"
+              className="glass-strong absolute bottom-[8%] right-3 px-5 py-3.5 sm:-right-6 sm:bottom-[12%] lg:-right-10"
             >
               <p className="font-display text-2xl leading-none text-ink">
                 {PRICE.standard} {PRICE.currency}
@@ -150,7 +148,7 @@ function Portret() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1.1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-      className="glass p-2.5 sm:p-3"
+      className="glass p-1 sm:p-2 lg:p-2.5"
     >
       <div className="relative aspect-[4/5] w-full overflow-hidden">
         <Image
@@ -158,7 +156,7 @@ function Portret() {
           alt="Liliana Jgheban, psiholog clinician și psihoterapeut integrativ în București"
           fill
           priority
-          sizes="(max-width: 640px) 256px, (max-width: 1024px) 304px, 31rem"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 352px, 31rem"
           className="object-cover object-[50%_20%]"
         />
       </div>
@@ -216,8 +214,8 @@ function CasetaHero() {
   }
 
   return (
-    <div className="relative">
-      {/* Prezentarea */}
+    <div className="relative flex flex-col">
+      {/* Prezentarea (pe telefon, sub Ana) */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -259,20 +257,6 @@ function CasetaHero() {
           {HERO.intro}
         </motion.p>
 
-        {/* Pe telefon etichetele de lângă portret nu încap — reperele stau aici */}
-        <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-2 sm:hidden">
-          {[
-            { Icon: IconPrice, text: `${PRICE.standard} ${PRICE.currency} / ședință` },
-            { Icon: IconClock, text: "50 de minute" },
-            { Icon: IconOffice, text: "În cabinet și online" },
-          ].map(({ Icon, text }) => (
-            <li key={text} className="flex items-center gap-2 font-sans text-[0.9rem] text-ink">
-              <Icon className="h-5 w-5 text-periwinkle" />
-              {text}
-            </li>
-          ))}
-        </ul>
-
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -289,13 +273,13 @@ function CasetaHero() {
         </motion.div>
       </motion.div>
 
-      {/* Ana — blocul ei, separat, sub prezentare */}
+      {/* Ana — blocul ei, separat: pe telefon primul, de la tabletă sub prezentare */}
       {!gata && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1.2, delay: 0.5, ease }}
-          className="glass-strong mt-4 p-4 sm:p-5 lg:!bg-white/55"
+          className="glass-strong order-first mb-4 p-4 sm:order-none sm:mb-0 sm:mt-4 sm:p-5 lg:!bg-white/55"
         >
           <div className="flex items-center gap-3">
             <AnaFace size={46} mood={mood} />

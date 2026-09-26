@@ -115,75 +115,79 @@ export function Gallery() {
             <div className="absolute inset-0 bg-cream/25" />
           </div>
 
-          <div
-            ref={pista}
-            className="relative flex snap-x snap-mandatory gap-4 overflow-x-auto px-[7vw] [scrollbar-width:none] sm:gap-6 sm:px-[14vw] lg:px-[18vw] [&::-webkit-scrollbar]:hidden"
-          >
-            {poze.map((p, i) => (
-              <figure
-                key={p.src}
-                className="relative w-[86vw] shrink-0 snap-center sm:w-[72vw] lg:w-[64vw]"
-                aria-roledescription="slide"
-                aria-label={`${i + 1} din ${poze.length}`}
-              >
-                <button
-                  type="button"
-                  onClick={() => du(i)}
-                  tabIndex={i === activ ? -1 : 0}
-                  aria-label={i === activ ? p.alt : `Arată: ${p.alt}`}
-                  className={`relative block aspect-[4/3] w-full overflow-hidden bg-cream-deep shadow-[0_40px_80px_-40px_rgba(40,48,40,0.55)] transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] sm:aspect-[3/2] ${i === activ ? "scale-100 opacity-100" : "scale-[0.94] cursor-pointer opacity-55 hover:opacity-80"}`}
+          <div className="relative">
+            <div
+              ref={pista}
+              className="relative flex snap-x snap-mandatory gap-4 overflow-x-auto px-[7vw] [scrollbar-width:none] sm:gap-6 sm:px-[14vw] lg:px-[18vw] [&::-webkit-scrollbar]:hidden"
+            >
+              {poze.map((p, i) => (
+                <figure
+                  key={p.src}
+                  className="relative w-[86vw] shrink-0 snap-center sm:w-[72vw] lg:w-[64vw]"
+                  aria-roledescription="slide"
+                  aria-label={`${i + 1} din ${poze.length}`}
                 >
-                  <Image
-                    src={p.src}
-                    alt={p.alt}
-                    fill
-                    sizes="(min-width: 1024px) 64vw, (min-width: 640px) 72vw, 86vw"
-                    className="object-cover"
-                  />
-                </button>
-              </figure>
-            ))}
-          </div>
-
-          {/* Descrierea, săgețile și punctele */}
-          <div className="relative mx-auto mt-8 flex max-w-7xl flex-col items-center gap-5 px-6 sm:flex-row sm:justify-between lg:px-10">
-            <p className="min-h-[1.5em] text-center font-sans text-[0.92rem] text-ink-soft sm:text-left" aria-live="polite">
-              <span className="font-display text-ink">
-                {String(activ + 1).padStart(2, "0")} / {String(poze.length).padStart(2, "0")}
-              </span>
-              <span className="mx-3 text-ink/25">·</span>
-              {poze[activ].alt}
-            </p>
-            <div className="flex items-center gap-5">
-              <div className="flex gap-2">
-                {poze.map((p, i) => (
                   <button
-                    key={p.src}
                     type="button"
                     onClick={() => du(i)}
-                    aria-label={`Fotografia ${i + 1}`}
-                    aria-current={i === activ}
-                    className={`h-1.5 transition-all duration-500 ${i === activ ? "w-8 bg-periwinkle" : "w-3 bg-ink/20 hover:bg-ink/40"}`}
-                  />
-                ))}
-              </div>
-              <div className="flex gap-2">
-                <button
-                  type="button"
-                  onClick={() => du(activ - 1)}
-                  aria-label="Fotografia anterioară"
-                  className="glass-btn flex h-11 w-11 items-center justify-center text-ink transition-colors hover:bg-ink hover:text-cream"
-                >
-                  <IconArrow className="h-5 w-5 rotate-180" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => du(activ + 1)}
-                  aria-label="Fotografia următoare"
-                  className="glass-btn flex h-11 w-11 items-center justify-center text-ink transition-colors hover:bg-ink hover:text-cream"
-                >
-                  <IconArrow className="h-5 w-5" />
-                </button>
+                    tabIndex={i === activ ? -1 : 0}
+                    aria-label={i === activ ? p.alt : `Arată: ${p.alt}`}
+                    className={`relative block aspect-[4/3] w-full overflow-hidden bg-cream-deep shadow-[0_40px_80px_-40px_rgba(40,48,40,0.55)] transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] sm:aspect-[3/2] ${i === activ ? "scale-100 opacity-100" : "scale-[0.94] cursor-pointer opacity-55 hover:opacity-80"}`}
+                  >
+                    <Image
+                      src={p.src}
+                      alt={p.alt}
+                      fill
+                      sizes="(min-width: 1024px) 64vw, (min-width: 640px) 72vw, 86vw"
+                      className="object-cover"
+                    />
+                  </button>
+                </figure>
+              ))}
+            </div>
+            {/* Peste fotografia din mijloc, jos: descrierea, punctele și săgețile.
+                Stratul lasă degetul să treacă (swipe); doar butoanele primesc clic. */}
+            <div className="pointer-events-none absolute inset-y-0 left-1/2 flex w-[86vw] -translate-x-1/2 items-end sm:w-[72vw] lg:w-[64vw]">
+              <div className="flex w-full items-end justify-between gap-4 bg-gradient-to-t from-ink/80 via-ink/40 to-transparent px-4 pb-4 pt-20 sm:px-7 sm:pb-6 lg:px-9 lg:pb-7">
+                <div className="min-w-0" aria-live="polite">
+                  <p className="font-display text-[1.05rem] leading-none text-cream sm:text-[1.25rem]">
+                    {String(activ + 1).padStart(2, "0")}
+                    <span className="text-cream/50"> / {String(poze.length).padStart(2, "0")}</span>
+                  </p>
+                  <p className="mt-2 line-clamp-2 font-sans text-[0.82rem] leading-snug text-cream/85 sm:text-[0.95rem]">
+                    {poze[activ].alt}
+                  </p>
+                  <div className="pointer-events-auto mt-3 hidden gap-2 sm:flex">
+                    {poze.map((p, i) => (
+                      <button
+                        key={p.src}
+                        type="button"
+                        onClick={() => du(i)}
+                        aria-label={`Fotografia ${i + 1}`}
+                        aria-current={i === activ}
+                        className={`h-1.5 transition-all duration-500 ${i === activ ? "w-8 bg-cream" : "w-3 bg-cream/35 hover:bg-cream/60"}`}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <div className="pointer-events-auto flex shrink-0 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => du(activ - 1)}
+                    aria-label="Fotografia anterioară"
+                    className="flex h-10 w-10 items-center justify-center border border-cream/35 bg-cream/15 text-cream backdrop-blur-md transition-colors hover:bg-cream hover:text-ink sm:h-12 sm:w-12"
+                  >
+                    <IconArrow className="h-5 w-5 rotate-180" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => du(activ + 1)}
+                    aria-label="Fotografia următoare"
+                    className="flex h-10 w-10 items-center justify-center border border-cream/35 bg-cream/15 text-cream backdrop-blur-md transition-colors hover:bg-cream hover:text-ink sm:h-12 sm:w-12"
+                  >
+                    <IconArrow className="h-5 w-5" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>

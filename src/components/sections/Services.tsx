@@ -281,7 +281,7 @@ export function Services() {
                   Nu trebuie să știi dinainte ce serviciu ți se potrivește. Îl alegem împreună, după
                   prima întâlnire.
                 </p>
-                <ActionButtons className="mt-8 lg:justify-center" />
+                <ActionButtons aliniere="stanga" className="mt-8" />
               </Reveal>
             </li>
           </ol>

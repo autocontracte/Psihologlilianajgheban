@@ -11,10 +11,13 @@ import { IconCalendar, IconPhone, IconWhatsApp } from "./Icons";
  */
 export function ActionButtons({
   variant = "light",
+  aliniere = "centru",
   className = "",
 }: {
   /** `light` — pe fundal deschis. `dark` — pe secțiunile întunecate. */
   variant?: "light" | "dark";
+  /** `stanga` — pe telefon lipite de text, la stânga; pe desktop la mijloc. */
+  aliniere?: "centru" | "stanga";
   className?: string;
 }) {
   const primary =
@@ -31,7 +34,7 @@ export function ActionButtons({
     "inline-flex items-center justify-center gap-2.5 px-7 py-3.5 font-sans text-[0.95rem] transition-colors duration-400";
 
   return (
-    <div className={`flex flex-wrap justify-center gap-3 ${className}`}>
+    <div className={`flex flex-wrap gap-3 ${aliniere === "stanga" ? "justify-start lg:justify-center" : "justify-center"} ${className}`}>
       <Link href="/programari" className={`${base} ${primary}`}>
         <IconCalendar className="h-5 w-5" />
         Programează-te
