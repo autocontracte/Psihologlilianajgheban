@@ -171,6 +171,11 @@ Aceasta e întrebarea ${intrebarea} din ${ANA_MAX_INTREBARI}. ${final}`;
 const CRIZA =
   /sinucid|suicid|s[aă]-?mi iau via[tț]a|s[aă] m[aă] omor|nu mai vreau s[aă] (tr[aă]iesc|exist)|s[aă]-?mi fac r[aă]u|m[aă] tai|automutil|vreau s[aă] mor/i;
 
+/* Întrebări practice (preț, adresă, programare): la ele Ana răspunde direct
+   și pune linkul de programare, fără să mai aștepte. */
+const PRACTIC =
+  /c[aâ]t cost|pre[tț]|tarif|\blei\b|adres|unde (e|este|se afl)|programez|programare|or[ae] liber|disponibil|cum decurge|prima (ș|s)edin|online|zoom|plat[aăi]/i;
+
 /* Socoteala tokenurilor, ca să știm cât costă Ana. */
 const consum = { raspunsuri: 0, intrare: 0, iesire: 0 };
 
@@ -211,10 +216,23 @@ export async function raspundeAna(istoric: Replica[]): Promise<ReadableStream<Ui
   const intrebarea = istoric.filter((m) => m.role === "user").length;
   const ultima = istoric[istoric.length - 1]?.content ?? "";
   let system = sistem(await serviciiText(), intrebarea);
+
+  /* Instrucțiunea pentru mesajul acesta. Modelele țin mult mai sigur o regulă
+     spusă chiar acum, la final, decât una îngropată într-un prompt lung. */
+  const aDatLinkul = istoric.some((m) => m.role === "assistant" && m.content.includes("](programare)"));
+  let acum: string;
   if (CRIZA.test(ultima)) {
-    system +=
-      "\n\nATENȚIE: ultimul mesaj conține semne de criză. Aplică acum regula de SIGURANȚĂ, înaintea oricărui alt lucru.";
+    acum = "Ultimul mesaj conține semne de criză. Aplică acum regula de SIGURANȚĂ, înaintea oricărui alt lucru.";
+  } else if (PRACTIC.test(ultima)) {
+    acum =
+      "Omul întreabă ceva practic. Răspunde clar, doar cu informațiile de mai sus, fără să descrii cabinetul în cuvinte proprii, și încheie mesajul cu linkul [Programează-te aici, în chat](programare).";
+  } else if (intrebarea >= 3 && !aDatLinkul) {
+    acum =
+      "Acesta e al treilea mesaj al omului sau mai târziu. După ce reflectezi pe scurt ce ai înțeles, propune concret o ședință cu Liliana: spune pe nume ce serviciu i s-ar potrivi, cu prețul, și încheie cu linkul [Programează-te aici, în chat](programare). Nu mai pune altă întrebare în mesajul acesta.";
+  } else {
+    acum = "Ascultă: arată ce ai înțeles, dă cel mult o idee practică și pune o singură întrebare. Fără link de programare în mesajul acesta.";
   }
+  system += `\n\nPENTRU MESAJUL ACESTA: ${acum}\nReamintire: dacă omul nu și-a arătat genul, nu folosi despre el cuvinte cu gen (copleșit, epuizat, obosit, singur, sigur).`;
 
   const res = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
