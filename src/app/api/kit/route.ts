@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { creeazaComanda } from "@/lib/consiliere";
+import { creeazaComanda } from "@/lib/kit";
 import { clientIp } from "@/lib/request";
 
 /* Limită largă: cineva poate reîncepe de câteva ori. Doar contra inundării. */

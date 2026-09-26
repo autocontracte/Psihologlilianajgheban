@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { salveazaComanda } from "@/lib/consiliere";
-import type { Raspunsuri } from "@/lib/consiliere/intrebari";
+import { salveazaComanda } from "@/lib/kit";
+import type { Raspunsuri } from "@/lib/kit/test";
 
 /** PATCH — salvează răspunsurile și, opțional, emailul. */
 export async function PATCH(

@@ -1,13 +1,10 @@
 import { NextResponse } from "next/server";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { getComanda } from "@/lib/consiliere";
+import { getComanda } from "@/lib/kit";
 
-/** GET — descarcă ghidul PDF. Doar după ce comanda e plătită. */
-export async function GET(
-  _request: Request,
-  { params }: { params: Promise<{ token: string }> },
-) {
+/** GET — descarcă ghidul PDF din kit. Doar după ce comanda e plătită. */
+export async function GET(_request: Request, { params }: { params: Promise<{ token: string }> }) {
   const { token } = await params;
   const comanda = await getComanda(token);
   if (!comanda || comanda.status !== "PAID") {
@@ -18,7 +15,7 @@ export async function GET(
   return new NextResponse(new Uint8Array(bytes), {
     headers: {
       "Content-Type": "application/pdf",
-      "Content-Disposition": "attachment; filename*=UTF-8''Ghid-practic-despre-divort.pdf",
+      "Content-Disposition": "attachment; filename*=UTF-8''Ghid-practic-cuplu-divort-familie.pdf",
       "Cache-Control": "private, no-store",
     },
   });

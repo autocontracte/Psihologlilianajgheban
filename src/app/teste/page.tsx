@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 
-/* Secțiunea de teste vocaționale a fost înlocuită cu „Consiliere psihologică".
-   Vechiul link duce acum acolo. */
+/* Vechea secțiune de teste a devenit kitul „Cum stai, de fapt, cu relația ta?". */
 export default function TestePage() {
-  redirect("/consiliere");
+  redirect("/kit");
 }

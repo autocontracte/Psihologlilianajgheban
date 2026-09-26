@@ -499,3 +499,36 @@ body {
   transform-origin: center;
   animation: ana-vorbeste 0.32s ease-in-out infinite;
 }
+
+/* ============================================================================
+   Cursoarele din calculatorul kitului (pe fundal întunecat)
+   ========================================================================== */
+.kit-cursor {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: linear-gradient(
+    to right,
+    var(--color-periwinkle-light) var(--umplere, 50%),
+    rgb(243 244 238 / 0.18) var(--umplere, 50%)
+  );
+  cursor: pointer;
+}
+.kit-cursor::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  background: var(--color-cream);
+  border: 5px solid var(--color-periwinkle-light);
+}
+.kit-cursor::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: var(--color-cream);
+  border: 5px solid var(--color-periwinkle-light);
+  border-radius: 0;
+}
+.kit-cursor:focus-visible {
+  outline: 2px solid var(--color-periwinkle-light);
+  outline-offset: 6px;
+}

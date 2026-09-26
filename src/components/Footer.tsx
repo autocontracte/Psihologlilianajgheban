@@ -107,10 +107,10 @@ export function Footer() {
 
                 <Link
 
-                  href="/consiliere"
+                  href="/kit"
                   className="font-sans text-[0.87rem] text-cream/65 transition-colors duration-300 hover:text-periwinkle-light"
                 >
-                  Consiliere psihologică
+                  Kit „Cum stai cu relația ta?”
                 </Link>
               </li>
             </ul>

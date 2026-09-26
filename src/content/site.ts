@@ -1,3 +1,5 @@
+import { PRET_KIT_LEI } from "@/lib/kit/pret";
+
 /* ============================================================================
    CONȚINUTUL SITE-ULUI — editează totul din acest fișier.
    Nu e nevoie să modifici componentele pentru a schimba texte.
@@ -67,7 +69,7 @@ export const NAV = [
   { label: "Acasă", href: "/#acasa" },
   { label: "Despre mine", href: "/#despre" },
   { label: "Servicii", href: "/#servicii" },
-  { label: "Evaluare gratuită", href: "/evaluare-gratuita" },
+  { label: "Kit relație", href: "/kit" },
   { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/#contact" },
 ] as const;
@@ -505,16 +507,16 @@ export const CONTACT = {
 
 /* -------------------------------------------------------------------------- */
 
-/* Secțiunea de pe prima pagină care duce la evaluarea psihologică gratuită.
-   Ghidul despre divorț are pagina lui (/consiliere) și se poate cumpăra și
-   din rezultatul evaluării. */
+/* Secțiunea de pe prima pagină care duce la kitul „Cum stai, de fapt, cu
+   relația ta?" (/kit): test, raport personal și ghid, la un singur preț. */
 export const TESTS = {
-  eyebrow: "Evaluare psihologică gratuită",
+  eyebrow: `Kit pentru cuplu · ${PRET_KIT_LEI} lei`,
   title: "Cum stai, de fapt, cu *relația ta*?",
   description:
-    "Pentru momentele în care relația doare: certuri, gânduri de despărțire, un divorț în curs sau unul care încă apasă. Răspunzi la câteva întrebări și primești gratuit, pe loc, o interpretare personală și pași concreți.",
-  cta: "Începe evaluarea gratuită",
-  href: "/evaluare-gratuita",
+    "Pentru momentele în care relația doare: certuri, gânduri de despărțire, un divorț în curs sau unul care încă apasă. Un kit complet, făcut acasă: un test de 30 de întrebări, un raport personal detaliat în PDF și ghidul practic de 63 de pagini.",
+  items: ["Test de 30 de întrebări", "Raport personal detaliat, în PDF", "Ghidul practic de 63 de pagini"],
+  cta: "Descoperă kitul",
+  href: "/kit",
 };
 
 /* ============================================================================

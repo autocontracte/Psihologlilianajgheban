@@ -5,7 +5,7 @@ import { IconArrow } from "../ui/Icons";
 import { useAna } from "./useAna";
 
 /* Rutele pe care Ana are voie să le dea. Orice alt link rămâne text simplu. */
-const RUTE = ["/programari", "/#", "/consiliere", "/evaluare-gratuita", "/blog"];
+const RUTE = ["/programari", "/#", "/kit", "/blog"];
 const waHref = `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(SITE.whatsappMessage)}`;
 
 const buton =

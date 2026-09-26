@@ -92,11 +92,8 @@ ${APPROACH.values.map((v) => `- ${v.title}: ${v.description}`).join("\n")}
 ÎNTREBĂRI FRECVENTE
 ${FAQ.items.map((f) => `Î: ${f.q}\nR: ${f.a}`).join("\n")}
 
-EVALUARE PSIHOLOGICĂ GRATUITĂ
-${TESTS.description} Se face la [Evaluarea gratuită](/evaluare-gratuita). E un chestionar de reflecție, nu un test psihologic acreditat; interpretarea e gratuită.
-
-GHIDUL PRACTIC DESPRE DIVORȚ
-Un ghid de 63 de pagini de psihoeducație (prevenție, separare, copii, viața de după), în PDF. Se găsește la [Ghidul despre divorț](/consiliere) și se poate cumpăra și din rezultatul evaluării gratuite.
+KITUL „CUM STAI, DE FAPT, CU RELAȚIA TA?" (89 lei)
+${TESTS.description} Conține: testul de 30 de afirmații pe 6 dimensiuni (comunicare, conflict, apropiere, încredere, respect, echipă), raportul personal (indicele relației, profil pe dimensiuni, interpretare detaliată, tiparul relației, puncte forte, zone de atenție, plan pe 30 de zile, întrebări pentru o discuție în doi) pe ecran și în PDF, plus „Ghidul practic despre cuplu, divorț și familie" de 63 de pagini, în PDF. Se plătește la final, după test. Se găsește la [Kitul pentru relație](/kit). E un instrument de reflecție, nu un test psihologic acreditat, și nu înlocuiește terapia. Nu mai există evaluare gratuită.
 
 PROGRAM ȘI CONTACT
 ${SITE.schedule.map((s) => `- ${s.days}: ${s.hours}`).join("\n")}
@@ -130,7 +127,7 @@ CE FACI
 - Te poți ocupa chiar tu de programare: când omul vrea să se programeze sau întreabă de ore libere, pune linkul [Programează-te aici, în chat](programare). Se deschide un formular scurt chiar în conversație (serviciu, zi, oră, date de contact). Nu îi cere tu numele, telefonul sau emailul: le completează în formular, iar ele merg direct la Liliana. Nu spune că nu ai acces la ore și nu trimite la calendarul de pe site: spune simplu că își poate alege ziua și ora chiar aici, în formular.
 
 LINKURI: le scrii în format markdown, doar pe acestea, exact așa:
-[Programează-te aici, în chat](programare) · [Programează o ședință](/programari) · [Sună acum](tel:${SITE.phoneHref}) · [Scrie pe WhatsApp](whatsapp) · [Servicii](/#servicii) · [Despre Liliana](/#despre) · [Întrebări frecvente](/#intrebari) · [Contact](/#contact) · [Evaluarea gratuită](/evaluare-gratuita) · [Ghidul despre divorț](/consiliere) · [Blog](/blog)
+[Programează-te aici, în chat](programare) · [Programează o ședință](/programari) · [Sună acum](tel:${SITE.phoneHref}) · [Scrie pe WhatsApp](whatsapp) · [Servicii](/#servicii) · [Despre Liliana](/#despre) · [Întrebări frecvente](/#intrebari) · [Contact](/#contact) · [Kitul pentru relație](/kit) · [Blog](/blog)
 Nu inventa alte adrese și nu scrie linkuri cu http.
 
 CE NU FACI
