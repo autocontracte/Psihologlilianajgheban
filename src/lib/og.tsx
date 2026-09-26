@@ -45,6 +45,8 @@ export type Miniatura = {
   titlu: string;
   subtitlu?: string;
   imagine?: Imagine;
+  /** Folosită dacă `imagine` nu se poate citi (de exemplu, coperta unui articol ștearsă). */
+  rezerva?: Imagine;
 };
 
 const TIP_MIME: Record<string, string> = {
@@ -53,14 +55,31 @@ const TIP_MIME: Record<string, string> = {
   ".png": "image/png",
 };
 
-/** Fișierul din `public`, ca data URL. Formatele pe care `next/og` nu le
-    citește (webp, avif) trec prin sharp. Fără fișier, întoarce null. */
+/** Octeții imaginii: din `public`, din `uploads/blog` (imaginile încărcate
+    în articole, servite ca /blog-media/…) sau de pe web. */
+async function citeste(src: string): Promise<{ bytes: Buffer; ext: string } | null> {
+  if (/^https?:\/\//.test(src)) {
+    const res = await fetch(src, { signal: AbortSignal.timeout(8000) });
+    if (!res.ok) return null;
+    return { bytes: Buffer.from(await res.arrayBuffer()), ext: extname(new URL(src).pathname).toLowerCase() };
+  }
+  const relativ = decodeURIComponent(src.split("?")[0]).replace(/^\/+/, "");
+  const [dir, rest] = relativ.startsWith("blog-media/")
+    ? [join(RADACINA, "uploads", "blog"), relativ.slice("blog-media/".length)]
+    : [join(RADACINA, "public"), relativ];
+  const cale = join(dir, rest);
+  if (!cale.startsWith(dir)) return null;
+  return { bytes: await readFile(cale), ext: extname(cale).toLowerCase() };
+}
+
+/** Imaginea, ca data URL. Formatele pe care `next/og` nu le citește (webp,
+    avif) trec prin sharp. Dacă nu se poate citi, întoarce null. */
 async function dataUrl(src: string): Promise<string | null> {
   try {
-    const cale = join(RADACINA, "public", decodeURIComponent(src.split("?")[0]).replace(/^\/+/, ""));
-    if (!cale.startsWith(join(RADACINA, "public"))) return null;
-    const bytes = await readFile(cale);
-    const mime = TIP_MIME[extname(cale).toLowerCase()];
+    const fisier = await citeste(src);
+    if (!fisier) return null;
+    const { bytes } = fisier;
+    const mime = TIP_MIME[fisier.ext];
     if (mime) return `data:${mime};base64,${bytes.toString("base64")}`;
 
     const sharp = (await import("sharp")).default;
@@ -102,12 +121,14 @@ function marimeTitlu(titlu: string, cuImagine: boolean): number {
   return 40 * baza;
 }
 
-export async function miniatura({ eticheta, titlu, subtitlu, imagine }: Miniatura) {
-  const [fonts, logo, foto] = await Promise.all([
+export async function miniatura({ eticheta, titlu, subtitlu, imagine: ceruta, rezerva }: Miniatura) {
+  const [fonts, logo, fotoCeruta] = await Promise.all([
     incarcaFonturi(),
     dataUrl("/og/logo.png"),
-    imagine ? dataUrl(imagine.src) : Promise.resolve(null),
+    ceruta ? dataUrl(ceruta.src) : Promise.resolve(null),
   ]);
+  const [foto, imagine] =
+    fotoCeruta || !rezerva ? [fotoCeruta, ceruta] : [await dataUrl(rezerva.src), rezerva];
   const cuImagine = Boolean(foto);
   const contain = imagine?.potrivire === "contain";
   const domeniu = SITE.url.replace(/^https?:\/\//, "");

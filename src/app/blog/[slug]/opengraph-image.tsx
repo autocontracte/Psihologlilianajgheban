@@ -21,6 +21,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
     eticheta: post?.publishedAt ? `Blog · ${formatDateLong(post.publishedAt)}` : "Blog",
     titlu: post?.title ?? "Gânduri și resurse",
     subtitlu: post?.excerpt ? scurt(post.excerpt) : undefined,
-    imagine: { src: post?.coverImage || PHOTOS.portrete[0], pozitie: post?.coverImage ? "50% 50%" : "50% 22%" },
+    imagine: post?.coverImage ? { src: post.coverImage, pozitie: "50% 50%" } : undefined,
+    rezerva: { src: PHOTOS.portrete[0], pozitie: "50% 22%" },
   });
 }
