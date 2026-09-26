@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
+import { metaPagina } from "@/lib/seo";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { Reveal } from "@/components/ui/Reveal";
-import { articolPublicat, curataHtml } from "@/lib/blog";
+import { articolPublicat, curataHtml, rezumatDinHtml } from "@/lib/blog";
 import { formatDateLong } from "@/lib/tz";
+import { SITE } from "@/content/site";
 
 export async function generateMetadata({
   params,
@@ -14,14 +16,13 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const post = await articolPublicat(slug);
-  if (!post) return { title: "Articol negăsit" };
-  return {
-    title: post.title,
-    description: post.excerpt ?? undefined,
-    openGraph: post.coverImage
-      ? { images: [{ url: post.coverImage }], title: post.title }
-      : undefined,
-  };
+  if (!post) return { title: "Articol negăsit", robots: { index: false } };
+  return metaPagina({
+    titlu: post.title,
+    descriere: post.excerpt || rezumatDinHtml(post.content, 160),
+    cale: `/blog/${post.slug}`,
+    articol: { publicat: post.publishedAt, modificat: post.updatedAt },
+  });
 }
 
 export default async function ArticolPage({
@@ -105,6 +106,25 @@ export default async function ArticolPage({
         </article>
       </main>
       <Footer />
+      {/* Articolul, descris pentru Google: autor, date, imagine */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            headline: post.title,
+            description: post.excerpt || rezumatDinHtml(post.content, 160),
+            image: post.coverImage ? `${SITE.url}${post.coverImage}` : `${SITE.url}/blog/${post.slug}/opengraph-image`,
+            datePublished: post.publishedAt?.toISOString(),
+            dateModified: post.updatedAt.toISOString(),
+            mainEntityOfPage: `${SITE.url}/blog/${post.slug}`,
+            author: { "@type": "Person", name: SITE.name, url: SITE.url },
+            publisher: { "@id": `${SITE.url}/#cabinet` },
+            inLanguage: "ro-RO",
+          }).replace(/</g, "\\u003c"),
+        }}
+      />
     </>
   );
 }

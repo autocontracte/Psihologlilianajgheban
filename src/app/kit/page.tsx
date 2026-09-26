@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { metaPagina } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -37,16 +38,11 @@ import { SITE } from "@/content/site";
    pagină, autoarea, întrebări frecvente și precizările oneste de la final.
    -------------------------------------------------------------------------- */
 
-export const metadata: Metadata = {
-  title: `Kit „${NUME_KIT}” · test, raport personal și ghid`,
-  description: `Test de 30 de întrebări despre relația ta, raport personal detaliat în PDF și ghidul practic de 63 de pagini despre cuplu, divorț și familie, creat de psihologul Liliana Jgheban. ${PRET_KIT_LEI} lei.`,
-  alternates: { canonical: `${SITE.url}/kit` },
-  openGraph: {
-    title: `Kit „${NUME_KIT}”`,
-    description: "Test, raport personal în PDF și ghidul practic de 63 de pagini, de la psihologul Liliana Jgheban.",
-    images: [{ url: `${SITE.url}/foto/kit-raport-ghid-og.jpg`, width: 1200, height: 630 }],
-  },
-};
+export const metadata: Metadata = metaPagina({
+  titlu: `Kit „${NUME_KIT}”: test, raport personal și ghid`,
+  descriere: `Test de 30 de întrebări despre relația ta, raport personal detaliat în PDF și ghidul practic de 63 de pagini despre cuplu, divorț și familie, creat de psihologul Liliana Jgheban. ${PRET_KIT_LEI} lei.`,
+  cale: "/kit",
+});
 
 const PE_SCURT = [
   { icon: ClipboardList, titlu: "Testul", text: "30 de afirmații despre relația ta, pe 6 dimensiuni. Acasă, în 10 minute." },
@@ -515,7 +511,7 @@ export default function KitPage() {
               name: `Kit „${NUME_KIT}”`,
               description:
                 "Test de 30 de întrebări despre relația de cuplu, raport personal detaliat în PDF și ghid practic de 63 de pagini despre cuplu, divorț și familie.",
-              image: `${SITE.url}/foto/kit-raport-ghid-og.jpg`,
+              image: `${SITE.url}/kit/opengraph-image`,
               brand: { "@type": "Brand", name: "Liliana Jgheban" },
               offers: {
                 "@type": "Offer",

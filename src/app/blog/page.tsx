@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { metaPagina } from "@/lib/seo";
 import Link from "next/link";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
@@ -7,11 +8,12 @@ import { articolePublicate } from "@/lib/blog";
 import { formatDateLong } from "@/lib/tz";
 import { Lumina } from "@/components/ui/Lumina";
 
-export const metadata: Metadata = {
-  title: "Blog",
-  description:
+export const metadata: Metadata = metaPagina({
+  titlu: "Blog",
+  descriere:
     "Articole despre psihoterapie, relații, parenting și dezvoltare personală, scrise de psiholog Liliana Jgheban.",
-};
+  cale: "/blog",
+});
 
 export default async function BlogPage() {
   const posts = await articolePublicate();

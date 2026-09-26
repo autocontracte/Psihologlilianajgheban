@@ -53,7 +53,6 @@ export const metadata: Metadata = {
     siteName: SITE.name,
     title: `Psiholog și psihoterapeut în ${SITE.city} | ${SITE.name}`,
     description: SITE.description,
-    images: [{ url: "/foto/liliana-portret-4.jpg", alt: `${SITE.name}, psiholog și psihoterapeut` }],
   },
   twitter: {
     card: "summary_large_image",
@@ -71,9 +70,6 @@ export const metadata: Metadata = {
         nocache: true,
         googleBot: { index: false, follow: false, noimageindex: true },
       },
-  alternates: {
-    canonical: SITE.url,
-  },
 };
 
 export const viewport: Viewport = {

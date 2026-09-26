@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
+import { metaPagina } from "@/lib/seo";
 import { LegalPage, type LegalSection } from "@/components/LegalPage";
 import { SITE } from "@/content/site";
 
-export const metadata: Metadata = {
-  title: "Politica de confidențialitate",
-  description:
+export const metadata: Metadata = metaPagina({
+  titlu: "Politica de confidențialitate",
+  descriere:
     "Cum sunt colectate, folosite și protejate datele cu caracter personal transmise prin site.",
+  cale: "/confidentialitate",
   robots: { index: false, follow: true },
-};
+});
 
 /* ⚠️ ȘABLON — de verificat de un jurist înainte de lansare și de completat cu
    datele reale ale operatorului (nume complet, CUI/CIF, adresă, telefon). */

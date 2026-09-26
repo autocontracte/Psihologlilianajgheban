@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { metaPagina } from "@/lib/seo";
 import Link from "next/link";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
@@ -12,11 +13,12 @@ import { IconArrow, IconCalendar, IconClock, IconOffice } from "@/components/ui/
 import { Lumina } from "@/components/ui/Lumina";
 import { Val } from "@/components/ui/Val";
 
-export const metadata: Metadata = {
-  title: "Programări",
-  description:
+export const metadata: Metadata = metaPagina({
+  titlu: "Programează o ședință",
+  descriere:
     "Programează online o ședință de psihoterapie, consiliere parentală sau evaluare psihologică cu Liliana Jgheban. În cabinet sau online.",
-};
+  cale: "/programari",
+});
 
 export const dynamic = "force-dynamic";
 

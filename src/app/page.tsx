@@ -13,7 +13,11 @@ import { Contact } from "@/components/sections/Contact";
 import { Gallery } from "@/components/sections/Gallery";
 import { Reviews } from "@/components/sections/Reviews";
 import { Val } from "@/components/ui/Val";
-import { FAQ } from "@/content/site";
+import { FAQ, SITE } from "@/content/site";
+
+/* Adresa canonică doar aici: pusă în layout, s-ar fi moștenit pe toate
+   paginile, iar Google le-ar fi socotit copii ale primei pagini. */
+export const metadata = { alternates: { canonical: SITE.url } };
 
 /* Între două secțiuni cu fundaluri diferite stă un val în culoarea celei de
    dedesubt. Unde fundalul rămâne același, nu e nevoie de el. */

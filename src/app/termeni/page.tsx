@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
+import { metaPagina } from "@/lib/seo";
 import { LegalPage, type LegalSection } from "@/components/LegalPage";
 import { SITE } from "@/content/site";
 
-export const metadata: Metadata = {
-  title: "Termeni și condiții",
-  description:
+export const metadata: Metadata = metaPagina({
+  titlu: "Termeni și condiții",
+  descriere:
     "Termenii și condițiile de utilizare a site-ului și de furnizare a serviciilor psihologice.",
+  cale: "/termeni",
   robots: { index: false, follow: true },
-};
+});
 
 /* ⚠️ ȘABLON — de verificat de un jurist și de completat cu politica reală
    privind tarifele, anulările și modalitățile de plată. */
