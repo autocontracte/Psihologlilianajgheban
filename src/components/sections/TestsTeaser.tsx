@@ -15,7 +15,7 @@ export function TestsTeaser() {
       <Lumina din="dreapta" />
       <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
         <Reveal>
-          <div className="grid overflow-hidden lg:grid-cols-[1.2fr_0.8fr]">
+          <div className="grid overflow-hidden lg:grid-cols-[1.1fr_0.9fr]">
             <div className="relative flex min-h-[23rem] items-center overflow-hidden lg:min-h-[30rem]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/foto/consiliere-hero.jpg" alt="" className="absolute inset-0 h-full w-full object-cover" />
@@ -24,11 +24,7 @@ export function TestsTeaser() {
               <div className="absolute inset-0 bg-ink/15" />
 
               <div className="relative px-8 py-14 lg:px-14 lg:py-16">
-                <span className="inline-flex bg-cream/15 px-4 py-1.5 font-sans text-[0.74rem] tracking-[0.02em] text-cream backdrop-blur-sm">
-                  {TESTS.eyebrow}
-                </span>
-
-                <h2 className="mt-6 font-display text-3xl leading-[1.08] text-cream sm:text-4xl lg:text-[3rem]">
+                <h2 className=" font-display text-3xl leading-[1.08] text-cream sm:text-4xl lg:text-[3rem]">
                   <Accent text={TESTS.title} className="text-periwinkle-light" />
                 </h2>
 
@@ -53,14 +49,14 @@ export function TestsTeaser() {
               </div>
             </div>
 
-            <div className="flex flex-col items-center justify-center bg-cream-deep px-6 py-10">
+            <div className="flex flex-col items-center justify-center bg-cream-deep px-3 py-8 lg:px-4">
               <Image
-                src="/foto/kit-relatie.webp"
-                alt="Ghidul „Cum stai, de fapt, cu relația ta?” de Liliana Jgheban"
-                width={2000}
-                height={1333}
-                sizes="(min-width: 1024px) 460px, 90vw"
-                className="w-full max-w-md mix-blend-multiply"
+                src="/foto/kit-raport-ghid.webp"
+                alt="Raportul personal și ghidul „Cum stai, de fapt, cu relația ta?” de Liliana Jgheban"
+                width={1514}
+                height={1154}
+                sizes="(min-width: 1024px) 560px, 95vw"
+                className="w-full"
               />
               <p className="mt-2 font-display text-[2rem] leading-none text-ink">
                 {PRET_KIT_LEI} <span className="text-[1rem] text-ink-soft">lei</span>

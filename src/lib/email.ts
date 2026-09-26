@@ -47,7 +47,10 @@ function smtp(): Transporter {
 type Mesaj = {
   to: string;
   subject: string;
+  /** Varianta simplă, pentru programele care nu arată HTML. */
   text: string;
+  /** Varianta îngrijită, din `compuneEmail` (src/lib/emailSablon.ts). */
+  html?: string;
   replyTo?: string;
   /** Invitație de calendar (.ics). Gmail/Outlook o arată ca eveniment. */
   ical?: { method: "REQUEST" | "CANCEL"; content: string };

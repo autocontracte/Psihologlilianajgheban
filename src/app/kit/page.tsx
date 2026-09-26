@@ -24,6 +24,8 @@ import { IconArrow, IconCheck } from "@/components/ui/Icons";
 import { TestKit } from "@/components/kit/TestKit";
 import { CalculatorTensiune } from "@/components/kit/CalculatorTensiune";
 import { NUME_KIT, PRET_KIT_LEI } from "@/lib/kit";
+import { INTREBARI_FRECVENTE } from "@/lib/kit/faq";
+import { AnaPanou } from "@/components/ana/AnaPanou";
 import { platileSuntActive } from "@/lib/stripe";
 import { SITE } from "@/content/site";
 
@@ -42,7 +44,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: `Kit „${NUME_KIT}”`,
     description: "Test, raport personal în PDF și ghidul practic de 63 de pagini, de la psihologul Liliana Jgheban.",
-    images: [{ url: `${SITE.url}/foto/kit-relatie.webp`, width: 2000, height: 1333 }],
+    images: [{ url: `${SITE.url}/foto/kit-raport-ghid-og.jpg`, width: 1200, height: 630 }],
   },
 };
 
@@ -58,7 +60,7 @@ const STATISTICI = [
     text: "atât așteaptă, în medie, un cuplu nefericit până să ceară ajutor. Între timp, tiparele se adâncesc.",
   },
   {
-    cifra: "69%",
+    cifra: "70%",
     text: "dintre conflictele unui cuplu sunt perpetue: nu se rezolvă definitiv, se gestionează. Contează cum vă certați, nu dacă.",
   },
   {
@@ -126,41 +128,6 @@ const PASI = [
   { nr: "04", titlu: "Alegi pasul următor", text: "Ghidul, o discuție în doi sau, dacă simți nevoia, o ședință cu Liliana." },
 ];
 
-const INTREBARI_FRECVENTE = [
-  {
-    q: "Ce conține, concret, kitul?",
-    a: `Testul de 30 de întrebări, raportul tău personal (indicele relației, profilul pe 6 dimensiuni, interpretarea detaliată, tiparul relației, puncte forte, zone de atenție, plan pe 30 de zile, întrebări pentru o discuție în doi) pe ecran și în PDF, plus „Ghidul practic despre cuplu, divorț și familie”, de 63 de pagini, în PDF. Totul costă ${PRET_KIT_LEI} lei.`,
-  },
-  {
-    q: "Este un test psihologic acreditat?",
-    a: "Nu. Este un instrument de reflecție și autocunoaștere, creat de Liliana pe baza experienței clinice și a ghidului ei, nu un test psihologic standardizat. Nu pune diagnostice. Pentru o evaluare psihologică propriu-zisă, te poți programa la o ședință.",
-  },
-  {
-    q: "Cine scrie interpretarea?",
-    a: "Scorurile se calculează din răspunsurile tale. Interpretarea detaliată e generată automat, pornind de la răspunsuri și de la principiile din ghidul Lilianei, cu reguli stricte: fără diagnostice, fără sfaturi juridice sau medicale, fără să-ți spună ce decizie să iei.",
-  },
-  {
-    q: "Când plătesc și când primesc materialele?",
-    a: "Plătești abia după ce termini testul. Imediat după plată vezi raportul pe ecran; interpretarea personală e gata în aproximativ un minut. De pe aceeași pagină descarci raportul și ghidul în PDF, iar linkul îți vine și pe email.",
-  },
-  {
-    q: "Ne-am despărțit deja. Mi se potrivește?",
-    a: "Da. Răspunzi gândindu-te la ultima perioadă a relației, iar raportul ține cont că sunteți în separare sau după divorț: te ajută să înțelegi ce s-a întâmplat, cum îi protejezi pe copii și ce iei cu tine mai departe.",
-  },
-  {
-    q: "Pot face testul împreună cu partenerul?",
-    a: "Testul e gândit pentru o singură persoană, pentru că fiecare trăiește relația altfel. Dacă vreți amândoi, fiecare îl poate face separat; două rapoarte puse alături pot deschide o discuție foarte bună.",
-  },
-  {
-    q: "Ce se întâmplă cu răspunsurile mele?",
-    a: "Sunt confidențiale și sunt folosite doar pentru raportul tău. Raportul e accesibil doar prin linkul tău personal.",
-  },
-  {
-    q: "Înlocuiește o ședință de terapie?",
-    a: "Nu. E psihoeducație, un punct de plecare bun. O ședință îți oferă ce nu poate oferi un raport: pe cineva care te ascultă și lucrează cu tine, pe situația ta.",
-  },
-];
-
 export default function KitPage() {
   return (
     <>
@@ -204,16 +171,19 @@ export default function KitPage() {
             </Reveal>
 
             <Reveal delay={0.15} className="relative">
+              {/* Mockup-ul (raportul și ghidul) e decupat strâns și are fundal
+                  transparent; pe ecrane mari iese puțin din coloană, ca să
+                  domine hero-ul. */}
               <Image
-                src="/foto/kit-relatie.webp"
-                alt="Ghidul „Cum stai, de fapt, cu relația ta?” de Liliana Jgheban"
-                width={2000}
-                height={1333}
+                src="/foto/kit-raport-ghid.webp"
+                alt="Raportul personal și ghidul „Cum stai, de fapt, cu relația ta?” de Liliana Jgheban"
+                width={1514}
+                height={1154}
                 priority
-                sizes="(min-width: 1024px) 560px, 100vw"
-                className="w-full mix-blend-multiply"
+                sizes="(min-width: 1024px) 720px, 100vw"
+                className="w-full lg:w-[118%] lg:max-w-none"
               />
-              <div className="glass-strong absolute bottom-4 left-0 hidden p-4 sm:block lg:-left-6">
+              <div className="glass-strong absolute bottom-[8%] left-[4%] hidden p-4 sm:block">
                 <p className="font-sans text-[0.75rem] text-ink-muted">Tot kitul</p>
                 <p className="font-display text-[1.9rem] leading-none text-ink">
                   {PRET_KIT_LEI} <span className="text-[1rem] text-ink-soft">lei</span>
@@ -431,33 +401,43 @@ export default function KitPage() {
         <Val culoare="var(--color-cream)" varianta={2} />
 
         {/* ---------- Întrebări frecvente ---------- */}
-        <section className="relative overflow-hidden bg-cream py-20 lg:py-28">
+        {/* overflow-clip, nu hidden: altfel panoul Anei nu mai poate sta „sticky" */}
+        <section className="relative overflow-clip bg-cream py-20 lg:py-28">
           <Lumina din="dreapta" />
-          <div className="relative mx-auto max-w-3xl px-6 lg:px-10">
+          <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
             <Reveal>
               <p className="font-sans text-[0.85rem] text-periwinkle">Întrebări frecvente</p>
               <h2 className="mt-4 font-display text-4xl leading-tight text-ink sm:text-5xl">
                 Ce e bine să <em className="not-italic text-periwinkle">știi</em>
               </h2>
             </Reveal>
-            <div className="mt-10 space-y-3">
-              {INTREBARI_FRECVENTE.map((f) => (
-                <Reveal key={f.q}>
-                  <details className="glass group p-6">
-                    <summary className="flex cursor-pointer list-none items-center justify-between gap-6 font-display text-[1.1rem] text-ink [&::-webkit-details-marker]:hidden">
-                      {f.q}
-                      <span
-                        aria-hidden
-                        className="flex h-8 w-8 shrink-0 items-center justify-center bg-periwinkle-pale font-sans text-lg text-periwinkle transition-colors group-open:bg-periwinkle group-open:text-cream"
-                      >
-                        <span className="group-open:hidden">+</span>
-                        <span className="hidden group-open:inline">−</span>
-                      </span>
-                    </summary>
-                    <p className="mt-4 font-sans text-[0.92rem] leading-[1.85] text-ink-soft">{f.a}</p>
-                  </details>
-                </Reveal>
-              ))}
+            {/* Stânga: întrebările. Dreapta: Ana, care știe tot despre kit. */}
+            <div className="mt-10 grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-12 xl:grid-cols-[minmax(0,1fr)_minmax(0,28rem)]">
+              <div className="space-y-3">
+                {INTREBARI_FRECVENTE.map((f) => (
+                  <Reveal key={f.q}>
+                    <details className="glass group p-6">
+                      <summary className="flex cursor-pointer list-none items-center justify-between gap-6 font-display text-[1.1rem] text-ink [&::-webkit-details-marker]:hidden">
+                        {f.q}
+                        <span
+                          aria-hidden
+                          className="flex h-8 w-8 shrink-0 items-center justify-center bg-periwinkle-pale font-sans text-lg text-periwinkle transition-colors group-open:bg-periwinkle group-open:text-cream"
+                        >
+                          <span className="group-open:hidden">+</span>
+                          <span className="hidden group-open:inline">−</span>
+                        </span>
+                      </summary>
+                      <p className="mt-4 font-sans text-[0.92rem] leading-[1.85] text-ink-soft">{f.a}</p>
+                    </details>
+                  </Reveal>
+                ))}
+              </div>
+              <Reveal delay={0.1} className="lg:sticky lg:top-28">
+                <AnaPanou
+                  intro="Nu ai găsit răspunsul în listă? Întreabă-mă orice despre kit: ce conține, cum se plătește, când primești raportul sau dacă ți se potrivește."
+                  sugestii={["Ce primesc, concret?", "Cât durează testul?", "Mi se potrivește dacă ne-am despărțit?"]}
+                />
+              </Reveal>
             </div>
           </div>
         </section>
@@ -481,7 +461,7 @@ export default function KitPage() {
                 href="#test"
                 className="group mt-9 inline-flex items-center justify-center gap-3 bg-periwinkle-light px-9 py-4 font-sans text-[0.97rem] text-ink transition-colors hover:bg-cream"
               >
-                Obține kitul · {PRET_KIT_LEI} lei
+                Obține kitul
                 <IconArrow className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
               </a>
               <ul className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2">
@@ -535,7 +515,7 @@ export default function KitPage() {
               name: `Kit „${NUME_KIT}”`,
               description:
                 "Test de 30 de întrebări despre relația de cuplu, raport personal detaliat în PDF și ghid practic de 63 de pagini despre cuplu, divorț și familie.",
-              image: `${SITE.url}/foto/kit-relatie.webp`,
+              image: `${SITE.url}/foto/kit-raport-ghid-og.jpg`,
               brand: { "@type": "Brand", name: "Liliana Jgheban" },
               offers: {
                 "@type": "Offer",

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { clientIp } from "@/lib/request";
 import { CABINET_EMAIL, trimiteEmail } from "@/lib/email";
+import { compuneEmail } from "@/lib/emailSablon";
 
 /* ----------------------------------------------------------------------------
    Rută pentru formularul de contact.
@@ -103,7 +104,18 @@ export async function POST(request: Request) {
     to: CABINET_EMAIL,
     replyTo: email,
     subject: `Mesaj nou de la ${name} — ${subject || "contact site"}`,
-    text: `Nume: ${name}\nEmail: ${email}\nTelefon: ${phone || "-"}\n\n${message}`,
+    ...compuneEmail({
+      intern: true,
+      eticheta: "Mesaj de pe site",
+      titlu: subject || `Mesaj de la ${name}`,
+      detalii: [
+        { eticheta: "Nume", valoare: name },
+        { eticheta: "Email", valoare: email },
+        { eticheta: "Telefon", valoare: phone || "-" },
+      ],
+      citat: { eticheta: "Mesajul", text: message },
+      dupaDetalii: ["Răspunde direct la acest email: ajunge la omul care a scris."],
+    }),
   });
 
   console.log("[contact] mesaj nou", {

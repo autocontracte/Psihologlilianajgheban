@@ -16,10 +16,13 @@ const waHref = `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(SITE.wh
 export function AnaMesaje({
   onGo,
   faraSalut = false,
+  sugestii = SUGESTII,
 }: {
   onGo: (href: string) => void;
   /** În hero, salutul e de prisos: omul tocmai a început să scrie. */
   faraSalut?: boolean;
+  /** Întrebările de început; pe pagina kitului sunt despre kit. */
+  sugestii?: readonly string[];
 }) {
   const { turns, busy, error, gata, intrebari, trimite, programare, deschideProgramare, inchideProgramare } = useAna();
   const vizibile = faraSalut && intrebari > 0 ? turns.slice(1) : faraSalut ? [] : turns;
@@ -56,7 +59,7 @@ export function AnaMesaje({
 
       {intrebari === 0 && !busy && !programare && (
         <div className="flex flex-wrap gap-2 pt-1">
-          {SUGESTII.map((s) => (
+          {sugestii.map((s) => (
             <button
               key={s}
               type="button"

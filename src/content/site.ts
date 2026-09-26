@@ -1,4 +1,3 @@
-import { PRET_KIT_LEI } from "@/lib/kit/pret";
 
 /* ============================================================================
    CONȚINUTUL SITE-ULUI — editează totul din acest fișier.
@@ -510,7 +509,6 @@ export const CONTACT = {
 /* Secțiunea de pe prima pagină care duce la kitul „Cum stai, de fapt, cu
    relația ta?" (/kit): test, raport personal și ghid, la un singur preț. */
 export const TESTS = {
-  eyebrow: `Kit pentru cuplu · ${PRET_KIT_LEI} lei`,
   title: "Cum stai, de fapt, cu *relația ta*?",
   description:
     "Pentru momentele în care relația doare: certuri, gânduri de despărțire, un divorț în curs sau unul care încă apasă. Un kit complet, făcut acasă: un test de 30 de întrebări, un raport personal detaliat în PDF și ghidul practic de 63 de pagini.",

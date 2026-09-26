@@ -3,6 +3,7 @@ import "server-only";
 import { randomBytes } from "node:crypto";
 import { db } from "../db";
 import { trimiteEmail, CABINET_EMAIL } from "../email";
+import { compuneEmail } from "../emailSablon";
 import { SITE } from "@/content/site";
 import { genereazaInterpretare } from "./ai";
 import { calculeaza, type Raspunsuri } from "./test";
@@ -129,14 +130,22 @@ export async function confirmaPlata(comandaId: string, email?: string | null) {
       to: actualizata.email,
       replyTo: SITE.email,
       subject: `Kitul tău: „${NUME_KIT}”`,
-      text:
-        `Bună,\n\nÎți mulțumesc că ai ales kitul „${NUME_KIT}”.\n\n` +
-        `Raportul tău personal, ghidul complet și toate materialele sunt aici, oricând vrei să revii la ele:\n${link}\n\n` +
-        `Interpretarea personală se scrie pe baza răspunsurilor tale și e gata în câteva minute. ` +
-        `De pe aceeași pagină descarci raportul în PDF și ghidul de 63 de pagini.\n\n` +
-        `Păstrează acest email: linkul e doar al tău. Dacă după ce citești raportul simți nevoia să vorbim, ` +
-        `te poți programa oricând aici: ${SITE.url}/programari\n\n` +
-        `Cu drag,\nLiliana Jgheban\nPsiholog`,
+      ...compuneEmail({
+        eticheta: "Kitul tău",
+        titlu: NUME_KIT,
+        previzualizare: "Raportul tău personal și ghidul complet te așteaptă.",
+        salut: "Bună,",
+        semnatura: true,
+        paragrafe: [
+          `Îți mulțumesc că ai ales kitul „${NUME_KIT}”. Raportul tău personal, ghidul complet și toate materialele sunt pe pagina ta, oricând vrei să revii la ele.`,
+        ],
+        buton: { text: "Deschide raportul", href: link },
+        dupaDetalii: [
+          "Interpretarea personală se scrie pe baza răspunsurilor tale și e gata în câteva minute. De pe aceeași pagină descarci raportul în PDF și ghidul de 63 de pagini.",
+          "Păstrează acest email: linkul e doar al tău. Dacă după ce citești raportul simți nevoia să vorbim, te poți programa oricând.",
+        ],
+        linkuri: [{ text: "Programează o ședință", href: `${SITE.url}/programari` }],
+      }),
     });
   }
 
@@ -144,11 +153,16 @@ export async function confirmaPlata(comandaId: string, email?: string | null) {
     await trimiteEmail({
       to: CABINET_EMAIL,
       subject: `Kit nou: ${actualizata.email ?? "fără email"}${rez ? ` · indice ${rez.indice}/100` : ""}`,
-      text:
-        `A fost cumpărat un kit „${NUME_KIT}”.\n\n` +
-        `Email: ${actualizata.email ?? "—"}\n` +
-        (rez ? `Indicele relației: ${rez.indice}/100 (${rez.profil.nume})\n` : "") +
-        `\nDetaliile sunt în panou: ${SITE.url}/admin/kit`,
+      ...compuneEmail({
+        intern: true,
+        eticheta: "Kit cumpărat",
+        titlu: `Un kit nou „${NUME_KIT}”`,
+        detalii: [
+          { eticheta: "Email", valoare: actualizata.email ?? "—" },
+          ...(rez ? [{ eticheta: "Indicele relației", valoare: `${rez.indice}/100 (${rez.profil.nume})` }] : []),
+        ],
+        buton: { text: "Deschide în panou", href: `${SITE.url}/admin/kit` },
+      }),
     });
   }
 }

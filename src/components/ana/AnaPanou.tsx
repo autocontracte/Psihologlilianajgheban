@@ -14,7 +14,16 @@ import { useNavigheaza } from "./useNavigheaza";
  * plutitor. `data-ana-inline` îi spune butonului plutitor să stea ascuns cât
  * timp panoul e pe ecran, ca Ana să nu apară de două ori.
  */
-export function AnaPanou({ className = "" }: { className?: string }) {
+export function AnaPanou({
+  className = "",
+  intro,
+  sugestii,
+}: {
+  className?: string;
+  /** Textul de deasupra conversației, până la prima întrebare. */
+  intro?: string;
+  sugestii?: readonly string[];
+}) {
   const { busy, gata, intrebari, ramase, trimite, turns } = useAna();
   const [draft, setDraft] = useState("");
   const mood = useAnaMood(draft);
@@ -52,11 +61,11 @@ export function AnaPanou({ className = "" }: { className?: string }) {
       <div ref={listaRef} className="min-h-0 flex-1 overflow-y-auto px-6 py-5" aria-live="polite">
         {!aInceput && (
           <p className="mb-4 font-sans text-[0.92rem] leading-relaxed text-ink-soft">
-            Nu ai găsit răspunsul în listă? Scrie-mi cu cuvintele tale și îți răspund pe loc despre
-            ședințe, prețuri, varianta online sau despre cum decurge prima întâlnire.
+            {intro ??
+              "Nu ai găsit răspunsul în listă? Scrie-mi cu cuvintele tale și îți răspund pe loc despre ședințe, prețuri, varianta online sau despre cum decurge prima întâlnire."}
           </p>
         )}
-        <AnaMesaje onGo={navigheaza} faraSalut />
+        <AnaMesaje onGo={navigheaza} faraSalut sugestii={sugestii} />
       </div>
 
       {!gata && (

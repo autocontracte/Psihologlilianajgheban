@@ -1,12 +1,71 @@
+"use client";
+
 import Image from "next/image";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { PHOTOS } from "@/content/site";
 import { Reveal } from "../ui/Reveal";
 import { ActionButtons } from "../ui/ActionButtons";
 import { Lumina } from "../ui/Lumina";
+import { IconArrow } from "../ui/Icons";
 
-/** Fotografiile cabinetului. Un om care caută terapie vrea să vadă unde intră. */
+/* ----------------------------------------------------------------------------
+   Fotografiile cabinetului. Un om care caută terapie vrea să vadă unde intră.
+
+   Un carusel pe toată lățimea ecranului: fotografia curentă mare, la mijloc,
+   cu vecinele care se văd pe margini. În spate, pe toată banda, aceeași
+   fotografie, mărită și blurată, care se schimbă odată cu slide-ul — camera
+   „umple" pagina, fără să taie din fotografia propriu-zisă.
+
+   Derularea e nativă (scroll-snap): merge cu degetul pe telefon, cu
+   trackpad-ul și cu săgețile.
+   -------------------------------------------------------------------------- */
+
 export function Gallery() {
-  const [principala, ...restul] = PHOTOS.cabinet;
+  const poze = PHOTOS.cabinet;
+  const [activ, setActiv] = useState(0);
+  const pista = useRef<HTMLDivElement>(null);
+
+  // Slide-ul activ e cel al cărui centru e cel mai aproape de centrul pistei
+  useEffect(() => {
+    const el = pista.current;
+    if (!el) return;
+    let cadru = 0;
+    const actualizeaza = () => {
+      cadru = 0;
+      const centru = el.scrollLeft + el.clientWidth / 2;
+      let cel = 0;
+      let dist = Infinity;
+      Array.from(el.children).forEach((c, i) => {
+        const s = c as HTMLElement;
+        const d = Math.abs(s.offsetLeft + s.offsetWidth / 2 - centru);
+        if (d < dist) {
+          dist = d;
+          cel = i;
+        }
+      });
+      setActiv(cel);
+    };
+    const laDerulare = () => {
+      if (!cadru) cadru = requestAnimationFrame(actualizeaza);
+    };
+    el.addEventListener("scroll", laDerulare, { passive: true });
+    window.addEventListener("resize", laDerulare);
+    return () => {
+      el.removeEventListener("scroll", laDerulare);
+      window.removeEventListener("resize", laDerulare);
+      if (cadru) cancelAnimationFrame(cadru);
+    };
+  }, []);
+
+  const du = useCallback(
+    (i: number) => {
+      const el = pista.current;
+      const s = el?.children[(i + poze.length) % poze.length] as HTMLElement | undefined;
+      if (!el || !s) return;
+      el.scrollTo({ left: s.offsetLeft - (el.clientWidth - s.offsetWidth) / 2, behavior: "smooth" });
+    },
+    [poze.length],
+  );
 
   return (
     <section id="cabinet" className="relative overflow-hidden bg-cream py-24 lg:py-32">
@@ -28,45 +87,113 @@ export function Gallery() {
             </p>
           </Reveal>
         </div>
+      </div>
 
-        {/* O fotografie mare, restul într-o grilă dreaptă */}
-        <div className="mt-14 grid gap-3 lg:grid-cols-2">
-          {/* Fără `row-span`: pe un singur rând, cele două coloane se întind
-              amândouă cât cea mai înaltă, oricâte poze ar fi în dreapta. */}
-          <Reveal>
-            <div className="relative h-72 w-full overflow-hidden bg-cream-deep sm:h-96 lg:h-full lg:min-h-[34rem]">
+      {/* Banda pe toată lățimea */}
+      <Reveal delay={0.1}>
+        <div
+          className="relative mt-14 py-10 lg:py-14"
+          role="region"
+          aria-roledescription="carusel"
+          aria-label="Fotografiile cabinetului"
+        >
+          {/* Fundalul: fotografia activă, blurată; masca o topește în pagină sus și jos */}
+          <div
+            aria-hidden
+            className="absolute inset-0 overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_18%,black_82%,transparent)]"
+          >
+            {poze.map((p, i) => (
               <Image
-                src={principala.src}
-                alt={principala.alt}
+                key={p.src}
+                src={p.src}
+                alt=""
                 fill
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.03]"
+                sizes="40vw"
+                className={`scale-125 object-cover blur-3xl saturate-[1.15] transition-opacity duration-[900ms] ${i === activ ? "opacity-90" : "opacity-0"}`}
               />
-            </div>
-          </Reveal>
+            ))}
+            <div className="absolute inset-0 bg-cream/25" />
+          </div>
 
-          {/* Grila din dreapta se întinde cât fotografia mare, ca cele două
-              coloane să se termine la aceeași înălțime indiferent câte poze
-              sunt. */}
-          <div className="grid grid-cols-2 gap-3 lg:h-full lg:auto-rows-fr">
-            {restul.map((foto, i) => (
-              <Reveal key={foto.src} delay={Math.min(i * 0.06, 0.3)} className="lg:h-full">
-                <div className="relative h-40 w-full overflow-hidden bg-cream-deep sm:h-52 lg:h-full">
+          <div
+            ref={pista}
+            className="relative flex snap-x snap-mandatory gap-4 overflow-x-auto px-[7vw] [scrollbar-width:none] sm:gap-6 sm:px-[14vw] lg:px-[18vw] [&::-webkit-scrollbar]:hidden"
+          >
+            {poze.map((p, i) => (
+              <figure
+                key={p.src}
+                className="relative w-[86vw] shrink-0 snap-center sm:w-[72vw] lg:w-[64vw]"
+                aria-roledescription="slide"
+                aria-label={`${i + 1} din ${poze.length}`}
+              >
+                <button
+                  type="button"
+                  onClick={() => du(i)}
+                  tabIndex={i === activ ? -1 : 0}
+                  aria-label={i === activ ? p.alt : `Arată: ${p.alt}`}
+                  className={`relative block aspect-[4/3] w-full overflow-hidden bg-cream-deep shadow-[0_40px_80px_-40px_rgba(40,48,40,0.55)] transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] sm:aspect-[3/2] ${i === activ ? "scale-100 opacity-100" : "scale-[0.94] cursor-pointer opacity-55 hover:opacity-80"}`}
+                >
                   <Image
-                    src={foto.src}
-                    alt={foto.alt}
+                    src={p.src}
+                    alt={p.alt}
                     fill
-                    sizes="(max-width: 1024px) 50vw, 25vw"
-                    className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.05]"
+                    sizes="(min-width: 1024px) 64vw, (min-width: 640px) 72vw, 86vw"
+                    className="object-cover"
                   />
-                </div>
-              </Reveal>
+                </button>
+              </figure>
             ))}
           </div>
-        </div>
-        <ActionButtons variant="light" className="mt-16" />
 
+          {/* Descrierea, săgețile și punctele */}
+          <div className="relative mx-auto mt-8 flex max-w-7xl flex-col items-center gap-5 px-6 sm:flex-row sm:justify-between lg:px-10">
+            <p className="min-h-[1.5em] text-center font-sans text-[0.92rem] text-ink-soft sm:text-left" aria-live="polite">
+              <span className="font-display text-ink">
+                {String(activ + 1).padStart(2, "0")} / {String(poze.length).padStart(2, "0")}
+              </span>
+              <span className="mx-3 text-ink/25">·</span>
+              {poze[activ].alt}
+            </p>
+            <div className="flex items-center gap-5">
+              <div className="flex gap-2">
+                {poze.map((p, i) => (
+                  <button
+                    key={p.src}
+                    type="button"
+                    onClick={() => du(i)}
+                    aria-label={`Fotografia ${i + 1}`}
+                    aria-current={i === activ}
+                    className={`h-1.5 transition-all duration-500 ${i === activ ? "w-8 bg-periwinkle" : "w-3 bg-ink/20 hover:bg-ink/40"}`}
+                  />
+                ))}
+              </div>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => du(activ - 1)}
+                  aria-label="Fotografia anterioară"
+                  className="glass-btn flex h-11 w-11 items-center justify-center text-ink transition-colors hover:bg-ink hover:text-cream"
+                >
+                  <IconArrow className="h-5 w-5 rotate-180" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => du(activ + 1)}
+                  aria-label="Fotografia următoare"
+                  className="glass-btn flex h-11 w-11 items-center justify-center text-ink transition-colors hover:bg-ink hover:text-cream"
+                >
+                  <IconArrow className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Reveal>
+
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
+        <ActionButtons variant="light" className="mt-12" />
       </div>
     </section>
   );
 }
+

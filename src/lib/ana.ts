@@ -12,6 +12,8 @@ import {
   SITE,
   TESTS,
 } from "@/content/site";
+import { INTREBARI_FRECVENTE as FAQ_KIT } from "@/lib/kit/faq";
+import { PRET_KIT_LEI } from "@/lib/kit/pret";
 
 /* ----------------------------------------------------------------------------
    Ana — asistenta virtuală a cabinetului.
@@ -92,8 +94,10 @@ ${APPROACH.values.map((v) => `- ${v.title}: ${v.description}`).join("\n")}
 ÎNTREBĂRI FRECVENTE
 ${FAQ.items.map((f) => `Î: ${f.q}\nR: ${f.a}`).join("\n")}
 
-KITUL „CUM STAI, DE FAPT, CU RELAȚIA TA?" (89 lei)
+KITUL „CUM STAI, DE FAPT, CU RELAȚIA TA?" (${PRET_KIT_LEI} lei)
 ${TESTS.description} Conține: testul de 30 de afirmații pe 6 dimensiuni (comunicare, conflict, apropiere, încredere, respect, echipă), raportul personal (indicele relației, profil pe dimensiuni, interpretare detaliată, tiparul relației, puncte forte, zone de atenție, plan pe 30 de zile, întrebări pentru o discuție în doi) pe ecran și în PDF, plus „Ghidul practic despre cuplu, divorț și familie" de 63 de pagini, în PDF. Se plătește la final, după test. Se găsește la [Kitul pentru relație](/kit). E un instrument de reflecție, nu un test psihologic acreditat, și nu înlocuiește terapia. Nu mai există evaluare gratuită.
+Întrebările frecvente despre kit (răspunde la fel ca pagina):
+${FAQ_KIT.map((f) => `Î: ${f.q}\nR: ${f.a}`).join("\n")}
 
 PROGRAM ȘI CONTACT
 ${SITE.schedule.map((s) => `- ${s.days}: ${s.hours}`).join("\n")}
