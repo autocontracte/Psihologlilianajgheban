@@ -59,6 +59,12 @@ export const metadata: Metadata = {
     title: `Psiholog și psihoterapeut în ${SITE.city} | ${SITE.name}`,
     description: SITE.description,
   },
+  /* Codurile de verificare pentru Google Search Console și Bing Webmaster
+     Tools, din .env pe server (GOOGLE_SITE_VERIFICATION, BING_SITE_VERIFICATION). */
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION || undefined,
+    other: process.env.BING_SITE_VERIFICATION ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION } : undefined,
+  },
   /* Cât timp SITE.indexable este false, fiecare pagină cere explicit să nu fie
      indexată. Doar robots.txt nu e de ajuns: dacă cineva pune un link către
      site, Google îl poate afișa oricum în rezultate. */

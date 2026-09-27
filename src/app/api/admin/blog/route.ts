@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { anuntaIndexNow } from "@/lib/indexnow";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { curataHtml, rezumatDinHtml, slugUnic } from "@/lib/blog";
@@ -51,6 +52,9 @@ export async function POST(request: Request) {
       publishedAt: status === "PUBLISHED" ? new Date() : null,
     },
   });
+
+  // Articolul publicat e anunțat motoarelor de căutare (IndexNow), în fundal
+  if (status === "PUBLISHED") void anuntaIndexNow([`/blog/${post.slug}`, "/blog"]);
 
   return NextResponse.json({ ok: true, id: post.id, slug: post.slug });
 }

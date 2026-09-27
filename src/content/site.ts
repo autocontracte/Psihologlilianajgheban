@@ -13,9 +13,10 @@ export const SITE = {
              interzice tot). Potrivit cât timp încă lucrăm la el.
      true  — site-ul devine vizibil în Google.
 
-     Când îl treci pe `true`, mai fă un lucru: intră în Google Search Console
-     și cere indexarea, altfel poate dura săptămâni până e găsit singur. */
-  indexable: false,
+     Pe `true` din 27 septembrie 2026. Articolele publicate sunt anunțate
+     singure prin IndexNow (Bing etc.); pentru Google, sitemap-ul se trimite
+     din Google Search Console. */
+  indexable: true,
 
   name: "Liliana Jgheban",
   role: "Psiholog clinician & Psihoterapeut integrativ",
