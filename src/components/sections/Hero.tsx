@@ -60,6 +60,16 @@ export function Hero() {
   const portretYm = useTransform(sy, (v) => v * 10);
   const chipX = useTransform(sx, (v) => v * 26);
 
+  /* Video-ul de fundal: doar pe ecrane mari, fără „mișcare redusă" și fără
+     economizor de date. Pe telefon rămâne fotografia (date și baterie). Până
+     pornește, se vede fotografia, iar video-ul apare printr-un fade. */
+  const [video, setVideo] = useState(false);
+  const [videoGata, setVideoGata] = useState(false);
+  useEffect(() => {
+    const conexiune = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+    setVideo(!reduce && window.matchMedia("(min-width: 1024px)").matches && !conexiune?.saveData);
+  }, [reduce]);
+
   useEffect(() => {
     if (reduce) return;
     if (!window.matchMedia("(pointer: fine)").matches) return;
@@ -88,6 +98,20 @@ export function Hero() {
             sizes="100vw"
             className="object-cover object-[50%_40%] blur-[1.5px]"
           />
+          {video && (
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              poster={PHOTOS.heroVideo.poster}
+              onCanPlay={() => setVideoGata(true)}
+              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-[1500ms] ${videoGata ? "opacity-100" : "opacity-0"}`}
+            >
+              <source src={PHOTOS.heroVideo.webm} type="video/webm" />
+              <source src={PHOTOS.heroVideo.mp4} type="video/mp4" />
+            </video>
+          )}
         </motion.div>
       </motion.div>
 
