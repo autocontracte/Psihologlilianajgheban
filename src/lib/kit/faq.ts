@@ -5,7 +5,7 @@ import { PRET_KIT_LEI } from "./pret";
 export const INTREBARI_FRECVENTE = [
   {
     q: "Ce conține, concret, kitul?",
-    a: `Testul de 30 de întrebări, raportul tău personal (indicele relației, profilul pe 6 dimensiuni, interpretarea detaliată, tiparul relației, puncte forte, zone de atenție, plan pe 30 de zile, întrebări pentru o discuție în doi) pe ecran și în PDF, plus „Ghidul practic despre cuplu, divorț și familie”, de 63 de pagini, în PDF. Totul costă ${PRET_KIT_LEI} lei.`,
+    a: `Testul de 30 de întrebări, raportul tău personal (indicele relației, profilul pe 6 dimensiuni, interpretarea detaliată, tiparul relației, puncte forte, zone de atenție, plan pe 30 de zile, întrebări pentru o discuție în doi) pe ecran și în PDF, plus „Ghidul practic despre cuplu, divorț și familie”, de 79 de pagini, în PDF. Totul costă ${PRET_KIT_LEI} lei.`,
   },
   {
     q: "Este un test psihologic acreditat?",

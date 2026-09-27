@@ -40,14 +40,14 @@ import { SITE } from "@/content/site";
 
 export const metadata: Metadata = metaPagina({
   titlu: `Kit „${NUME_KIT}”: test, raport personal și ghid`,
-  descriere: `Test de 30 de întrebări despre relația ta, raport personal detaliat în PDF și ghidul practic de 63 de pagini despre cuplu, divorț și familie, creat de psihologul Liliana Jgheban. ${PRET_KIT_LEI} lei.`,
+  descriere: `Test de 30 de întrebări despre relația ta, raport personal detaliat în PDF și ghidul practic de 79 de pagini despre cuplu, divorț și familie, creat de psihologul Liliana Jgheban. ${PRET_KIT_LEI} lei.`,
   cale: "/kit",
 });
 
 const PE_SCURT = [
   { icon: ClipboardList, titlu: "Testul", text: "30 de afirmații despre relația ta, pe 6 dimensiuni. Acasă, în 10 minute." },
   { icon: FileText, titlu: "Raportul personal", text: "Interpretare detaliată și plan pe 30 de zile, pe ecran și în PDF." },
-  { icon: BookOpen, titlu: "Ghidul practic", text: "63 de pagini despre cuplu, divorț și familie, scrise de Liliana." },
+  { icon: BookOpen, titlu: "Ghidul practic", text: "79 de pagini despre cuplu, divorț și familie, scrise de Liliana." },
 ];
 
 const STATISTICI = [
@@ -100,7 +100,7 @@ const CE_PRIMESTI = [
   {
     icon: BookOpen,
     eticheta: "06 · Ghid practic",
-    titlu: "Ghidul de 63 de pagini",
+    titlu: "Ghidul de 79 de pagini",
     text: "Prevenția crizei, separarea, copiii, co-parentajul și familia recompusă. Cu capitolele recomandate pentru tine.",
   },
   {
@@ -142,7 +142,7 @@ export default function KitPage() {
               </h1>
               <p className="mt-6 max-w-xl font-sans text-[1.02rem] leading-[1.85] text-ink-soft">
                 Un kit complet, făcut acasă, în ritmul tău: un test de 30 de întrebări, un raport personal detaliat pe
-                care îl descarci în PDF și ghidul practic de 63 de pagini scris de Liliana Jgheban, psiholog clinician.
+                care îl descarci în PDF și ghidul practic de 79 de pagini scris de Liliana Jgheban, psiholog clinician.
               </p>
               <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
                 <a
@@ -510,7 +510,7 @@ export default function KitPage() {
               "@type": "Product",
               name: `Kit „${NUME_KIT}”`,
               description:
-                "Test de 30 de întrebări despre relația de cuplu, raport personal detaliat în PDF și ghid practic de 63 de pagini despre cuplu, divorț și familie.",
+                "Test de 30 de întrebări despre relația de cuplu, raport personal detaliat în PDF și ghid practic de 79 de pagini despre cuplu, divorț și familie.",
               image: `${SITE.url}/kit/opengraph-image`,
               brand: { "@type": "Brand", name: "Liliana Jgheban" },
               offers: {

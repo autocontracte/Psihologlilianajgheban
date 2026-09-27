@@ -118,7 +118,7 @@ export default async function RezultatKit({ params }: { params: Promise<{ token:
                     href={`/api/kit/${token}/ghid`}
                     icon={BookOpen}
                     titlu="Ghidul practic"
-                    detaliu="PDF, 63 de pagini"
+                    detaliu="PDF, 79 de pagini"
                   />
                 </div>
               )}
@@ -140,7 +140,7 @@ export default async function RezultatKit({ params }: { params: Promise<{ token:
                   <h2 className="font-display text-[1.4rem] text-ink">Vrei un raport complet?</h2>
                   <p className="mx-auto mt-2 max-w-md font-sans text-[0.9rem] leading-relaxed text-ink-soft">
                     Kitul „Cum stai, de fapt, cu relația ta?” are un test de 30 de întrebări, un raport detaliat în PDF
-                    și ghidul de 63 de pagini.
+                    și ghidul de 79 de pagini.
                   </p>
                   <Link
                     href="/kit"

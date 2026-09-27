@@ -622,7 +622,7 @@ export async function genereazaRaportPdf(date: DateRaport): Promise<Uint8Array> 
   d.sectiune(
     "Ghidul din kit",
     "Ce să citești mai întâi în ghid",
-    "Ghidul practic are 63 de pagini. Pornind de la rezultatul tău, acestea sunt capitolele care te privesc cel mai direct acum:",
+    "Ghidul practic are 79 de pagini. Pornind de la rezultatul tău, acestea sunt capitolele care te privesc cel mai direct acum:",
     { paginaNoua: false },
   );
   d.listaNumerotata(capitoleRecomandate(r, rez), C.nisip);

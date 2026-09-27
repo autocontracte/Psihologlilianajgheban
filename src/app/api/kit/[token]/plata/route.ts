@@ -38,7 +38,7 @@ export async function POST(_request: Request, { params }: { params: Promise<{ to
             product_data: {
               name: `Kit „${NUME_KIT}”`,
               description:
-                "Test de 30 de întrebări, raport personal detaliat (PDF) și ghidul practic de 63 de pagini (PDF)",
+                "Test de 30 de întrebări, raport personal detaliat (PDF) și ghidul practic de 79 de pagini (PDF)",
             },
           },
         },

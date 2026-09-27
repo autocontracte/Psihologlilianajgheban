@@ -469,7 +469,7 @@ function EcranFinal({
           "Raport personal detaliat, pe ecran și în PDF",
           "Analiza fiecărei dimensiuni și tiparul relației",
           "Plan concret pentru următoarele 30 de zile",
-          "Ghidul practic de 63 de pagini, în PDF",
+          "Ghidul practic de 79 de pagini, în PDF",
         ].map((t) => (
           <li key={t} className="flex items-start gap-2.5 font-sans text-[0.88rem] text-ink">
             <Check className="mt-0.5 h-4 w-4 shrink-0 text-periwinkle" aria-hidden />

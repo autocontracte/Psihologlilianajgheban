@@ -9,7 +9,7 @@ export default function Image() {
   return miniatura({
     eticheta: "Kit pentru cuplu",
     titlu: NUME_KIT,
-    subtitlu: "Test de 30 de întrebări, raport personal în PDF și ghidul practic de 63 de pagini.",
+    subtitlu: "Test de 30 de întrebări, raport personal în PDF și ghidul practic de 79 de pagini.",
     imagine: { src: "/og/kit-mockup.png", potrivire: "contain" },
   });
 }

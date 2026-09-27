@@ -15,7 +15,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ tok
   return new NextResponse(new Uint8Array(bytes), {
     headers: {
       "Content-Type": "application/pdf",
-      "Content-Disposition": "attachment; filename*=UTF-8''Ghid-practic-cuplu-divort-familie.pdf",
+      "Content-Disposition": "attachment; filename*=UTF-8''Ghid-Cum-stai-de-fapt-cu-relatia-ta-Liliana-Jgheban.pdf",
       "Cache-Control": "private, no-store",
     },
   });

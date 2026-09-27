@@ -141,7 +141,7 @@ export async function confirmaPlata(comandaId: string, email?: string | null) {
         ],
         buton: { text: "Deschide raportul", href: link },
         dupaDetalii: [
-          "Interpretarea personală se scrie pe baza răspunsurilor tale și e gata în câteva minute. De pe aceeași pagină descarci raportul în PDF și ghidul de 63 de pagini.",
+          "Interpretarea personală se scrie pe baza răspunsurilor tale și e gata în câteva minute. De pe aceeași pagină descarci raportul în PDF și ghidul de 79 de pagini.",
           "Păstrează acest email: linkul e doar al tău. Dacă după ce citești raportul simți nevoia să vorbim, te poți programa oricând.",
         ],
         linkuri: [{ text: "Programează o ședință", href: `${SITE.url}/programari` }],

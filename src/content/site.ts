@@ -522,8 +522,8 @@ export const CONTACT = {
 export const TESTS = {
   title: "Cum stai, de fapt, cu *relația ta*?",
   description:
-    "Pentru momentele în care relația doare: certuri, gânduri de despărțire, un divorț în curs sau unul care încă apasă. Un kit complet, făcut acasă: un test de 30 de întrebări, un raport personal detaliat în PDF și ghidul practic de 63 de pagini.",
-  items: ["Test de 30 de întrebări", "Raport personal detaliat, în PDF", "Ghidul practic de 63 de pagini"],
+    "Pentru momentele în care relația doare: certuri, gânduri de despărțire, un divorț în curs sau unul care încă apasă. Un kit complet, făcut acasă: un test de 30 de întrebări, un raport personal detaliat în PDF și ghidul practic de 79 de pagini.",
+  items: ["Test de 30 de întrebări", "Raport personal detaliat, în PDF", "Ghidul practic de 79 de pagini"],
   cta: "Descoperă kitul",
   href: "/kit",
 };
