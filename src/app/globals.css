@@ -297,6 +297,20 @@ body {
 }
 }
 
+/* Fundalul hero-ului fără video (economizor de date): cadrul fix se apropie
+   și se depărtează foarte lent, ca o respirație. */
+@keyframes hero-respira {
+  from {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.08) translate3d(-1.5%, -1%, 0);
+  }
+}
+.hero-respira {
+  animation: hero-respira 22s ease-in-out infinite alternate;
+}
+
 /* Ana — respirația avatarului și punctele care „scriu" */
 @keyframes respira {
   0%,

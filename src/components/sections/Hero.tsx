@@ -60,15 +60,18 @@ export function Hero() {
   const portretYm = useTransform(sy, (v) => v * 10);
   const chipX = useTransform(sx, (v) => v * 26);
 
-  /* Video-ul de fundal: doar pe ecrane mari, fără „mișcare redusă" și fără
-     economizor de date. Pe telefon rămâne fotografia (date și baterie). Până
-     pornește, se vede fotografia, iar video-ul apare printr-un fade. */
-  const [video, setVideo] = useState(false);
-  const [videoGata, setVideoGata] = useState(false);
+  /* Fundalul: bucla cu lumină printre copaci, pe orice ecran (pe telefon, în
+     varianta verticală, mai mică). Cu „mișcare redusă" rămâne un cadru fix din
+     video; cu economizorul de date, cadrul fix, cu o mișcare lentă din CSS.
+     Până pornește video-ul se vede același cadru, deci trecerea nu se simte. */
+  const [fundal, setFundal] = useState<"asteapta" | "video" | "animat" | "fix">("asteapta");
+  const [telefon, setTelefon] = useState(false);
   useEffect(() => {
     const conexiune = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
-    setVideo(!reduce && window.matchMedia("(min-width: 1024px)").matches && !conexiune?.saveData);
+    setTelefon(window.matchMedia("(max-width: 1023px)").matches);
+    setFundal(reduce ? "fix" : conexiune?.saveData ? "animat" : "video");
   }, [reduce]);
+  const v = telefon ? PHOTOS.heroVideo.telefon : PHOTOS.heroVideo.desktop;
 
   useEffect(() => {
     if (reduce) return;
@@ -87,29 +90,34 @@ export function Hero() {
       id="acasa"
       className="relative flex min-h-[100svh] items-center overflow-hidden bg-cream-deep pt-24 lg:pb-24 lg:pt-28"
     >
-      {/* Planul din spate: cabinetul, pe toată lățimea */}
+      {/* Planul din spate: lumină printre copaci, pe toată lățimea */}
       <motion.div aria-hidden style={{ x: bgX, y: bgYm }} className="pointer-events-none absolute inset-0">
-        <motion.div style={{ y: bgY, scale: bgScale }} className="absolute inset-0">
-          <Image
-            src={PHOTOS.heroFundal}
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-[50%_40%] blur-[1.5px]"
-          />
-          {video && (
+        <motion.div style={{ y: bgY, scale: bgScale }} className="absolute inset-0 overflow-hidden">
+          {/* Cadrul fix, primul din buclă: se vede imediat și rămâne pentru cei
+              fără video. Pe telefon, varianta verticală. */}
+          <picture>
+            <source media="(max-width: 1023px)" srcSet={PHOTOS.heroVideo.telefon.cadru} />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={PHOTOS.heroVideo.desktop.cadru}
+              alt=""
+              fetchPriority="high"
+              className={`absolute inset-0 h-full w-full object-cover ${fundal === "animat" ? "hero-respira" : ""}`}
+            />
+          </picture>
+          {fundal === "video" && (
             <video
+              key={v.mp4}
               autoPlay
               muted
               loop
               playsInline
-              poster={PHOTOS.heroVideo.poster}
-              onCanPlay={() => setVideoGata(true)}
-              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-[1500ms] ${videoGata ? "opacity-100" : "opacity-0"}`}
+              preload="auto"
+              poster={v.cadru}
+              className="absolute inset-0 h-full w-full object-cover"
             >
-              <source src={PHOTOS.heroVideo.webm} type="video/webm" />
-              <source src={PHOTOS.heroVideo.mp4} type="video/mp4" />
+              <source src={v.webm} type="video/webm" />
+              <source src={v.mp4} type="video/mp4" />
             </video>
           )}
         </motion.div>

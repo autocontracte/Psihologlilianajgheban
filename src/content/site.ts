@@ -538,14 +538,22 @@ export const PHOTOS = {
   hero: "/foto/cabinet-camera-1.jpg",
   /** Hero-ul de pe prima pagină: cabinetul pe fundal, Liliana în prim-plan. */
   heroFundal: "/foto/cabinet-spatiu-3.jpg",
-  /** Pe ecrane mari, peste fundal: lumină printre copaci, în buclă lentă.
+  /** Fundalul hero-ului: lumină printre copaci, în buclă de 20 s.
       Sursa: Pexels, video 856325 („Sun Glare From Trees”), licență Pexels
-      (gratuit, fără atribuire obligatorie). Încetinit și pus înainte-înapoi,
-      ca bucla să nu aibă tăietură. */
+      (gratuit, fără atribuire obligatorie). Doar partea clară a clipului
+      (4,75–8,35 s), legănată lin înainte-înapoi și estompată ușor, ca bucla
+      să nu aibă tăietură. `cadru` e primul cadru din buclă. */
   heroVideo: {
-    mp4: "/video/hero-lumina.mp4",
-    webm: "/video/hero-lumina.webm",
-    poster: "/video/hero-lumina.jpg",
+    desktop: {
+      mp4: "/video/lumina-d.mp4",
+      webm: "/video/lumina-d.webm",
+      cadru: "/video/lumina-d.jpg",
+    },
+    telefon: {
+      mp4: "/video/lumina-m.mp4",
+      webm: "/video/lumina-m.webm",
+      cadru: "/video/lumina-m.jpg",
+    },
   },
   heroPortret: "/foto/liliana-portret-4.jpg",
   despre: "/foto/liliana-fotoliu.jpg",
