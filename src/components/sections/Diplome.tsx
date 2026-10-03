@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
+import { ZoomIn } from "lucide-react";
 import { DIPLOME } from "@/content/site";
 import { CaruselInfinit } from "../ui/CaruselInfinit";
 import { Reveal } from "../ui/Reveal";
@@ -80,8 +81,8 @@ export function Diplome() {
                     className="object-contain transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03]"
                   />
                   <span className="absolute inset-0 flex items-center justify-center bg-ink/0 transition-colors duration-500 group-hover:bg-ink/25">
-                    <span className="mi flex h-12 w-12 scale-90 items-center justify-center bg-cream text-[1.5rem] text-ink opacity-0 transition-all duration-500 group-hover:scale-100 group-hover:opacity-100">
-                      zoom_in
+                    <span className="flex h-12 w-12 scale-90 items-center justify-center bg-cream text-ink opacity-0 transition-all duration-500 group-hover:scale-100 group-hover:opacity-100">
+                      <ZoomIn className="h-5 w-5" strokeWidth={1.75} aria-hidden />
                     </span>
                   </span>
                 </span>
