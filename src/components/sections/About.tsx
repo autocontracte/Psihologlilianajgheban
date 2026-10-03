@@ -9,6 +9,7 @@ import { IconCheck } from "../ui/Icons";
 import { Pete } from "../ui/Pete";
 import { Lumina } from "../ui/Lumina";
 import { Accent } from "../ui/Accent";
+import { Diplome } from "./Diplome";
 
 export function About() {
   const ref = useRef<HTMLElement>(null);
@@ -97,6 +98,8 @@ export function About() {
           </Reveal>
         </div>
       </div>
+
+      <Diplome />
     </section>
   );
 }

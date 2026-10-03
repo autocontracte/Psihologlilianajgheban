@@ -399,6 +399,92 @@ export const ABOUT = {
 
 /* -------------------------------------------------------------------------- */
 
+/** Diplomele și atestatele, în caruselul din secțiunea „Despre mine".
+    Imaginile sunt în /public/diplome, randate din PDF-urile originale.
+    ⚠️ Pe atestatele de liberă practică CNP-ul e acoperit — păstrează-l așa
+    și la orice document nou adăugat aici. */
+export const DIPLOME = {
+  titlu: "Diplome și *atestate*",
+  descriere:
+    "Formarea nu se oprește niciodată. Iată câteva dintre documentele care o atestă.",
+  documente: [
+    {
+      src: "/diplome/atestat-psihologie-clinica-2025.webp",
+      titlu: "Atestat de liberă practică: psihologie clinică, autonom",
+      emitent: "Colegiul Psihologilor din România",
+      an: "2025",
+    },
+    {
+      src: "/diplome/atestat-psihoterapie-integrativa-2023.webp",
+      titlu: "Atestat de liberă practică: psihoterapie integrativă",
+      emitent: "Colegiul Psihologilor din România",
+      an: "2023",
+    },
+    {
+      src: "/diplome/iestca-psihoterapie-integrativa-2022.webp",
+      titlu: "Formare completă în psihoterapie integrativă (650 de ore)",
+      emitent: "Institutul European de Studii pentru Terapia Copiilor și Adolescenților",
+      an: "2022",
+    },
+    {
+      src: "/diplome/arpi-trauma-2024.webp",
+      titlu: "Specializare în lucrul cu trauma din perspectiva psihoterapiei integrative",
+      emitent: "Asociația Română de Psihoterapie Integrativă",
+      an: "2024",
+    },
+    {
+      src: "/diplome/apricas-sandtray-2026.webp",
+      titlu: "Sandtray therapy: lucrul la lădița cu nisip în psihoterapie",
+      emitent: "Asociația APRICAS",
+      an: "2026",
+    },
+    {
+      src: "/diplome/acpor-cognikit-2025.webp",
+      titlu: "Evaluarea și intervenția psihologică computerizată pentru copii și adolescenți (CogniKit)",
+      emitent: "Asociația de Consiliere și Psihoterapie Online din România",
+      an: "2025",
+    },
+    {
+      src: "/diplome/autism-voice-aba-2025.webp",
+      titlu: "Analiză comportamentală aplicată (ABA) în terapia copiilor cu autism",
+      emitent: "Asociația Autism Voice",
+      an: "2025",
+    },
+    {
+      src: "/diplome/aba-masters-2025.webp",
+      titlu: "ABA Masters Class: protocoale de lucru în tulburarea de spectru autist",
+      emitent: "ABA Masters",
+      an: "2025",
+    },
+    {
+      src: "/diplome/confident-teste-proiective-2023.webp",
+      titlu: "Teste proiective în psihodiagnoză și intervenție",
+      emitent: "Asociația Confident",
+      an: "2023",
+    },
+    {
+      src: "/diplome/neagu-joc-2023.webp",
+      titlu: "Conceptualizarea cazului și planificarea intervenției terapeutice prin joc",
+      emitent: "Psiholog Andreea Neagu",
+      an: "2023",
+    },
+    {
+      src: "/diplome/neagu-trauma-dezvoltare-2023.webp",
+      titlu: "Trauma de dezvoltare",
+      emitent: "Psiholog Andreea Neagu",
+      an: "2023",
+    },
+    {
+      src: "/diplome/neagu-divort-2023.webp",
+      titlu: "Evaluarea și terapia copiilor și adolescenților în situații de divorț",
+      emitent: "Psiholog Andreea Neagu, Play&Grow Training",
+      an: "2023",
+    },
+  ],
+};
+
+/* -------------------------------------------------------------------------- */
+
 export const APPROACH = {
   eyebrow: "Abordare",
   title: "Cum *lucrez*",
