@@ -6,7 +6,7 @@ import { NIVELURI, calculeaza, raspunsuriTest, raspunsuriText } from "@/lib/kit/
 import { platileSuntActive } from "@/lib/stripe";
 import { InterpretareButton } from "@/components/admin/InterpretareButton";
 
-export const metadata = { title: "Kit relație" };
+export const metadata = { title: "Trusă de ajutor" };
 export const dynamic = "force-dynamic";
 
 const STARE: Record<string, { text: string; stil: string }> = {
@@ -24,9 +24,9 @@ export default async function AdminKitPage() {
 
   return (
     <div>
-      <h1 className="font-display text-3xl text-ink lg:text-4xl">Kit „Cum stai, de fapt, cu relația ta?”</h1>
+      <h1 className="font-display text-3xl text-ink lg:text-4xl">Trusa de ajutor „Cum stai, de fapt, în relația ta?”</h1>
       <p className="mt-3 max-w-2xl font-sans text-[0.92rem] leading-relaxed text-ink-soft">
-        Comenzile kitului ({PRET_KIT_LEI} lei): răspunsurile la test, scorul, interpretarea AI și plata. Linkul
+        Comenzile trusei ({PRET_KIT_LEI} lei): răspunsurile la test, scorul, interpretarea AI și plata. Linkul
         „Deschide raportul” arată exact ce vede clientul.
       </p>
 
@@ -58,7 +58,7 @@ export default async function AdminKitPage() {
             {!platileSuntActive && (
               <li>
                 <span className="text-ink">Plata:</span> completează cheile Stripe în{" "}
-                <code className="text-[0.85em]">.env</code>. Până atunci, kitul se primește gratuit, pentru testare.
+                <code className="text-[0.85em]">.env</code>. Până atunci, trusa se primește gratuit, pentru testare.
               </li>
             )}
             {!interpretareaActiva && (

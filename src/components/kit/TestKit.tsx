@@ -182,7 +182,7 @@ export function TestKit({ pretLei, platesteActiv }: { pretLei: number; platesteA
     const facute = reluare ? AFIRMATII.filter((a) => reluare.raspunsuri[a.id]).length : 0;
     return (
       <div ref={cutie} className="glass-strong p-8 text-center sm:p-12">
-        <p className="font-sans text-[0.85rem] text-periwinkle">Testul din kit</p>
+        <p className="font-sans text-[0.85rem] text-periwinkle">Testul din trusă</p>
         <h2 className="mt-3 font-display text-[1.9rem] leading-tight text-ink sm:text-[2.4rem]">
           30 de afirmații despre <em className="not-italic text-periwinkle">relația ta</em>
         </h2>
@@ -495,7 +495,7 @@ function EcranFinal({
 
       {!platesteActiv && (
         <p className="mt-5 border-l-2 border-sage bg-sage-pale px-5 py-3 font-sans text-[0.83rem] leading-relaxed text-ink-soft">
-          În perioada de testare primești kitul <span className="font-semibold text-ink">gratuit</span>. Plata de{" "}
+          În perioada de testare primești trusa <span className="font-semibold text-ink">gratuit</span>. Plata de{" "}
           {pretLei} lei se activează în curând.
         </p>
       )}
@@ -511,8 +511,8 @@ function EcranFinal({
             ? "Se deschide plata…"
             : "Se pregătește…"
           : platesteActiv
-            ? `Obține kitul · ${pretLei} lei`
-            : "Primește kitul gratuit"}
+            ? `Obține trusa · ${pretLei} lei`
+            : "Primește trusa gratuit"}
       </button>
       <p className="mt-3 text-center font-sans text-[0.76rem] leading-relaxed text-ink-muted">
         {platesteActiv ? "Plată sigură prin Stripe · " : ""}Acces imediat · Raportul e confidențial și rămâne doar al tău

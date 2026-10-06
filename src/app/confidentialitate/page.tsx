@@ -32,7 +32,7 @@ const sections: LegalSection[] = [
       "Programări și contul de client: nume, email, telefon, programările tale (serviciul, data, formatul) și mesajul pe care îl lași la programare. Parola nu o cunoaștem: se păstrează doar sub formă criptată, ireversibil.",
       "Plata online: plata cu cardul se face prin Stripe. Datele cardului nu ajung la noi; păstrăm doar suma, data și referința plății.",
       "Contractul de prestări servicii: datele completate în contract (pentru un minor, și datele părinților), semnătura și, ca dovadă a semnării, data, adresa IP și browserul folosit.",
-      "Kitul „Cum stai, de fapt, cu relația ta?”: răspunsurile la test, adresa de email, plata și raportul generat pentru tine.",
+      "Trusa de ajutor „Cum stai, de fapt, în relația ta?”: răspunsurile la test, adresa de email, plata și raportul generat pentru tine.",
       "Ana, asistenta virtuală: întrebările pe care i le scrii. Te rugăm să nu îi scrii date despre sănătate sau alte informații sensibile.",
       "Formularul de contact: numele, emailul, telefonul și mesajul tău.",
       "Date tehnice: jurnalele serverului (adresa IP, pagina accesată, ora), folosite doar pentru securitate și pentru remedierea erorilor.",
@@ -41,7 +41,7 @@ const sections: LegalSection[] = [
   {
     heading: "3. De ce folosim datele și pe ce temei",
     bullets: [
-      "Ca să îți oferim serviciile cerute (programări, ședințe, contract, kitul, răspunsuri la mesaje): executarea contractului sau demersurile de dinaintea lui (art. 6 alin. 1 lit. b GDPR).",
+      "Ca să îți oferim serviciile cerute (programări, ședințe, contract, trusa de ajutor, răspunsuri la mesaje): executarea contractului sau demersurile de dinaintea lui (art. 6 alin. 1 lit. b GDPR).",
       "Ca să respectăm obligațiile legale, de exemplu cele financiar-contabile (art. 6 alin. 1 lit. c GDPR).",
       "Pentru securitatea site-ului și prevenirea abuzurilor: interesul nostru legitim (art. 6 alin. 1 lit. f GDPR).",
       "Informațiile despre sănătatea psihică discutate în ședințe sunt prelucrate pentru furnizarea serviciilor psihologice, sub obligația de secret profesional (art. 9 alin. 2 lit. h GDPR).",
@@ -58,9 +58,9 @@ const sections: LegalSection[] = [
     bullets: [
       "Hostinger: serverul pe care rulează site-ul și baza de date.",
       "Stripe: procesarea plăților cu cardul.",
-      "Resend: trimiterea emailurilor automate (confirmări de programare, linkul către kit).",
+      "Resend: trimiterea emailurilor automate (confirmări de programare, linkul către trusă).",
       "Google (Google Calendar): programările apar în calendarul Lilianei, cu numele, telefonul, emailul tău și serviciul ales.",
-      "OpenAI: generează răspunsurile Anei și interpretarea din raportul kitului. Primește textul întrebărilor, respectiv răspunsurile la test, fără numele sau datele tale de contact.",
+      "OpenAI: generează răspunsurile Anei și interpretarea din raportul trusei. Primește textul întrebărilor, respectiv răspunsurile la test, fără numele sau datele tale de contact.",
       "Cloudflare: redirecționarea emailurilor trimise la adresa cabinetului.",
     ],
   },
@@ -76,7 +76,7 @@ const sections: LegalSection[] = [
       "Mesajele din formularul de contact: cât e nevoie ca să îți răspundem, apoi cel mult 12 luni.",
       "Contul de client: până când ceri ștergerea lui.",
       "Programările, plățile, contractele și documentele contabile: pe durata colaborării și apoi cât cer legislația financiar-contabilă și normele profesiei de psiholog.",
-      "Kitul: cât timp ai nevoie de acces la raport. Poți cere oricând ștergerea lui.",
+      "Trusa de ajutor: cât timp ai nevoie de acces la raport. Poți cere oricând ștergerea lui.",
       "Conversația cu Ana nu o păstrăm: stă doar în browserul tău, cât timp e deschisă fila.",
       "Jurnalele tehnice ale serverului: cel mult câteva luni.",
     ],
@@ -116,7 +116,7 @@ const sections: LegalSection[] = [
   {
     heading: "11. Securitatea datelor",
     paragraphs: [
-      "Site-ul folosește conexiune criptată (HTTPS). Parolele sunt păstrate criptat, ireversibil. Raportul kitului și contractele se deschid doar prin linkuri personale, imposibil de ghicit. Accesul la panoul de administrare e limitat la cabinet.",
+      "Site-ul folosește conexiune criptată (HTTPS). Parolele sunt păstrate criptat, ireversibil. Raportul trusei și contractele se deschid doar prin linkuri personale, imposibil de ghicit. Accesul la panoul de administrare e limitat la cabinet.",
     ],
   },
 ];

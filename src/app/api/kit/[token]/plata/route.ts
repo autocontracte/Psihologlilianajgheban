@@ -5,7 +5,7 @@ import { getComanda, NUME_KIT, PRET_KIT_BANI, raspunsuriComanda } from "@/lib/ki
 import { testComplet } from "@/lib/kit/test";
 import { SITE } from "@/content/site";
 
-/** POST — pornește plata kitului (89 lei). Suma vine de pe server, nu din browser. */
+/** POST — pornește plata trusei (89 lei). Suma vine de pe server, nu din browser. */
 export async function POST(_request: Request, { params }: { params: Promise<{ token: string }> }) {
   if (!platileSuntActive) {
     return NextResponse.json({ error: "Plata online nu este încă activată." }, { status: 503 });
@@ -36,7 +36,7 @@ export async function POST(_request: Request, { params }: { params: Promise<{ to
             currency: "ron",
             unit_amount: PRET_KIT_BANI,
             product_data: {
-              name: `Kit „${NUME_KIT}”`,
+              name: `Trusa de ajutor „${NUME_KIT}”`,
               description:
                 "Test de 30 de întrebări, raport personal detaliat (PDF) și ghidul practic de 79 de pagini (PDF)",
             },

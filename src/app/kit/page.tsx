@@ -31,7 +31,7 @@ import { platileSuntActive } from "@/lib/stripe";
 import { SITE } from "@/content/site";
 
 /* ----------------------------------------------------------------------------
-   Kitul „Cum stai, de fapt, cu relația ta?" — pagina de prezentare și testul.
+   Trusa de ajutor „Cum stai, de fapt, în relația ta?" — pagina de prezentare și testul.
 
    Structura urmează kit.emthrive.ro: promisiunea și prețul sus, ce spun
    cercetările, un calculator, ce primești, cum funcționează, testul chiar în
@@ -39,7 +39,7 @@ import { SITE } from "@/content/site";
    -------------------------------------------------------------------------- */
 
 export const metadata: Metadata = metaPagina({
-  titlu: `Kit „${NUME_KIT}”: test, raport personal și ghid`,
+  titlu: `Trusa de ajutor „${NUME_KIT}”: test, raport personal și ghid`,
   descriere: `Test de 30 de întrebări despre relația ta, raport personal detaliat în PDF și ghidul practic de 79 de pagini despre cuplu, divorț și familie, creat de psihologul Liliana Jgheban. ${PRET_KIT_LEI} lei.`,
   cale: "/kit",
 });
@@ -69,7 +69,7 @@ const CE_PRIMESTI = [
   {
     icon: ClipboardList,
     eticheta: "01 · Testul central",
-    titlu: "„Cum stai, de fapt, cu relația ta?”",
+    titlu: "„Cum stai, de fapt, în relația ta?”",
     text: "30 de afirmații, grupate pe șase dimensiuni: comunicarea, conflictul, apropierea, încrederea, respectul și sentimentul de echipă. Îl completezi acasă, în ritmul tău.",
     mare: true,
   },
@@ -119,7 +119,7 @@ const CE_PRIMESTI = [
 
 const PASI = [
   { nr: "01", titlu: "Răspunzi", text: "30 de afirmații, în jur de 10 minute. Răspunsurile se salvează pe măsură ce le dai." },
-  { nr: "02", titlu: "Obții kitul", text: `Abia la final plătești ${PRET_KIT_LEI} lei, sigur, prin Stripe. Fără cont.` },
+  { nr: "02", titlu: "Obții trusa", text: `Abia la final plătești ${PRET_KIT_LEI} lei, sigur, prin Stripe. Fără cont.` },
   { nr: "03", titlu: "Citești raportul", text: "Pe ecran, imediat, și în PDF. Linkul îți vine și pe email." },
   { nr: "04", titlu: "Alegi pasul următor", text: "Ghidul, o discuție în doi sau, dacă simți nevoia, o ședință cu Liliana." },
 ];
@@ -135,13 +135,13 @@ export default function KitPage() {
           <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-10">
             <Reveal>
               <span className="inline-flex bg-periwinkle-pale px-4 py-2 font-sans text-[0.8rem] text-periwinkle">
-                Kit pentru cupluri, părinți care se separă și familii
+                Trusă de ajutor pentru cupluri, părinți care se separă și familii
               </span>
               <h1 className="mt-6 font-display text-[2.6rem] leading-[1.06] text-ink sm:text-[3.4rem] lg:text-[3.9rem]">
-                Cum stai, de fapt, cu <em className="not-italic text-periwinkle">relația ta</em>?
+                Cum stai, de fapt, în <em className="not-italic text-periwinkle">relația ta</em>?
               </h1>
               <p className="mt-6 max-w-xl font-sans text-[1.02rem] leading-[1.85] text-ink-soft">
-                Un kit complet, făcut acasă, în ritmul tău: un test de 30 de întrebări, un raport personal detaliat pe
+                O trusă de ajutor completă, făcută acasă, în ritmul tău: un test de 30 de întrebări, un raport personal detaliat pe
                 care îl descarci în PDF și ghidul practic de 79 de pagini scris de Liliana Jgheban, psiholog clinician.
               </p>
               <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
@@ -172,7 +172,7 @@ export default function KitPage() {
                   domine hero-ul. */}
               <Image
                 src="/foto/kit-raport-ghid.webp"
-                alt="Raportul personal și ghidul „Cum stai, de fapt, cu relația ta?” de Liliana Jgheban"
+                alt="Raportul personal și ghidul „Cum stai, de fapt, în relația ta?” de Liliana Jgheban"
                 width={1514}
                 height={1154}
                 priority
@@ -180,7 +180,7 @@ export default function KitPage() {
                 className="w-full lg:w-[118%] lg:max-w-none"
               />
               <div className="glass-strong absolute bottom-[8%] left-[4%] hidden p-4 sm:block">
-                <p className="font-sans text-[0.75rem] text-ink-muted">Tot kitul</p>
+                <p className="font-sans text-[0.75rem] text-ink-muted">Toată trusa</p>
                 <p className="font-display text-[1.9rem] leading-none text-ink">
                   {PRET_KIT_LEI} <span className="text-[1rem] text-ink-soft">lei</span>
                 </p>
@@ -237,7 +237,7 @@ export default function KitPage() {
                   „Nu conflictele distrug relațiile, ci transformarea lor în conflicte distructive și nerezolvate.”
                 </p>
                 <footer className="mt-3 font-sans text-[0.85rem] text-cream/55">
-                  Liliana Jgheban, din ghidul inclus în kit
+                  Liliana Jgheban, din ghidul inclus în trusă
                 </footer>
               </blockquote>
             </Reveal>
@@ -271,7 +271,7 @@ export default function KitPage() {
                 Tot ce-ți trebuie ca să vezi <em className="not-italic text-periwinkle">clar</em> unde sunteți
               </h2>
               <p className="mt-5 font-sans text-[0.98rem] leading-[1.85] text-ink-soft">
-                Un kit gândit de Liliana Jgheban pornind de la anii de lucru cu cupluri, părinți și familii. Nu o
+                O trusă gândită de Liliana Jgheban pornind de la anii de lucru cu cupluri, părinți și familii. Nu o
                 etichetă, ci o perspectivă și câțiva pași concreți.
               </p>
             </Reveal>
@@ -361,17 +361,17 @@ export default function KitPage() {
               />
             </Reveal>
             <Reveal delay={0.12}>
-              <p className="font-sans text-[0.85rem] text-periwinkle">Cine a creat kitul</p>
+              <p className="font-sans text-[0.85rem] text-periwinkle">Cine a creat trusa</p>
               <h2 className="mt-3 font-display text-[2.2rem] leading-tight text-ink sm:text-[2.6rem]">
                 Liliana <em className="not-italic text-periwinkle">Jgheban</em>
               </h2>
               <p className="mt-5 font-sans text-[0.96rem] leading-[1.85] text-ink-soft">
                 Psiholog clinician și psihoterapeut integrativ, cu cabinet în București. Lucrează cu adulți, cupluri,
-                copii și părinți, și a scris ghidul inclus în kit pentru oamenii care trec printr-o criză de cuplu, o
+                copii și părinți, și a scris ghidul inclus în trusă pentru oamenii care trec printr-o criză de cuplu, o
                 separare sau începutul unei familii noi.
               </p>
               <p className="mt-4 font-sans text-[0.96rem] leading-[1.85] text-ink-soft">
-                Kitul nu ține locul unei ședințe, dar e un prim pas bun: te ajută să pui în cuvinte ce trăiești și să
+                Trusa nu ține locul unei ședințe, dar e un prim pas bun: te ajută să pui în cuvinte ce trăiești și să
                 știi de unde să pornești.
               </p>
               <div className="mt-7 flex flex-col gap-3 sm:flex-row">
@@ -407,7 +407,7 @@ export default function KitPage() {
                 Ce e bine să <em className="not-italic text-periwinkle">știi</em>
               </h2>
             </Reveal>
-            {/* Stânga: întrebările. Dreapta: Ana, care știe tot despre kit. */}
+            {/* Stânga: întrebările. Dreapta: Ana, care știe tot despre trusă. */}
             <div className="mt-10 grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-12 xl:grid-cols-[minmax(0,1fr)_minmax(0,28rem)]">
               <div className="space-y-3">
                 {INTREBARI_FRECVENTE.map((f) => (
@@ -430,7 +430,7 @@ export default function KitPage() {
               </div>
               <Reveal delay={0.1} className="lg:sticky lg:top-28">
                 <AnaPanou
-                  intro="Nu ai găsit răspunsul în listă? Întreabă-mă orice despre kit: ce conține, cum se plătește, când primești raportul sau dacă ți se potrivește."
+                  intro="Nu ai găsit răspunsul în listă? Întreabă-mă orice despre trusă: ce conține, cum se plătește, când primești raportul sau dacă ți se potrivește."
                   sugestii={["Ce primesc, concret?", "Cât durează testul?", "Mi se potrivește dacă ne-am despărțit?"]}
                 />
               </Reveal>
@@ -457,7 +457,7 @@ export default function KitPage() {
                 href="#test"
                 className="group mt-9 inline-flex items-center justify-center gap-3 bg-periwinkle-light px-9 py-4 font-sans text-[0.97rem] text-ink transition-colors hover:bg-cream"
               >
-                Obține kitul
+                Obține trusa
                 <IconArrow className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
               </a>
               <ul className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2">
@@ -485,7 +485,7 @@ export default function KitPage() {
                 {
                   icon: MessageCircle,
                   titlu: "Dacă ești în pericol",
-                  text: "Kitul nu e potrivit pentru situațiile de urgență. Sună la 112 sau la linia gratuită pentru victimele violenței domestice: 0800 500 333.",
+                  text: "Trusa nu e potrivită pentru situațiile de urgență. Sună la 112 sau la linia gratuită pentru victimele violenței domestice: 0800 500 333.",
                 },
               ].map((n) => (
                 <div key={n.titlu} className="border border-cream/12 p-5">
@@ -508,7 +508,7 @@ export default function KitPage() {
             {
               "@context": "https://schema.org",
               "@type": "Product",
-              name: `Kit „${NUME_KIT}”`,
+              name: `Trusa de ajutor „${NUME_KIT}”`,
               description:
                 "Test de 30 de întrebări despre relația de cuplu, raport personal detaliat în PDF și ghid practic de 79 de pagini despre cuplu, divorț și familie.",
               image: `${SITE.url}/kit/opengraph-image`,

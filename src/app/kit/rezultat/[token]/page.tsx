@@ -71,7 +71,7 @@ export default async function RezultatKit({ params }: { params: Promise<{ token:
         <div className="relative mx-auto max-w-4xl px-6 pb-24 pt-36 lg:px-10 lg:pt-44">
           {!platit && !evaluareVeche ? (
             <div className="glass-strong p-10 text-center">
-              <h1 className="font-display text-[1.9rem] text-ink">Kitul nu e încă plătit</h1>
+              <h1 className="font-display text-[1.9rem] text-ink">Trusa nu e încă plătită</h1>
               <p className="mx-auto mt-3 max-w-md font-sans text-[0.92rem] leading-relaxed text-ink-soft">
                 Nu am înregistrat plata pentru această comandă. Dacă tocmai ai plătit, reîncarcă pagina peste câteva
                 secunde.
@@ -90,7 +90,7 @@ export default async function RezultatKit({ params }: { params: Promise<{ token:
           ) : (
             <>
               <header className="text-center">
-                <p className="font-sans text-[0.85rem] text-periwinkle">Kit „Cum stai, de fapt, cu relația ta?”</p>
+                <p className="font-sans text-[0.85rem] text-periwinkle">Trusa de ajutor „Cum stai, de fapt, în relația ta?”</p>
                 <h1 className="mt-4 font-display text-[2.3rem] leading-tight text-ink lg:text-[3rem]">
                   Raportul tău <em className="not-italic text-periwinkle">personal</em>
                 </h1>
@@ -139,14 +139,14 @@ export default async function RezultatKit({ params }: { params: Promise<{ token:
                 <div className="glass mt-6 p-8 text-center">
                   <h2 className="font-display text-[1.4rem] text-ink">Vrei un raport complet?</h2>
                   <p className="mx-auto mt-2 max-w-md font-sans text-[0.9rem] leading-relaxed text-ink-soft">
-                    Kitul „Cum stai, de fapt, cu relația ta?” are un test de 30 de întrebări, un raport detaliat în PDF
+                    Trusa de ajutor „Cum stai, de fapt, în relația ta?” are un test de 30 de întrebări, un raport detaliat în PDF
                     și ghidul de 79 de pagini.
                   </p>
                   <Link
                     href="/kit"
                     className="mt-6 inline-flex items-center gap-2 bg-periwinkle px-7 py-4 font-sans text-[0.93rem] text-cream transition-colors hover:bg-ink"
                   >
-                    Descoperă kitul <IconArrow className="h-5 w-5" />
+                    Descoperă trusa <IconArrow className="h-5 w-5" />
                   </Link>
                 </div>
               )}
@@ -432,7 +432,7 @@ function Interpretare({ ai, rez, r }: { ai: RaportAI; rez: Rezultat; r: Raspunsu
       )}
 
       <section className="glass p-7 sm:p-10">
-        <Titlu kicker="Ghidul din kit">Ce să citești mai întâi în ghid</Titlu>
+        <Titlu kicker="Ghidul din trusă">Ce să citești mai întâi în ghid</Titlu>
         <ol className="mt-6 space-y-2">
           {capitoleRecomandate(r, rez).map((c) => (
             <li key={c} className="flex items-start gap-3 font-sans text-[0.95rem] text-ink">

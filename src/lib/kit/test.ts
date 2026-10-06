@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
-   Testul din kitul „Cum stai, de fapt, cu relația ta?".
+   Testul din trusa de ajutor „Cum stai, de fapt, în relația ta?".
 
    30 de afirmații, câte 5 pe fiecare dintre cele 6 dimensiuni ale relației,
    notate pe o scară de frecvență (1 = aproape niciodată … 5 = aproape mereu).

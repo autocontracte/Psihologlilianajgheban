@@ -143,7 +143,7 @@ class Document {
     this.pagina = this.doc.addPage([W, H]);
     this.y = H - SUS;
     // antetul discret de pe fiecare pagină
-    this.scrie("Cum stai, de fapt, cu relația ta?  ·  Raport personal", MX, H - 42, this.f.text, 8, C.cernealaStearsa);
+    this.scrie("Cum stai, de fapt, în relația ta?  ·  Raport personal", MX, H - 42, this.f.text, 8, C.cernealaStearsa);
     const dr = "Liliana Jgheban";
     this.scrie(dr, W - MX - this.lat(dr, this.f.titlu, 9), H - 42, this.f.titlu, 9, C.verde);
     this.pagina.drawLine({ start: { x: MX, y: H - 52 }, end: { x: W - MX, y: H - 52 }, thickness: 0.5, color: C.cremAdanc });
@@ -333,9 +333,9 @@ export async function genereazaRaportPdf(date: DateRaport): Promise<Uint8Array> 
     /* fără fotografii, raportul rămâne valid */
   }
 
-  d.doc.setTitle("Cum stai, de fapt, cu relația ta? · Raport personal");
+  d.doc.setTitle("Cum stai, de fapt, în relația ta? · Raport personal");
   d.doc.setAuthor("Liliana Jgheban, psiholog");
-  d.doc.setSubject("Raport personal din kitul „Cum stai, de fapt, cu relația ta?”");
+  d.doc.setSubject("Raport personal din trusa de ajutor „Cum stai, de fapt, în relația ta?”");
   d.doc.setCreator(SITE.url);
 
   /* ===== COPERTA ===== */
@@ -353,9 +353,9 @@ export async function genereazaRaportPdf(date: DateRaport): Promise<Uint8Array> 
     d.scrie(text, (W - d.lat(text, font, marime)) / 2, y, font, marime, culoare, c);
 
   const spatiat = (text: string) => [...text].join(" ");
-  centru(spatiat("RAPORT PERSONAL · KIT PENTRU CUPLU"), H - 300, f.textSemi, 8, C.verdeDeschis);
+  centru(spatiat("RAPORT PERSONAL · TRUSĂ DE AJUTOR"), H - 300, f.textSemi, 8, C.verdeDeschis);
   centru("Cum stai, de fapt,", H - 348, f.titluBold, 34, C.crem);
-  centru("cu relația ta?", H - 390, f.titluBold, 34, C.crem);
+  centru("în relația ta?", H - 390, f.titluBold, 34, C.crem);
   c.drawRectangle({ x: W / 2 - 26, y: H - 418, width: 52, height: 1.2, color: C.nisip });
 
   const subtitlu = ai?.titlu || rez.profil.scurt;
@@ -620,7 +620,7 @@ export async function genereazaRaportPdf(date: DateRaport): Promise<Uint8Array> 
 
   /* ===== CE SĂ CITEȘTI ÎN GHID ===== */
   d.sectiune(
-    "Ghidul din kit",
+    "Ghidul din trusă",
     "Ce să citești mai întâi în ghid",
     "Ghidul practic are 79 de pagini. Pornind de la rezultatul tău, acestea sunt capitolele care te privesc cel mai direct acum:",
     { paginaNoua: false },
@@ -662,7 +662,7 @@ export async function genereazaRaportPdf(date: DateRaport): Promise<Uint8Array> 
   d.scrie("Liliana Jgheban", tx, ay - 30, f.titluBold, 15, C.cerneala);
   let yb = ay - 48;
   for (const l of d.rupe(
-    "Psiholog clinician și psihoterapeut integrativ, cu cabinet în București. Lucrează cu adulți, cupluri, copii și părinți, și e autoarea ghidului practic despre cuplu, divorț și familie din acest kit.",
+    "Psiholog clinician și psihoterapeut integrativ, cu cabinet în București. Lucrează cu adulți, cupluri, copii și părinți, și e autoarea ghidului practic despre cuplu, divorț și familie din această trusă.",
     f.text,
     9.5,
     W - MX - tx,

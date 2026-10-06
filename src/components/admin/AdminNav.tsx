@@ -11,7 +11,7 @@ const LINKS = [
   { href: "/admin/plati", label: "Plăți și facturi" },
   { href: "/admin/contracte", label: "Contracte" },
   { href: "/admin/blog", label: "Blog" },
-  { href: "/admin/kit", label: "Kit relație" },
+  { href: "/admin/kit", label: "Trusă de ajutor" },
   { href: "/admin/chestionar", label: "Chestionar" },
 ];
 

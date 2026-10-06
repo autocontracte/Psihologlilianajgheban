@@ -159,7 +159,7 @@ export function CalculatorTensiune({ pretLei }: { pretLei: number }) {
         <div className="mt-8 border-t border-ink/10 pt-5">
           <p className="font-sans text-[0.85rem] leading-relaxed text-ink-soft">
             Estimare orientativă, nu o măsurătoare. Primul pas ca lucrurile să se schimbe e să vezi clar ce se întâmplă.
-            Kitul costă {pretLei} lei.
+            Trusa costă {pretLei} lei.
           </p>
           <a
             href="#test"

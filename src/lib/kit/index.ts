@@ -9,7 +9,7 @@ import { genereazaInterpretare } from "./ai";
 import { calculeaza, type Raspunsuri } from "./test";
 
 /* ----------------------------------------------------------------------------
-   Kitul „Cum stai, de fapt, cu relația ta?": test + raport personal + ghid.
+   Trusa de ajutor „Cum stai, de fapt, în relația ta?": test + raport personal + ghid.
 
    O comandă (tabelul GuideOrder) ține tot: răspunsurile, emailul, plata și
    interpretarea. Accesul la rezultat e prin token — 32 de octeți aleatori,
@@ -129,15 +129,15 @@ export async function confirmaPlata(comandaId: string, email?: string | null) {
     await trimiteEmail({
       to: actualizata.email,
       replyTo: SITE.email,
-      subject: `Kitul tău: „${NUME_KIT}”`,
+      subject: `Trusa ta de ajutor: „${NUME_KIT}”`,
       ...compuneEmail({
-        eticheta: "Kitul tău",
+        eticheta: "Trusa ta de ajutor",
         titlu: NUME_KIT,
         previzualizare: "Raportul tău personal și ghidul complet te așteaptă.",
         salut: "Bună,",
         semnatura: true,
         paragrafe: [
-          `Îți mulțumesc că ai ales kitul „${NUME_KIT}”. Raportul tău personal, ghidul complet și toate materialele sunt pe pagina ta, oricând vrei să revii la ele.`,
+          `Îți mulțumesc că ai ales trusa de ajutor „${NUME_KIT}”. Raportul tău personal, ghidul complet și toate materialele sunt pe pagina ta, oricând vrei să revii la ele.`,
         ],
         buton: { text: "Deschide raportul", href: link },
         dupaDetalii: [
@@ -152,11 +152,11 @@ export async function confirmaPlata(comandaId: string, email?: string | null) {
   if (CABINET_EMAIL) {
     await trimiteEmail({
       to: CABINET_EMAIL,
-      subject: `Kit nou: ${actualizata.email ?? "fără email"}${rez ? ` · indice ${rez.indice}/100` : ""}`,
+      subject: `Trusă nouă: ${actualizata.email ?? "fără email"}${rez ? ` · indice ${rez.indice}/100` : ""}`,
       ...compuneEmail({
         intern: true,
-        eticheta: "Kit cumpărat",
-        titlu: `Un kit nou „${NUME_KIT}”`,
+        eticheta: "Trusă cumpărată",
+        titlu: `O trusă nouă „${NUME_KIT}”`,
         detalii: [
           { eticheta: "Email", valoare: actualizata.email ?? "—" },
           ...(rez ? [{ eticheta: "Indicele relației", valoare: `${rez.indice}/100 (${rez.profil.nume})` }] : []),

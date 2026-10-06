@@ -7,7 +7,7 @@ import { Accent } from "../ui/Accent";
 import { IconCheck } from "../ui/Icons";
 import { PRET_KIT_LEI } from "@/lib/kit/pret";
 
-/* Kitul „Cum stai, de fapt, cu relația ta?" pe prima pagină: în stânga,
+/* Trusa de ajutor „Cum stai, de fapt, în relația ta?" pe prima pagină: în stânga,
    fotografia alb-negru cu voal întunecat și textul; în dreapta, ghidul. */
 export function TestsTeaser() {
   return (
@@ -52,7 +52,7 @@ export function TestsTeaser() {
             <div className="flex flex-col items-center justify-center bg-cream-deep px-3 py-8 lg:px-4">
               <Image
                 src="/foto/kit-raport-ghid.webp"
-                alt="Raportul personal și ghidul „Cum stai, de fapt, cu relația ta?” de Liliana Jgheban"
+                alt="Raportul personal și ghidul „Cum stai, de fapt, în relația ta?” de Liliana Jgheban"
                 width={1514}
                 height={1154}
                 sizes="(min-width: 1024px) 560px, 95vw"

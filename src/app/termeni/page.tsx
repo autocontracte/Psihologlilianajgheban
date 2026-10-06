@@ -28,7 +28,7 @@ const sections: LegalSection[] = [
   {
     heading: "2. Informațiile de pe site nu înlocuiesc consultul",
     paragraphs: [
-      "Conținutul publicat pe acest site, articolele, răspunsurile asistentei virtuale Ana și raportul din kit au caracter informativ. Nu constituie diagnostic, recomandare terapeutică sau consult psihologic și nu înlocuiesc o întâlnire profesională.",
+      "Conținutul publicat pe acest site, articolele, răspunsurile asistentei virtuale Ana și raportul din trusă au caracter informativ. Nu constituie diagnostic, recomandare terapeutică sau consult psihologic și nu înlocuiesc o întâlnire profesională.",
       "Dacă te afli într-o situație de criză sau ai gânduri de a-ți face rău, sună imediat la 112.",
     ],
   },
@@ -57,11 +57,11 @@ const sections: LegalSection[] = [
     ],
   },
   {
-    heading: "6. Kitul „Cum stai, de fapt, cu relația ta?”",
+    heading: "6. Trusa de ajutor „Cum stai, de fapt, în relația ta?”",
     paragraphs: [
-      "Kitul este un produs digital: testul, raportul personal și ghidul practic, în format PDF. Îl plătești după ce termini testul și îl primești imediat, pe ecran și pe email.",
+      "Trusa de ajutor este un produs digital: testul, raportul personal și ghidul practic, în format PDF. O plătești după ce termini testul și o primești imediat, pe ecran și pe email.",
       "Conform legii (OUG nr. 34/2014), te poți răzgândi în 14 zile de la cumpărare: scrie-ne și îți returnăm banii în cel mult 14 zile, pe același card.",
-      "Materialele din kit sunt pentru uzul tău personal și nu pot fi redistribuite.",
+      "Materialele din trusă sunt pentru uzul tău personal și nu pot fi redistribuite.",
     ],
   },
   {
@@ -102,7 +102,7 @@ export default function TermeniPage() {
     <LegalPage
       title="Termeni și condiții"
       updated="septembrie 2026"
-      intro="Condițiile în care poate fi folosit acest site și în care sunt oferite serviciile psihologice și kitul digital."
+      intro="Condițiile în care poate fi folosit acest site și în care sunt oferite serviciile psihologice și trusa de ajutor digitală."
       sections={sections}
     />
   );
