@@ -12,7 +12,7 @@ export async function GET() {
   const articole = await articolePublicate();
   const atestate = DIPLOME.documente.filter((d) => d.titlu.startsWith("Atestat"));
   const l: string[] = [];
-  l.push(`# ${SITE.name}: ${SITE.role.replace("&", "și")} în ${SITE.city}`);
+  l.push(`# ${SITE.name}: psiholog clinician și psihoterapeut integrativ în ${SITE.city}`);
   l.push("");
   l.push(`> ${SITE.description}`);
   l.push("");
