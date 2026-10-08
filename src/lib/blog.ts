@@ -90,10 +90,27 @@ export type ArticolCard = {
   publishedAt: Date | null;
 };
 
+/**
+ * Un articol publicat cu o dată din viitor e „programat": apare pe site abia
+ * de la acea dată. Paginile blogului se generează la fiecare cerere, așa că nu
+ * e nevoie de niciun cron.
+ */
+export function filtruVizibile() {
+  return {
+    status: "PUBLISHED",
+    OR: [{ publishedAt: null }, { publishedAt: { lte: new Date() } }],
+  };
+}
+
+/** Publicat, dar cu data în viitor. */
+export function eProgramat(p: { status: string; publishedAt: Date | null }): boolean {
+  return p.status === "PUBLISHED" && !!p.publishedAt && p.publishedAt.getTime() > Date.now();
+}
+
 /** Articolele publicate, cele mai noi primele. */
 export async function articolePublicate(): Promise<ArticolCard[]> {
   const posts = await db.blogPost.findMany({
-    where: { status: "PUBLISHED" },
+    where: filtruVizibile(),
     orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
     select: { slug: true, title: true, excerpt: true, coverImage: true, publishedAt: true },
   });
@@ -103,6 +120,6 @@ export async function articolePublicate(): Promise<ArticolCard[]> {
 /** Un articol publicat, după slug. `null` dacă nu există sau e ciornă. */
 export async function articolPublicat(slug: string) {
   const post = await db.blogPost.findUnique({ where: { slug } });
-  if (!post || post.status !== "PUBLISHED") return null;
+  if (!post || post.status !== "PUBLISHED" || eProgramat(post)) return null;
   return post;
 }

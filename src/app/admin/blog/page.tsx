@@ -1,17 +1,20 @@
 import Link from "next/link";
 import { db } from "@/lib/db";
 import { formatDateTime } from "@/lib/tz";
+import { eProgramat } from "@/lib/blog";
 
 export const metadata = { title: "Blog" };
 
 const STARE: Record<string, { text: string; stil: string }> = {
   PUBLISHED: { text: "Publicat", stil: "bg-periwinkle-pale text-periwinkle" },
   DRAFT: { text: "Ciornă", stil: "bg-clay-pale text-clay" },
+  SCHEDULED: { text: "Programat", stil: "bg-sage-pale text-sage" },
 };
 
 export default async function AdminBlogPage() {
   const posts = await db.blogPost.findMany({ orderBy: { updatedAt: "desc" } });
-  const publicate = posts.filter((p) => p.status === "PUBLISHED").length;
+  const programate = posts.filter(eProgramat).length;
+  const publicate = posts.filter((p) => p.status === "PUBLISHED").length - programate;
 
   return (
     <div>
@@ -19,7 +22,7 @@ export default async function AdminBlogPage() {
         <div>
           <h1 className="font-display text-3xl text-ink lg:text-4xl">Blog</h1>
           <p className="mt-3 font-sans text-[0.92rem] text-ink-soft">
-            {posts.length} articole · {publicate} publicate
+            {posts.length} articole · {publicate} publicate{programate ? ` · ${programate} programate` : ""}
           </p>
         </div>
         <Link
@@ -37,7 +40,8 @@ export default async function AdminBlogPage() {
           </p>
         ) : (
           posts.map((p) => {
-            const stare = STARE[p.status] ?? STARE.DRAFT;
+            const programat = eProgramat(p);
+            const stare = programat ? STARE.SCHEDULED : STARE[p.status] ?? STARE.DRAFT;
             return (
               <Link
                 key={p.id}
@@ -54,7 +58,9 @@ export default async function AdminBlogPage() {
                       {stare.text}
                     </span>
                     <span className="font-sans text-[0.78rem] text-ink-muted">
-                      {p.publishedAt ? formatDateTime(p.publishedAt) : `modificat ${formatDateTime(p.updatedAt)}`}
+                      {p.publishedAt
+                        ? `${programat ? "apare pe " : ""}${formatDateTime(p.publishedAt)}`
+                        : `modificat ${formatDateTime(p.updatedAt)}`}
                     </span>
                   </div>
                   <p className="mt-1.5 font-display text-[1.15rem] text-ink">{p.title}</p>

@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { SITE } from "@/content/site";
 import { db } from "@/lib/db";
+import { filtruVizibile } from "@/lib/blog";
 
 // Articolele noi apar în sitemap fără un build nou
 export const dynamic = "force-dynamic";
@@ -12,7 +13,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const now = new Date();
   const articole = await db.blogPost.findMany({
-    where: { status: "PUBLISHED" },
+    where: filtruVizibile(),
     select: { slug: true, updatedAt: true },
     orderBy: { publishedAt: "desc" },
   });
