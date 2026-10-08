@@ -546,3 +546,35 @@ body {
   outline: 2px solid var(--color-periwinkle-light);
   outline-offset: 6px;
 }
+
+/* „Pe scurt" și „Întrebări frecvente" din articole (vezi structuraArticol) */
+.prose-articol .pe-scurt {
+  background: var(--color-sage-pale);
+  border-left: 3px solid var(--color-sage);
+  padding: 1.3rem 1.5rem 1.4rem;
+  margin-top: 2rem;
+}
+.prose-articol .pe-scurt-titlu {
+  font-family: var(--font-display);
+  color: var(--color-ink);
+  font-size: 1.25rem;
+  line-height: 1.3;
+}
+.prose-articol .pe-scurt ul {
+  margin-top: 0.7rem;
+}
+.prose-articol .pe-scurt li + li {
+  margin-top: 0.45rem;
+}
+.prose-articol .faq-articol {
+  border-top: 1px solid color-mix(in srgb, var(--color-ink) 10%, transparent);
+  margin-top: 2.6rem;
+  padding-top: 0.4rem;
+}
+.prose-articol .faq-articol > * + * {
+  margin-top: 1.1rem;
+}
+.prose-articol .faq-articol h3 {
+  font-size: 1.15rem;
+  margin-top: 1.7rem;
+}

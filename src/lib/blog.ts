@@ -117,6 +117,51 @@ export async function articolePublicate(): Promise<ArticolCard[]> {
   return posts.map((p) => ({ ...p, excerpt: p.excerpt ?? "" }));
 }
 
+/** Alte articole vizibile, cele mai noi primele (pentru „Articole similare"). */
+export async function articoleSimilare(slug: string, cate = 3): Promise<ArticolCard[]> {
+  const posts = await db.blogPost.findMany({
+    where: { ...filtruVizibile(), NOT: { slug } },
+    orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
+    take: cate,
+    select: { slug: true, title: true, excerpt: true, coverImage: true, publishedAt: true },
+  });
+  return posts.map((p) => ({ ...p, excerpt: p.excerpt ?? "" }));
+}
+
+function doarText(html: string): string {
+  return sanitizeHtml(html, { allowedTags: [], allowedAttributes: {} }).replace(/\s+/g, " ").trim();
+}
+
+export type IntrebareFrecventa = { q: string; a: string };
+
+/**
+ * Pune în evidență, în HTML-ul deja curățat, două secțiuni pe care le scrie
+ * autorul în editor ca text obișnuit:
+ *  - „Pe scurt" (un titlu H2 urmat de o listă) devine o casetă cu ideile-cheie;
+ *  - „Întrebări frecvente" (H2, apoi perechi H3 + paragrafe) devine o secțiune
+ *    marcată, iar întrebările se întorc separat, pentru datele FAQPage.
+ * Rezumatele și întrebările clare sunt exact ce citează motoarele de căutare
+ * cu AI. Dacă articolul nu are aceste secțiuni, HTML-ul rămâne neschimbat.
+ */
+export function structuraArticol(html: string): { html: string; faq: IntrebareFrecventa[] } {
+  let out = html.replace(
+    /<h2>\s*Pe scurt\s*<\/h2>\s*(<ul>[\s\S]*?<\/ul>)/i,
+    (_m, ul: string) => `<aside class="pe-scurt" aria-label="Pe scurt"><p class="pe-scurt-titlu">Pe scurt</p>${ul}</aside>`,
+  );
+  const faq: IntrebareFrecventa[] = [];
+  out = out.replace(/<h2>\s*Întrebări frecvente\s*<\/h2>([\s\S]*?)(?=<h2>|$)/i, (_m, corp: string) => {
+    const re = /<h3>([\s\S]*?)<\/h3>([\s\S]*?)(?=<h3>|$)/g;
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(corp))) {
+      const q = doarText(m[1]);
+      const a = doarText(m[2]);
+      if (q && a) faq.push({ q, a });
+    }
+    return `<section class="faq-articol" aria-label="Întrebări frecvente"><h2>Întrebări frecvente</h2>${corp}</section>`;
+  });
+  return { html: out, faq };
+}
+
 /** Un articol publicat, după slug. `null` dacă nu există sau e ciornă. */
 export async function articolPublicat(slug: string) {
   const post = await db.blogPost.findUnique({ where: { slug } });
