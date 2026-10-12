@@ -34,6 +34,31 @@ firewall-cmd --add-port=3001/tcp        # doar runtime, dispare la reload
 firewall-cmd --remove-port=3001/tcp     # inchide inapoi
 ```
 
+### Programatorul intern al cabinetelor
+
+`programator.psihologlilianajgheban.ro` este aceeași aplicație (același proces
+PM2, aceeași bază de date, tabelele `Cab*`), servită doar pe acest subdomeniu —
+vezi `src/middleware.ts`. Pe site-ul principal, `/programator` răspunde 404.
+
+| | |
+| --- | --- |
+| Apache | `ServerAlias programator.psihologlilianajgheban.ro` în ambele blocuri VirtualHost (pus cu `virtualmin modify-web --add-directive`, 12 octombrie 2026) |
+| DNS | record `programator` în Cloudflare, către `31.97.54.70` |
+| SSL | numele trebuie inclus în certificat — vezi comanda de mai jos |
+| Primul acces | administratorul site-ului intră cu emailul și parola de pe site, apoi dă utilizator și parolă celorlalți din „Oameni și cabinete" |
+| Test local | `http://programator.localhost:3000` (cu `npm run dev`) |
+
+După ce recordul DNS există, certificatul se reemite cu tot cu subdomeniu:
+
+```bash
+virtualmin generate-letsencrypt-cert \
+  --domain psihologlilianajgheban.ro \
+  --host psihologlilianajgheban.ro \
+  --host www.psihologlilianajgheban.ro \
+  --host programator.psihologlilianajgheban.ro \
+  --web --renew
+```
+
 Restul ghidului descrie pașii de la zero, dacă vei muta site-ul pe alt server.
 
 ---
