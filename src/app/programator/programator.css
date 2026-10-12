@@ -1,0 +1,445 @@
+/* ============================================================================
+   Programatorul intern al cabinetelor — grila săptămânală, ca un tabel Excel.
+   Culorile și fonturile vin din tokenele site-ului (globals.css).
+   ========================================================================== */
+
+/* Butonul de WhatsApp și asistentul Ana sunt pentru vizitatorii site-ului. */
+body:has(.prog) [data-site-widgets] {
+  display: none;
+}
+
+.prog {
+  min-height: 100dvh;
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+.prog-app {
+  display: flex;
+  height: 100dvh;
+  flex-direction: column;
+}
+
+/* legenda derulată pe telefon: o bară subțire, nu cea groasă a site-ului */
+.prog-unelte ::-webkit-scrollbar {
+  height: 4px;
+}
+
+/* ------------------------------------------------------------------- Grila */
+
+.prog-scroll {
+  position: relative;
+  flex: 1;
+  overflow: auto;
+  overscroll-behavior: contain;
+  background: var(--color-cream-warm);
+  outline: none;
+}
+
+.prog-grila {
+  --tw: 3.5rem; /* coloana cu orele */
+  --h1: 2.6rem; /* rândul cu zilele */
+  --h2: 1.7rem; /* rândul cu cabinetele */
+  --rh: 2rem; /* un rând = 30 de minute */
+  --cw: 6.25rem; /* lățimea minimă a unui cabinet */
+  --linie: color-mix(in srgb, var(--color-ink) 9%, transparent);
+  --linie-ora: color-mix(in srgb, var(--color-ink) 20%, transparent);
+  --linie-zi: color-mix(in srgb, var(--color-ink) 45%, transparent);
+
+  display: grid;
+  grid-template-columns: var(--tw) repeat(var(--cols), minmax(var(--cw), 1fr));
+  grid-template-rows: var(--h1) var(--h2) repeat(var(--rows), var(--rh));
+  width: max-content;
+  min-width: 100%;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* „Tot": toată săptămâna încape pe lățimea ecranului */
+.prog-grila[data-zoom="fit"] {
+  --cw: 2.1rem;
+  --rh: 1.7rem;
+  width: 100%;
+}
+
+.prog-grila[data-zoom="l"] {
+  --cw: 8.75rem;
+  --rh: 2.6rem;
+}
+
+.prog-colt,
+.prog-zi,
+.prog-cab,
+.prog-ora {
+  background: var(--color-cream);
+}
+
+.prog-colt {
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 8;
+  grid-row: 1 / span 2;
+  grid-column: 1;
+  border-right: 1px solid var(--linie-zi);
+  border-bottom: 1px solid var(--linie-zi);
+}
+
+.prog-zi {
+  position: sticky;
+  top: 0;
+  z-index: 6;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  border-right: 2px solid var(--linie-zi);
+  border-bottom: 1px solid var(--linie);
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+/* numele zilei rămâne la vedere cât timp se derulează prin cabinetele ei */
+.prog-zi > span {
+  position: sticky;
+  left: calc(var(--tw) + 0.6rem);
+  padding: 0 0.6rem;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45rem;
+}
+
+.prog-zi b {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.prog-zi small {
+  font-size: 0.8rem;
+  color: var(--color-ink-soft);
+}
+
+.prog-zi[data-azi] {
+  background: var(--color-periwinkle);
+  color: var(--color-cream);
+}
+
+.prog-zi[data-azi] small {
+  color: color-mix(in srgb, var(--color-cream) 85%, transparent);
+}
+
+.prog-cab {
+  position: sticky;
+  top: var(--h1);
+  z-index: 6;
+  grid-row: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  container-type: inline-size;
+  border-right: 1px solid var(--linie);
+  border-bottom: 1px solid var(--linie-zi);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--color-ink-soft);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.prog-cab[data-azi] {
+  background: var(--color-periwinkle-pale);
+  color: var(--color-ink);
+}
+
+.prog-ora {
+  position: sticky;
+  left: 0;
+  z-index: 5;
+  grid-column: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 0.15rem 0.45rem 0 0;
+  border-right: 1px solid var(--linie-zi);
+  border-bottom: 1px solid var(--linie);
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.prog-ora[data-jumate] {
+  font-weight: 400;
+  font-size: 0.7rem;
+  color: var(--color-ink-muted);
+  border-bottom-color: var(--linie-ora);
+}
+
+.prog-cel {
+  border-right: 1px solid var(--linie);
+  border-bottom: 1px solid var(--linie);
+  cursor: cell;
+  /* la navigarea cu tastele, celula nu se ascunde sub antete */
+  scroll-margin: calc(var(--h1) + var(--h2) + var(--rh)) var(--cw) var(--rh) calc(var(--tw) + var(--cw));
+}
+
+.prog-cel[data-jumate] {
+  border-bottom-color: var(--linie-ora);
+}
+
+.prog-cel[data-weekend] {
+  background: color-mix(in srgb, var(--color-sage-pale) 55%, transparent);
+}
+
+.prog-cel[data-azi] {
+  background: color-mix(in srgb, var(--color-periwinkle-pale) 45%, transparent);
+}
+
+.prog-cel[data-trecut] {
+  background-image: linear-gradient(
+    color-mix(in srgb, var(--color-ink) 4%, transparent),
+    color-mix(in srgb, var(--color-ink) 4%, transparent)
+  );
+}
+
+@media (hover: hover) {
+  .prog-cel:hover {
+    background: var(--color-periwinkle-pale);
+    box-shadow: inset 0 0 0 1px var(--color-periwinkle-light);
+  }
+}
+
+/* ultimul cabinet al zilei: linia groasă dintre zile */
+.prog-cab[data-capat],
+.prog-cel[data-capat],
+.prog-prop[data-capat] {
+  border-right: 2px solid var(--linie-zi);
+}
+
+/* ---------------------------------------------------------------- Rezervări */
+
+.prog-rez {
+  z-index: 2;
+  margin: 1px 2px 2px 1px;
+  padding: 0.2rem 0.4rem;
+  overflow: hidden;
+  container-type: inline-size;
+  border-left: 3px solid color-mix(in srgb, var(--color-ink) 38%, var(--c));
+  background: var(--c);
+  color: #262b33;
+  text-align: left;
+  font-size: 0.8rem;
+  line-height: 1.2;
+  cursor: pointer;
+  transition:
+    opacity 0.2s,
+    box-shadow 0.2s;
+}
+
+.prog-rez:hover,
+.prog-rez:focus-visible {
+  box-shadow: 0 0 0 2px var(--color-ink);
+  outline: none;
+  z-index: 3;
+}
+
+.prog-rez[data-estompat] {
+  opacity: 0.22;
+}
+
+.prog-rez b {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  font-weight: 600;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+
+.prog-rez-ora {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.78;
+}
+
+/* o singură jumătate de oră: încape un singur rând */
+.prog-rez[data-mic] b {
+  display: block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.prog-rez[data-mic] .prog-rez-ora {
+  display: none;
+}
+
+.prog-scurt {
+  display: none;
+}
+
+/* pe coloane înguste: doar inițialele (și C1 în loc de „Cabinet 1") */
+@container (max-width: 3.5rem) {
+  .prog-lung,
+  .prog-rez-ora {
+    display: none;
+  }
+  .prog-scurt {
+    display: inline;
+  }
+}
+
+/* Zilele în care cabinetul e al proprietarului lui */
+.prog-prop {
+  z-index: 1;
+  --c: var(--color-periwinkle-pale);
+  display: flex;
+  justify-content: center;
+  border-right: 1px solid var(--linie);
+  background: repeating-linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--c) 62%, white) 0 9px,
+    color-mix(in srgb, var(--c) 34%, white) 9px 18px
+  );
+  color: #262b33;
+  cursor: not-allowed;
+}
+
+.prog-prop > span {
+  position: sticky;
+  top: calc(var(--h1) + var(--h2) + 0.8rem);
+  align-self: flex-start;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  padding: 0.6rem 0;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.prog-prop b {
+  font-weight: 600;
+}
+
+.prog-prop[data-estompat] {
+  opacity: 0.35;
+}
+
+/* -------------------------------------------------- Selecție, cursor, „acum" */
+
+.prog-sel {
+  z-index: 4;
+  margin: 0 1px 1px 0;
+  background: color-mix(in srgb, var(--color-periwinkle) 30%, transparent);
+  outline: 2px solid var(--color-periwinkle);
+  outline-offset: -2px;
+  pointer-events: none;
+  display: flex;
+  align-items: flex-start;
+  padding: 0.15rem 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.prog-cursor {
+  z-index: 5;
+  outline: 2px solid var(--color-ink);
+  outline-offset: -2px;
+  pointer-events: none;
+}
+
+.prog-acum {
+  position: relative;
+  z-index: 4;
+  align-self: start;
+  height: 2px;
+  background: var(--color-clay);
+  pointer-events: none;
+}
+
+.prog-acum::before {
+  content: "";
+  position: absolute;
+  margin: -3px 0 0 -4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-clay);
+}
+
+.prog-prinde {
+  grid-row: 3;
+  scroll-snap-align: start;
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------------ Telefon */
+
+@media (max-width: 700px) {
+  .prog-scroll {
+    scroll-snap-type: x proximity;
+    scroll-padding-left: 2.7rem;
+  }
+
+  /* o zi întreagă (toate cabinetele ei) pe lățimea ecranului */
+  .prog-grila,
+  .prog-grila[data-zoom="l"] {
+    --tw: 2.7rem;
+    --cw: calc((100vw - 2.7rem) / var(--rooms));
+    --rh: 2.3rem;
+  }
+
+  .prog-grila[data-zoom="fit"] {
+    --tw: 2.7rem;
+    --cw: 1.6rem;
+    --rh: 1.8rem;
+    width: max-content;
+  }
+
+  .prog-ora {
+    font-size: 0.72rem;
+    padding-right: 0.3rem;
+  }
+}
+
+/* ------------------------------------------------------------------- Tipar */
+
+@media print {
+  .prog-bara,
+  .prog-unelte {
+    display: none !important;
+  }
+  .prog-app {
+    height: auto;
+  }
+  .prog-scroll {
+    overflow: visible;
+  }
+  .prog-grila {
+    width: 100% !important;
+    --cw: 0px !important;
+    --rh: 1.35rem !important;
+  }
+  .prog-colt,
+  .prog-zi,
+  .prog-cab,
+  .prog-ora,
+  .prog-zi > span,
+  .prog-prop > span {
+    position: static;
+  }
+  .prog-rez,
+  .prog-prop,
+  .prog-zi[data-azi] {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

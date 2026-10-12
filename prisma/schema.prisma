@@ -376,3 +376,84 @@ model GuideOrder {
   @@index([status])
   @@index([email])
 }
+
+/**
+ * ============================================================================
+ * Programatorul intern al cabinetelor (programator.psihologlilianajgheban.ro)
+ * Cine ocupă un cabinet și când — fostul „Programator" de pe therapy-home.ro,
+ * păstrat doar pentru uz intern. Nu are legătură cu programările clienților.
+ * Tabelele au prefixul `Cab`, iar conturile sunt separate de cele ale site-ului.
+ * ==========================================================================
+ */
+
+/// Un cabinet. Dacă are proprietar, în zilele din `ownerWeekdays` e al lui toată
+/// ziua și nu se poate rezerva; în restul zilelor e liber pentru oricine.
+model CabRoom {
+  id            String           @id @default(cuid())
+  name          String
+  position      Int              @default(0)
+  active        Boolean          @default(true)
+  ownerId       String?
+  owner         CabPerson?       @relation("RoomOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+  /// Zilele proprietarului, ca listă: 1 = luni … 7 = duminică („1,2,3,4").
+  ownerWeekdays String           @default("")
+  reservations  CabReservation[]
+}
+
+/// Cine folosește cabinetele. `kind` este CENTRU (psiholog al Therapy Home)
+/// sau CHIRIAS (închiriază cabinetul).
+model CabPerson {
+  id           String           @id @default(cuid())
+  name         String
+  initials     String
+  color        String           @default("#9ED8F0")
+  kind         String           @default("CHIRIAS")
+  /// Poate modifica orice rezervare, oamenii și cabinetele.
+  manager      Boolean          @default(false)
+  active       Boolean          @default(true)
+  position     Int              @default(0)
+  /// Cât timp lipsesc, persoana apare în grilă, dar nu se poate autentifica.
+  username     String?          @unique
+  passwordHash String?
+  createdAt    DateTime         @default(now())
+  sessions     CabSession[]
+  reservations CabReservation[]
+  rooms        CabRoom[]        @relation("RoomOwner")
+}
+
+/// Sesiunile programatorului. Fie ale unei persoane, fie ale administratorului
+/// site-ului (`adminUserId`), care intră cu emailul și parola lui de pe site.
+model CabSession {
+  id          String     @id @default(cuid())
+  tokenHash   String     @unique
+  personId    String?
+  person      CabPerson? @relation(fields: [personId], references: [id], onDelete: Cascade)
+  adminUserId String?
+  expiresAt   DateTime
+  createdAt   DateTime   @default(now())
+
+  @@index([personId])
+}
+
+/// O rezervare de cabinet. Data și orele sunt în ora României, ca text și
+/// minute de la miezul nopții — o celulă din grilă, fără conversii de fus orar.
+model CabReservation {
+  id        String    @id @default(cuid())
+  roomId    String
+  room      CabRoom   @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  personId  String
+  person    CabPerson @relation(fields: [personId], references: [id], onDelete: Cascade)
+  /// "YYYY-MM-DD"
+  date      String
+  startMin  Int
+  endMin    Int
+  /// Același cod pentru toate rezervările create împreună, ca repetare.
+  series    String?
+  note      String?
+  createdBy String?
+  createdAt DateTime  @default(now())
+
+  @@index([date, roomId])
+  @@index([personId, date])
+  @@index([series])
+}

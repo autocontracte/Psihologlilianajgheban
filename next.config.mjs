@@ -3,6 +3,8 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
+  // Programatorul intern se testează local pe http://programator.localhost:3000
+  allowedDevOrigins: ["programator.localhost"],
   // Ghidul și evaluarea gratuită au devenit kitul „Cum stai, de fapt, cu relația ta?"
   async redirects() {
     return [

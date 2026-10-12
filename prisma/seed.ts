@@ -146,7 +146,60 @@ async function main() {
     console.log("  ────────────────────────────────────────────────");
   }
 
+  await seedProgramator();
+
   console.log("\nGata.");
+}
+
+/* ------------------------------------------------- Programatorul cabinetelor
+   Oamenii și cabinetele din vechiul programator de pe therapy-home.ro. Se
+   creează o singură dată; după aceea se administrează din programator
+   („Oameni și cabinete"), iar seed-ul nu mai atinge nimic.
+
+   Diana și Liliana sunt psihologii centrului: cabinetele 2 și 4 sunt ale lor
+   de luni până joi și libere de vineri până duminică. Cabinetele 1 și 3 sunt
+   libere toată săptămâna. Ceilalți închiriază.                              */
+const CAB_PEOPLE = [
+  { name: "Liliana Jgheban", initials: "LJ", color: "#9ED8F0", kind: "CENTRU", manager: true, active: true },
+  { name: "Diana Șorop", initials: "DS", color: "#BFE3C0", kind: "CENTRU", manager: true, active: true },
+  { name: "Elena Praz", initials: "EP", color: "#F4B6C2", kind: "CHIRIAS", manager: false, active: true },
+  { name: "Dana Ghindar", initials: "DG", color: "#D9C6F0", kind: "CHIRIAS", manager: false, active: true },
+  { name: "Anca Butuc", initials: "AB", color: "#F7E3A1", kind: "CHIRIAS", manager: false, active: true },
+  { name: "Camelia Buligoanea", initials: "CB", color: "#F6C6A8", kind: "CHIRIAS", manager: false, active: true },
+  { name: "Mihaela Mihai", initials: "MM", color: "#A9D3C9", kind: "CHIRIAS", manager: false, active: true },
+  { name: "Roxana Acojocaritei", initials: "RA", color: "#C9D6EA", kind: "CHIRIAS", manager: false, active: false },
+  { name: "Teodora Ghiur", initials: "TG", color: "#E8C9A0", kind: "CHIRIAS", manager: false, active: false },
+];
+
+const CAB_ROOMS = [
+  { name: "Cabinet 1", owner: null, days: "" },
+  { name: "Cabinet 2", owner: "Diana Șorop", days: "1,2,3,4" },
+  { name: "Cabinet 3", owner: null, days: "" },
+  { name: "Cabinet 4", owner: "Liliana Jgheban", days: "1,2,3,4" },
+];
+
+async function seedProgramator() {
+  if ((await db.cabPerson.count()) === 0) {
+    for (const [position, p] of CAB_PEOPLE.entries()) {
+      await db.cabPerson.create({ data: { ...p, position } });
+    }
+    console.log(`  programator: ${CAB_PEOPLE.length} oameni`);
+  }
+
+  if ((await db.cabRoom.count()) === 0) {
+    for (const [i, r] of CAB_ROOMS.entries()) {
+      const owner = r.owner ? await db.cabPerson.findFirst({ where: { name: r.owner } }) : null;
+      await db.cabRoom.create({
+        data: {
+          name: r.name,
+          position: i + 1,
+          ownerId: owner?.id ?? null,
+          ownerWeekdays: owner ? r.days : "",
+        },
+      });
+    }
+    console.log(`  programator: ${CAB_ROOMS.length} cabinete`);
+  }
 }
 
 main()

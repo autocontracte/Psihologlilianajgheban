@@ -94,8 +94,11 @@ export default function RootLayout({
     >
       <body className="antialiased">
         {children}
-        <WhatsAppButton />
-        <Ana />
+        {/* ascunse pe programatorul intern — vezi app/programator/programator.css */}
+        <div data-site-widgets>
+          <WhatsAppButton />
+          <Ana />
+        </div>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
