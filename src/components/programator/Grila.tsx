@@ -11,7 +11,17 @@ import {
   type MouseEvent,
   type PointerEvent,
 } from "react";
-import { CalendarDays, ChevronDown, ChevronLeft, ChevronRight, KeyRound, LogOut, Printer, Users } from "lucide-react";
+import {
+  CalendarDays,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ClipboardList,
+  KeyRound,
+  LogOut,
+  Printer,
+  Users,
+} from "lucide-react";
 import {
   DAY_END,
   DAY_START,
@@ -555,6 +565,12 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
               <Link href="/oameni" className="inline-flex items-center gap-1.5 transition-colors hover:text-periwinkle">
                 <Users className="h-4 w-4" />
                 <span className="hidden sm:inline">Oameni și cabinete</span>
+              </Link>
+            )}
+            {me.manager && (
+              <Link href="/situatie" className="inline-flex items-center gap-1.5 transition-colors hover:text-periwinkle">
+                <ClipboardList className="h-4 w-4" />
+                <span className="hidden sm:inline">Situație lunară</span>
               </Link>
             )}
             {me.personId && (
