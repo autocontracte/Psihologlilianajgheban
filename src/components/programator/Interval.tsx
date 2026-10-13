@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, type PointerEvent } from "react";
-import { ArrowRight, CircleAlert, CircleCheck, Minus, Plus } from "lucide-react";
+import { ArrowRight, ChevronDown, CircleAlert, CircleCheck, Minus, Plus } from "lucide-react";
 import { DAY_END, DAY_START, STEP, minToTime } from "@/lib/programator/reguli";
 
 /* Alegerea orelor: bara zilei, cu ce e deja ocupat în cabinet și cu intervalul
@@ -139,11 +139,12 @@ export function Interval({
             aria-label={`${label}: ${minToTime(value)}. Alege din listă`}
             aria-expanded={list === key}
             onClick={() => setList(list === key ? null : key)}
-            className={`h-12 min-w-0 flex-1 border-y px-1 font-sans text-[1.2rem] font-semibold tabular-nums transition-colors ${
+            className={`flex h-12 min-w-0 flex-1 items-center justify-center gap-1.5 border-y px-1 font-sans text-[1.25rem] font-semibold tabular-nums transition-colors ${
               list === key ? "border-periwinkle bg-periwinkle-pale text-ink" : "border-ink/20 bg-cream text-ink hover:bg-periwinkle-pale"
             }`}
           >
             {minToTime(value)}
+            <ChevronDown className={`h-5 w-5 text-ink-soft transition-transform ${list === key ? "rotate-180" : ""}`} />
           </button>
           <button type="button" aria-label={`${label}: mai târziu`} disabled={atMax} onClick={() => pas(key, 1)} className={buton}>
             <Plus className="h-5 w-5" />
@@ -182,7 +183,53 @@ export function Interval({
         </p>
       </div>
 
-      {/* Bara zilei */}
+      {/* De la / Până la: lista de ore e cea mai simplă cale; bara de dedesubt arată ce e ocupat */}
+      <div className="grid grid-cols-[1fr_auto_1fr] items-end gap-2">
+        {stepper("a", "De la")}
+        <ArrowRight className="mb-3.5 h-5 w-5 text-ink-muted" />
+        {stepper("b", "Până la")}
+      </div>
+
+      {list && (
+        <div className="border border-periwinkle bg-cream-warm p-2">
+          <p className="mb-1.5 px-1 font-sans text-[0.82rem] font-semibold text-ink-soft">
+            {list === "a" ? "De la ce oră?" : "Până la ce oră?"}
+          </p>
+          <div className="grid grid-cols-4 gap-1 sm:grid-cols-7">
+            {ore.map((m) => {
+              const on = m === (list === "a" ? start : end);
+              const off = ocupat(m);
+              return (
+                <button
+                  key={m}
+                  type="button"
+                  disabled={off}
+                  aria-pressed={on}
+                  onClick={() => {
+                    if (list === "a") moveStart(m);
+                    else set(start, m);
+                    setList(null);
+                  }}
+                  className={`h-10 font-sans text-[0.95rem] tabular-nums transition-colors disabled:cursor-not-allowed ${
+                    on
+                      ? "bg-periwinkle font-semibold text-cream"
+                      : off
+                        ? "bg-ink/5 text-ink-muted line-through"
+                        : "bg-cream text-ink hover:bg-periwinkle-pale"
+                  }`}
+                >
+                  {minToTime(m)}
+                </button>
+              );
+            })}
+          </div>
+          {ore.some(ocupat) && (
+            <p className="mt-2 px-1 font-sans text-[0.8rem] text-ink-muted">Orele tăiate sunt ocupate.</p>
+          )}
+        </div>
+      )}
+
+      {/* Bara zilei: se poate trage de interval sau de capetele lui */}
       <div>
         <div
           ref={track}
@@ -219,48 +266,6 @@ export function Interval({
           ))}
         </div>
       </div>
-
-      <div className="grid grid-cols-[1fr_auto_1fr] items-end gap-2">
-        {stepper("a", "De la")}
-        <ArrowRight className="mb-3.5 h-5 w-5 text-ink-muted" />
-        {stepper("b", "Până la")}
-      </div>
-
-      {list && (
-        <div className="border border-ink/15 bg-cream-warm p-2">
-          <div className="grid grid-cols-4 gap-1 sm:grid-cols-7">
-            {ore.map((m) => {
-              const on = m === (list === "a" ? start : end);
-              const off = ocupat(m);
-              return (
-                <button
-                  key={m}
-                  type="button"
-                  disabled={off}
-                  aria-pressed={on}
-                  onClick={() => {
-                    if (list === "a") moveStart(m);
-                    else set(start, m);
-                    setList(null);
-                  }}
-                  className={`h-10 font-sans text-[0.95rem] tabular-nums transition-colors disabled:cursor-not-allowed ${
-                    on
-                      ? "bg-periwinkle font-semibold text-cream"
-                      : off
-                        ? "bg-ink/5 text-ink-muted line-through"
-                        : "bg-cream text-ink hover:bg-periwinkle-pale"
-                  }`}
-                >
-                  {minToTime(m)}
-                </button>
-              );
-            })}
-          </div>
-          {ore.some(ocupat) && (
-            <p className="mt-2 px-1 font-sans text-[0.8rem] text-ink-muted">Orele tăiate sunt ocupate.</p>
-          )}
-        </div>
-      )}
 
       <div className="flex flex-wrap gap-1.5">
         {DURATE.map(([d, text]) => (
