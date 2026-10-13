@@ -15,12 +15,14 @@ export const ROWS = (DAY_END - DAY_START) / STEP;
 /** Cât de departe poate merge o repetare. */
 export const MAX_REPEAT_DAYS = 366;
 
-export const KINDS = ["CENTRU", "CHIRIAS"] as const;
+/* ADMIN = cont doar de administrare: nu ocupă cabinete, deci nu apare în grilă. */
+export const KINDS = ["CENTRU", "CHIRIAS", "ADMIN"] as const;
 export type Kind = (typeof KINDS)[number];
 
 export const KIND_LABEL: Record<Kind, string> = {
   CENTRU: "Therapy Home",
   CHIRIAS: "Chiriaș",
+  ADMIN: "Administrator",
 };
 
 /** Culori calde, lizibile cu text închis — aceleași ca în vechiul programator. */

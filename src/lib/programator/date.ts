@@ -40,7 +40,11 @@ export async function rooms(): Promise<Room[]> {
 }
 
 export async function people(): Promise<Person[]> {
-  const rows = await db.cabPerson.findMany({ orderBy: [{ position: "asc" }, { name: "asc" }] });
+  // conturile doar de administrare nu ocupă cabinete, deci nu apar în grilă
+  const rows = await db.cabPerson.findMany({
+    where: { kind: { not: "ADMIN" } },
+    orderBy: [{ position: "asc" }, { name: "asc" }],
+  });
   return rows.map((p) => ({
     id: p.id,
     name: p.name,
@@ -176,7 +180,9 @@ export async function createReservation(user: ProgUser, a: NewReservation) {
   const room = roomList.find((r) => r.id === a.roomId);
   if (!room) throw new ProgError("Cabinetul nu există.");
   const person = await db.cabPerson.findUnique({ where: { id: personId } });
-  if (!person || !person.active) throw new ProgError("Alege cine ocupă cabinetul.");
+  if (!person || !person.active || person.kind === "ADMIN") {
+    throw new ProgError("Alege cine ocupă cabinetul.");
+  }
 
   const every = a.everyWeeks === 1 || a.everyWeeks === 2 ? a.everyWeeks : 0;
   const dates = [a.date];
@@ -241,7 +247,9 @@ export async function updateReservation(
   if (!room) throw new ProgError("Cabinetul nu există.");
   if (n.personId !== cur.personId) {
     const person = await db.cabPerson.findUnique({ where: { id: n.personId } });
-    if (!person || !person.active) throw new ProgError("Alege cine ocupă cabinetul.");
+    if (!person || !person.active || person.kind === "ADMIN") {
+      throw new ProgError("Alege cine ocupă cabinetul.");
+    }
   }
 
   const why = await obstacle(room, roomList, n.personId, n.date, n.start, n.end, id);

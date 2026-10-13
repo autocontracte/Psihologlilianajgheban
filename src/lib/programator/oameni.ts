@@ -68,6 +68,7 @@ async function fields(b: Input, currentId = "") {
     data.kind = b.kind as Kind;
   }
   if (b.manager !== undefined) data.manager = !!b.manager;
+  if (data.kind === "ADMIN") data.manager = true;
   if (b.active !== undefined) data.active = !!b.active;
 
   if (b.username !== undefined) {
@@ -137,9 +138,8 @@ export async function updateRoom(id: string, b: Input) {
   }
   if (b.ownerId !== undefined) {
     const ownerId = String(b.ownerId ?? "");
-    if (ownerId && !(await db.cabPerson.findUnique({ where: { id: ownerId } }))) {
-      throw new ProgError("Persoana nu există.");
-    }
+    const owner = ownerId ? await db.cabPerson.findUnique({ where: { id: ownerId } }) : null;
+    if (ownerId && (!owner || owner.kind === "ADMIN")) throw new ProgError("Persoana nu există.");
     data.ownerId = ownerId || null;
   }
   if (b.ownerDays !== undefined) {

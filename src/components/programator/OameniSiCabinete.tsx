@@ -74,6 +74,7 @@ function PersonForm({
         <select id={`tip-${uid}`} value={d.kind} onChange={(e) => set("kind", e.target.value as Kind)} className={camp}>
           <option value="CENTRU">Therapy Home (psiholog al centrului)</option>
           <option value="CHIRIAS">Chiriaș (închiriază cabinetul)</option>
+          <option value="ADMIN">Administrator (doar administrează, nu apare în grilă)</option>
         </select>
       </div>
       <div>
@@ -123,7 +124,13 @@ function PersonForm({
       {!isMe && (
         <div className="flex flex-wrap gap-x-8 gap-y-2 font-sans text-[0.92rem] sm:col-span-2">
           <label className="inline-flex items-center gap-2">
-            <input type="checkbox" checked={d.manager} onChange={(e) => set("manager", e.target.checked)} className="h-4 w-4 accent-periwinkle" />
+            <input
+              type="checkbox"
+              checked={d.manager || d.kind === "ADMIN"}
+              disabled={d.kind === "ADMIN"}
+              onChange={(e) => set("manager", e.target.checked)}
+              className="h-4 w-4 accent-periwinkle"
+            />
             Administrator (modifică orice rezervare, oamenii și cabinetele)
           </label>
           <label className="inline-flex items-center gap-2">
@@ -191,7 +198,7 @@ function RoomForm({ room, people, onDone }: { room: Room; people: PersonAdmin[];
           <select id={`prop-${room.id}`} value={ownerId} onChange={(e) => setOwnerId(e.target.value)} className={camp}>
             <option value="">Al nimănui — liber toată săptămâna</option>
             {people
-              .filter((p) => p.active)
+              .filter((p) => p.active && p.kind !== "ADMIN")
               .map((p) => (
                 <option key={p.id} value={p.id}>
                   {p.name}
@@ -293,7 +300,9 @@ export function OameniSiCabinete({
                   {p.name}
                 </span>
                 <span className="font-sans text-[0.85rem] text-ink-soft">{KIND_LABEL[p.kind]}</span>
-                {p.manager && <span className="bg-periwinkle-pale px-2 py-0.5 font-sans text-[0.75rem] text-ink">administrator</span>}
+                {p.manager && p.kind !== "ADMIN" && (
+                  <span className="bg-periwinkle-pale px-2 py-0.5 font-sans text-[0.75rem] text-ink">administrator</span>
+                )}
                 <span className="font-sans text-[0.85rem] text-ink-muted">
                   {p.username && p.hasPassword ? `intră cu „${p.username}”` : "fără cont"}
                   {!p.active && " · inactiv"}

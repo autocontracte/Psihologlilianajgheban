@@ -50,7 +50,10 @@ export function DialogRezervare({
   const [date, setDate] = useState(init.date);
   const [start, setStart] = useState(init.start);
   const [end, setEnd] = useState(init.end);
-  const [personId, setPersonId] = useState(res?.personId ?? me.personId ?? "");
+  // un cont doar de administrare nu e în grilă, deci nu se poate propune pe el însuși
+  const [personId, setPersonId] = useState(
+    res?.personId ?? (week.people.some((p) => p.id === me.personId) ? (me.personId ?? "") : ""),
+  );
   const [every, setEvery] = useState(0);
   const [until, setUntil] = useState(addDays(init.date, 13 * 7));
   const [note, setNote] = useState(res?.note ?? "");
