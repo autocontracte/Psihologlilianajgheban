@@ -1,31 +1,36 @@
 "use client";
 
-import { useEffect, useRef, useState, type FormEvent } from "react";
-import { Repeat, Trash2, X } from "lucide-react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { Check, Repeat, Trash2, X } from "lucide-react";
 import {
   DAY_END,
   DAY_START,
   KIND_LABEL,
-  STEP,
   addDays,
   daysLabel,
   longDate,
   minToTime,
+  mondayOf,
   ownerDay,
   shortDate,
   type Reservation,
   type Week,
 } from "@/lib/programator/reguli";
+import { AlegeData } from "./Calendar";
+import { Interval, clashOf, type Busy } from "./Interval";
 import { butonPericol, butonPlin, butonSimplu, camp, cere, eticheta, type Me } from "./comun";
 
 export type Draft =
   | { mode: "new"; roomId: string; date: string; start: number; end: number }
   | { mode: "edit"; res: Reservation };
 
-const ORE: number[] = [];
-for (let m = DAY_START; m <= DAY_END; m += STEP) ORE.push(m);
-
 type Created = { created: number; skipped: { date: string; reason: string }[] };
+
+const REPETARI: [number, string][] = [
+  [0, "O dată"],
+  [1, "În fiecare săptămână"],
+  [2, "La 2 săptămâni"],
+];
 
 export function DialogRezervare({
   draft,
@@ -62,7 +67,24 @@ export function DialogRezervare({
   const [askDelete, setAskDelete] = useState(false);
   const panel = useRef<HTMLDivElement>(null);
 
-  const owner = res ? week.people.find((p) => p.id === res.personId) : null;
+  /* Rezervările zilei alese. Săptămâna deschisă în grilă le are deja; dacă ziua
+     se mută în altă săptămână, se cer de la server. */
+  const [other, setOther] = useState<Week | null>(null);
+  const dayWeek = other && mondayOf(date) === other.start ? other : week;
+  const known = mondayOf(date) === dayWeek.start;
+  useEffect(() => {
+    if (mondayOf(date) === week.start || mondayOf(date) === other?.start) return;
+    let alive = true;
+    cere<Week>(`/api/programator/saptamana?start=${date}`)
+      .then((w) => alive && setOther(w))
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, [date, week.start, other?.start]);
+
+  const people = useMemo(() => new Map(week.people.map((p) => [p.id, p])), [week.people]);
+  const owner = res ? people.get(res.personId) : null;
   const canEdit = !res || me.manager || (res.personId === me.personId && res.date >= week.today);
 
   useEffect(() => {
@@ -70,11 +92,43 @@ export function DialogRezervare({
       if (e.key === "Escape") onClose();
     };
     window.addEventListener("keydown", onKey);
-    panel.current?.querySelector<HTMLElement>("[data-primul]")?.focus();
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  const persons = week.people.filter((p) => p.active || p.id === res?.personId);
+  /* Ce e ocupat într-un cabinet în ziua aleasă: rezervările altora (și ale
+     tale) plus, în zilele proprietarului, toată ziua. */
+  const dayRes = useMemo(
+    () => (known ? dayWeek.reservations.filter((x) => x.date === date && x.id !== res?.id) : []),
+    [known, dayWeek, date, res?.id],
+  );
+
+  function busyIn(room: Week["rooms"][number]): Busy[] {
+    if (ownerDay(room, date)) {
+      const who = people.get(room.ownerId!);
+      return [{ a: DAY_START, b: DAY_END, label: who?.name ?? "proprietar", color: who?.color ?? "#ddd" }];
+    }
+    return dayRes
+      .filter((x) => x.roomId === room.id)
+      .map((x) => ({
+        a: x.start,
+        b: x.end,
+        label: people.get(x.personId)?.name ?? "ocupat",
+        color: people.get(x.personId)?.color ?? "#ddd",
+      }));
+  }
+
+  const room = week.rooms.find((r) => r.id === roomId) ?? week.rooms[0];
+  const roomBusy = busyIn(room);
+
+  // același om nu poate fi în două cabinete la aceeași oră
+  const elsewhere = dayRes.find(
+    (x) => x.personId === personId && x.roomId !== roomId && x.start < end && x.end > start,
+  );
+  const person = people.get(personId);
+  const problem = elsewhere
+    ? `${person?.name ?? "Persoana"} are deja ${week.rooms.find((r) => r.id === elsewhere.roomId)?.name ?? "alt cabinet"}, ${minToTime(elsewhere.start)}–${minToTime(elsewhere.end)}`
+    : null;
+  const blocked = !!clashOf(roomBusy, start, end) || !!problem;
 
   async function save(e: FormEvent) {
     e.preventDefault();
@@ -82,18 +136,15 @@ export function DialogRezervare({
       setError("Alege cine ocupă cabinetul.");
       return;
     }
+    if (blocked) {
+      setError("Intervalul ales nu e liber. Alege alte ore sau alt cabinet.");
+      return;
+    }
     setBusy(true);
     setError("");
     try {
       if (res) {
-        await cere(`/api/programator/rezervari/${res.id}`, "PATCH", {
-          roomId,
-          personId,
-          date,
-          start,
-          end,
-          note,
-        });
+        await cere(`/api/programator/rezervari/${res.id}`, "PATCH", { roomId, personId, date, start, end, note });
         onDone();
       } else {
         const out = await cere<Created>("/api/programator/rezervari", "POST", {
@@ -135,7 +186,8 @@ export function DialogRezervare({
     }
   }
 
-  const roomName = week.rooms.find((r) => r.id === roomId)?.name ?? "Cabinet";
+  const persons = week.people.filter((p) => p.active || p.id === res?.personId);
+  const titlu = eticheta.replace("mb-1.5", "mb-2");
 
   return (
     <div
@@ -149,39 +201,36 @@ export function DialogRezervare({
         role="dialog"
         aria-modal="true"
         aria-label={res ? "Rezervare" : "Rezervare nouă"}
-        className="max-h-[94dvh] w-full max-w-lg overflow-y-auto bg-cream p-6 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.6)] sm:p-8"
+        className="max-h-[96dvh] w-full max-w-2xl overflow-y-auto bg-cream p-5 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.6)] sm:p-7"
       >
         <div className="mb-5 flex items-start justify-between gap-4">
           <div>
             <h2 className="font-display text-2xl text-ink">
               {res ? (canEdit ? "Modifică rezervarea" : "Rezervare") : "Rezervare nouă"}
             </h2>
-            <p className="mt-1 font-sans text-[0.9rem] text-ink-soft">
-              {roomName} · {longDate(date)}
+            <p className="mt-1 font-sans text-[0.95rem] text-ink-soft">
+              {room.name} · {longDate(date)} · {minToTime(start)}–{minToTime(end)}
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
             aria-label="Închide"
-            className="p-1.5 text-ink-soft transition-colors hover:text-ink"
+            className="flex h-11 w-11 shrink-0 items-center justify-center border border-ink/15 text-ink-soft transition-colors hover:border-ink hover:text-ink"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
 
         {!canEdit && res ? (
-          <div className="space-y-4 font-sans text-[0.98rem]">
+          <div className="space-y-4 font-sans text-[1rem]">
             <p className="flex items-center gap-3">
-              <span className="inline-block h-4 w-4" style={{ background: owner?.color }} />
+              <span className="inline-block h-5 w-5" style={{ background: owner?.color }} />
               <b>{owner?.name}</b>
               {owner && <span className="text-ink-soft">{KIND_LABEL[owner.kind]}</span>}
             </p>
-            <p>
-              {minToTime(res.start)}–{minToTime(res.end)}
-            </p>
             {res.note && <p className="text-ink-soft">{res.note}</p>}
-            <p className="text-[0.85rem] text-ink-muted">
+            <p className="text-[0.88rem] text-ink-muted">
               {res.date < week.today && res.personId === me.personId
                 ? "Zilele trecute nu mai pot fi modificate."
                 : "Doar cine a făcut rezervarea sau un administrator o poate modifica."}
@@ -191,138 +240,135 @@ export function DialogRezervare({
             </button>
           </div>
         ) : (
-          <form onSubmit={save} className="space-y-4">
+          <form onSubmit={save} className="space-y-5">
+            {/* Cine */}
             {me.manager ? (
               <div>
-                <label htmlFor="rz-cine" className={eticheta}>
-                  Cine
-                </label>
-                <select
-                  id="rz-cine"
-                  data-primul
-                  value={personId}
-                  onChange={(e) => setPersonId(e.target.value)}
-                  className={camp}
-                  required
-                >
-                  <option value="">Alege…</option>
-                  {(["CENTRU", "CHIRIAS"] as const).map((kind) => (
-                    <optgroup key={kind} label={kind === "CENTRU" ? "Therapy Home" : "Chiriași"}>
-                      {persons
-                        .filter((p) => p.kind === kind)
-                        .map((p) => (
-                          <option key={p.id} value={p.id}>
-                            {p.name}
-                          </option>
-                        ))}
-                    </optgroup>
-                  ))}
-                </select>
+                <span className={titlu}>Cine</span>
+                <div className="space-y-2">
+                  {(["CENTRU", "CHIRIAS"] as const).map((kind) => {
+                    const list = persons.filter((p) => p.kind === kind);
+                    if (list.length === 0) return null;
+                    return (
+                      <div key={kind} className="grid grid-cols-2 gap-1.5 sm:grid-cols-3">
+                        {list.map((p) => {
+                          const on = p.id === personId;
+                          return (
+                            <button
+                              key={p.id}
+                              type="button"
+                              aria-pressed={on}
+                              onClick={() => setPersonId(p.id)}
+                              className={`flex min-h-12 items-center gap-2 border-2 px-2.5 py-2 text-left font-sans text-[0.95rem] leading-tight transition-colors ${
+                                on ? "border-ink bg-cream-warm font-semibold text-ink" : "border-ink/12 bg-cream-warm text-ink hover:border-ink/45"
+                              }`}
+                            >
+                              <span
+                                className="flex h-6 w-6 shrink-0 items-center justify-center"
+                                style={{ background: p.color }}
+                              >
+                                {on && <Check className="h-4 w-4 text-ink" strokeWidth={3} />}
+                              </span>
+                              <span className="min-w-0">
+                                {p.name}
+                                {kind === "CENTRU" && (
+                                  <small className="block text-[0.72rem] font-normal text-ink-muted">Therapy Home</small>
+                                )}
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             ) : (
-              <p className="font-sans text-[0.98rem]">
+              <p className="font-sans text-[1rem]">
                 Pentru <b>{me.name}</b>
               </p>
             )}
 
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label htmlFor="rz-cabinet" className={eticheta}>
-                  Cabinet
-                </label>
-                <select
-                  id="rz-cabinet"
-                  data-primul={me.manager ? undefined : true}
-                  value={roomId}
-                  onChange={(e) => setRoomId(e.target.value)}
-                  className={camp}
-                >
-                  {week.rooms.map((r) => {
-                    const taken = ownerDay(r, date);
-                    const who = week.people.find((p) => p.id === r.ownerId)?.name;
-                    return (
-                      <option key={r.id} value={r.id} disabled={taken}>
+            {/* Ziua */}
+            <div>
+              <span className={titlu}>Ziua</span>
+              <AlegeData
+                label="Ziua"
+                value={date}
+                today={week.today}
+                min={me.manager ? undefined : week.today}
+                onChange={setDate}
+              />
+            </div>
+
+            {/* Cabinetul, cu starea fiecăruia în intervalul ales */}
+            <div>
+              <span className={titlu}>Cabinet</span>
+              <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-4">
+                {week.rooms.map((r) => {
+                  const on = r.id === roomId;
+                  const owned = ownerDay(r, date);
+                  const c = clashOf(busyIn(r), start, end);
+                  return (
+                    <button
+                      key={r.id}
+                      type="button"
+                      aria-pressed={on}
+                      disabled={owned}
+                      onClick={() => setRoomId(r.id)}
+                      className={`flex min-h-[4.25rem] flex-col items-start justify-center border-2 px-3 py-2 text-left font-sans transition-colors disabled:cursor-not-allowed disabled:opacity-55 ${
+                        on ? "border-ink bg-cream-warm" : "border-ink/12 bg-cream-warm hover:border-ink/45"
+                      }`}
+                    >
+                      <span className="flex items-center gap-1.5 text-[1rem] font-semibold text-ink">
+                        {on && <Check className="h-4 w-4" strokeWidth={3} />}
                         {r.name}
-                        {taken ? ` — ${who}, ${daysLabel(r.ownerDays)}` : ""}
-                      </option>
-                    );
-                  })}
-                </select>
+                      </span>
+                      <small className={`text-[0.78rem] leading-tight ${c ? "text-clay" : "text-periwinkle"}`}>
+                        {owned
+                          ? `${people.get(r.ownerId!)?.name ?? "Ocupat"}, ${daysLabel(r.ownerDays)}`
+                          : c
+                            ? `Ocupat: ${c.label}`
+                            : "Liber"}
+                      </small>
+                    </button>
+                  );
+                })}
               </div>
-              <div>
-                <label htmlFor="rz-data" className={eticheta}>
-                  Ziua
-                </label>
-                <input
-                  id="rz-data"
-                  type="date"
-                  value={date}
-                  min={me.manager ? undefined : week.today}
-                  onChange={(e) => e.target.value && setDate(e.target.value)}
-                  className={camp}
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="rz-de-la" className={eticheta}>
-                  De la
-                </label>
-                <select
-                  id="rz-de-la"
-                  value={start}
-                  onChange={(e) => {
-                    const s = Number(e.target.value);
-                    // păstrează durata când se mută începutul
-                    setEnd(Math.min(DAY_END, s + (end - start)));
-                    setStart(s);
-                  }}
-                  className={camp}
-                >
-                  {ORE.slice(0, -1).map((m) => (
-                    <option key={m} value={m}>
-                      {minToTime(m)}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label htmlFor="rz-pana-la" className={eticheta}>
-                  Până la
-                </label>
-                <select
-                  id="rz-pana-la"
-                  value={end}
-                  onChange={(e) => setEnd(Number(e.target.value))}
-                  className={camp}
-                >
-                  {ORE.filter((m) => m > start).map((m) => (
-                    <option key={m} value={m}>
-                      {minToTime(m)}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            </div>
+
+            {/* Orele */}
+            <div>
+              <span className={titlu}>Ora</span>
+              <Interval
+                start={start}
+                end={end}
+                busy={roomBusy}
+                problem={problem}
+                onChange={(a, b) => {
+                  setStart(a);
+                  setEnd(b);
+                }}
+              />
             </div>
 
             {!res && (
               <div>
-                <span className={eticheta}>
+                <span className={titlu}>
                   <Repeat className="mr-1 inline h-3.5 w-3.5" />
                   Se repetă
                 </span>
-                <div className="grid grid-cols-3 border border-ink/20">
-                  {[
-                    [0, "O dată"],
-                    [1, "Săptămânal"],
-                    [2, "La 2 săptămâni"],
-                  ].map(([v, label]) => (
+                <div className="grid grid-cols-3 gap-1.5">
+                  {REPETARI.map(([v, label]) => (
                     <button
                       key={v}
                       type="button"
                       aria-pressed={every === v}
-                      onClick={() => setEvery(v as number)}
-                      className={`px-2 py-2.5 font-sans text-[0.85rem] transition-colors ${
-                        every === v ? "bg-periwinkle text-cream" : "bg-cream-warm text-ink hover:bg-periwinkle-pale"
+                      onClick={() => setEvery(v)}
+                      className={`min-h-12 border-2 px-2 py-2 font-sans text-[0.9rem] leading-tight transition-colors ${
+                        every === v
+                          ? "border-periwinkle bg-periwinkle font-semibold text-cream"
+                          : "border-ink/12 bg-cream-warm text-ink hover:border-ink/45"
                       }`}
                     >
                       {label}
@@ -331,26 +377,25 @@ export function DialogRezervare({
                 </div>
                 {every > 0 && (
                   <div className="mt-3">
-                    <label htmlFor="rz-pana" className={eticheta}>
-                      Până pe (inclusiv)
-                    </label>
-                    <input
-                      id="rz-pana"
-                      type="date"
-                      value={until}
+                    <span className={titlu}>Până pe (inclusiv)</span>
+                    <AlegeData
+                      label="Până pe"
+                      value={until < date ? date : until}
+                      today={week.today}
                       min={date}
                       max={addDays(date, 366)}
-                      onChange={(e) => e.target.value && setUntil(e.target.value)}
-                      className={camp}
-                      required
+                      onChange={setUntil}
                     />
+                    <p className="mt-1.5 font-sans text-[0.82rem] text-ink-muted">
+                      Zilele în care intervalul e deja ocupat sunt sărite și îți spun care.
+                    </p>
                   </div>
                 )}
               </div>
             )}
 
             <div>
-              <label htmlFor="rz-nota" className={eticheta}>
+              <label htmlFor="rz-nota" className={titlu}>
                 Notă (opțional)
               </label>
               <input
@@ -358,25 +403,25 @@ export function DialogRezervare({
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
                 maxLength={200}
-                className={camp}
+                className={`${camp} h-12`}
               />
             </div>
 
             {res?.series && (
-              <p className="font-sans text-[0.82rem] text-ink-muted">
+              <p className="font-sans text-[0.85rem] text-ink-muted">
                 Face parte dintr-o repetare. Modificarea se aplică doar acestei zile.
               </p>
             )}
 
             {error && (
-              <p role="alert" className="bg-clay-pale px-4 py-3 font-sans text-[0.9rem] text-clay">
+              <p role="alert" className="bg-clay-pale px-4 py-3 font-sans text-[0.95rem] text-clay">
                 {error}
               </p>
             )}
 
             {askDelete ? (
               <div className="space-y-3 border-t border-ink/10 pt-4">
-                <p className="font-sans text-[0.95rem]">Ce ștergi?</p>
+                <p className="font-sans text-[1rem]">Ce ștergi?</p>
                 <div className="flex flex-wrap gap-2">
                   <button type="button" disabled={busy} onClick={() => remove(false)} className={butonPericol}>
                     Doar {shortDate(res!.date)}
@@ -391,10 +436,10 @@ export function DialogRezervare({
               </div>
             ) : (
               <div className="flex flex-wrap items-center gap-2 border-t border-ink/10 pt-4">
-                <button type="submit" disabled={busy} className={butonPlin}>
+                <button type="submit" disabled={busy || blocked} className={`${butonPlin} min-h-12 px-7`}>
                   {busy ? "Se salvează…" : res ? "Salvează" : "Rezervă"}
                 </button>
-                <button type="button" disabled={busy} onClick={onClose} className={butonSimplu}>
+                <button type="button" disabled={busy} onClick={onClose} className={`${butonSimplu} min-h-12`}>
                   Renunță
                 </button>
                 {res && (
@@ -402,7 +447,7 @@ export function DialogRezervare({
                     type="button"
                     disabled={busy}
                     onClick={() => (res.series ? setAskDelete(true) : remove(false))}
-                    className={`${butonPericol} ml-auto`}
+                    className={`${butonPericol} ml-auto min-h-12`}
                   >
                     <Trash2 className="h-4 w-4" />
                     Șterge

@@ -22,7 +22,7 @@ body:has(.prog) [data-site-widgets] {
 }
 
 /* legenda derulată pe telefon: o bară subțire, nu cea groasă a site-ului */
-.prog-unelte ::-webkit-scrollbar {
+.prog-legenda::-webkit-scrollbar {
   height: 4px;
 }
 
@@ -59,8 +59,14 @@ body:has(.prog) [data-site-widgets] {
 /* „Tot": toată săptămâna încape pe lățimea ecranului */
 .prog-grila[data-zoom="fit"] {
   --cw: 2.1rem;
-  --rh: 1.7rem;
+  --rh: 1.45rem;
+  --h1: 2.3rem;
+  --h2: 1.5rem;
   width: 100%;
+  /* rândurile se întind cât e ecranul de înalt, ca toată ziua să se vadă fără derulare */
+  height: 100%;
+  min-height: calc(var(--h1) + var(--h2) + var(--rows) * var(--rh));
+  grid-template-rows: var(--h1) var(--h2) repeat(var(--rows), minmax(var(--rh), 1fr));
 }
 
 .prog-grila[data-zoom="l"] {
@@ -161,19 +167,39 @@ body:has(.prog) [data-site-widgets] {
   display: flex;
   align-items: flex-start;
   justify-content: flex-end;
-  padding: 0.15rem 0.45rem 0 0;
+  padding-right: 0.3rem;
   border-right: 1px solid var(--linie-zi);
-  border-bottom: 1px solid var(--linie);
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   font-variant-numeric: tabular-nums;
   font-weight: 600;
+  line-height: 1;
 }
 
-.prog-ora[data-jumate] {
+/* Ora stă pe linia ei: „09:30" e chiar linia de 9:30, nu rândul de dedesubt.
+   Altfel, cine trage „până la 9:30" nimerește în jumătatea de oră următoare. */
+.prog-ora > span {
+  transform: translateY(-50%);
+  padding: 0.1rem 0.15rem;
+  background: var(--color-cream);
+}
+
+.prog-ora[data-prima] > span {
+  transform: none;
+  padding-top: 0.2rem;
+}
+
+.prog-ora[data-jumate] > span {
   font-weight: 400;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   color: var(--color-ink-muted);
-  border-bottom-color: var(--linie-ora);
+}
+
+.prog-ora > .prog-ora-final {
+  position: absolute;
+  right: 0.3rem;
+  bottom: 0.15rem;
+  transform: none;
+  font-weight: 600;
 }
 
 .prog-cel {
@@ -359,16 +385,24 @@ body:has(.prog) [data-site-widgets] {
 .prog-acum {
   position: relative;
   z-index: 4;
-  align-self: start;
-  height: 2px;
-  background: var(--color-clay);
   pointer-events: none;
 }
 
 .prog-acum::before {
   content: "";
   position: absolute;
-  margin: -3px 0 0 -4px;
+  left: 0;
+  right: 0;
+  top: calc(var(--f) * 100% - 1px);
+  height: 2px;
+  background: var(--color-clay);
+}
+
+.prog-acum::after {
+  content: "";
+  position: absolute;
+  left: -4px;
+  top: calc(var(--f) * 100% - 4px);
   width: 8px;
   height: 8px;
   border-radius: 50%;
@@ -379,6 +413,122 @@ body:has(.prog) [data-site-widgets] {
   grid-row: 3;
   scroll-snap-align: start;
   pointer-events: none;
+}
+
+/* --------------------------------------------- Bara zilei, la alegerea orelor */
+
+.prog-tr-track {
+  position: relative;
+  height: 3.4rem;
+  border: 1px solid color-mix(in srgb, var(--color-ink) 22%, transparent);
+  /* o linie fină la fiecare oră (14 ore între 08 și 22) */
+  background:
+    repeating-linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-ink) 10%, transparent) 0 1px,
+      transparent 1px calc(100% / 14)
+    ),
+    var(--color-cream-warm);
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.prog-tr-blk {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  border-left: 3px solid color-mix(in srgb, var(--color-ink) 38%, var(--c));
+  background: var(--c);
+  pointer-events: none;
+}
+
+.prog-tr-blk em {
+  padding: 0 0.35rem;
+  font-family: var(--font-sans);
+  font-size: 0.74rem;
+  font-style: normal;
+  white-space: nowrap;
+  color: #262b33;
+}
+
+.prog-tr-sel {
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  z-index: 2;
+  background: color-mix(in srgb, var(--color-periwinkle) 42%, transparent);
+  outline: 3px solid var(--color-periwinkle);
+  outline-offset: -3px;
+  cursor: grab;
+}
+
+.prog-tr-sel[data-rau] {
+  background: color-mix(in srgb, var(--color-clay) 42%, transparent);
+  outline-color: var(--color-clay);
+}
+
+/* mânerele de la capete, late cât să fie ușor de prins */
+.prog-tr-h {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1.6rem;
+  cursor: ew-resize;
+}
+
+.prog-tr-h[data-h="a"] {
+  left: -0.8rem;
+}
+
+.prog-tr-h[data-h="b"] {
+  right: -0.8rem;
+}
+
+.prog-tr-h::after {
+  content: "";
+  position: absolute;
+  top: 18%;
+  bottom: 18%;
+  left: 50%;
+  width: 7px;
+  margin-left: -3.5px;
+  border-radius: 4px;
+  background: var(--color-ink);
+  pointer-events: none;
+}
+
+.prog-tr-ticks {
+  position: relative;
+  height: 1.3rem;
+  font-family: var(--font-sans);
+  font-size: 0.74rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink-muted);
+}
+
+.prog-tr-ticks span {
+  position: absolute;
+  top: 0.25rem;
+  transform: translateX(-50%);
+}
+
+.prog-tr-ticks span:first-child {
+  transform: none;
+}
+
+.prog-tr-ticks span:last-child {
+  transform: translateX(-100%);
+}
+
+@media (max-width: 520px) {
+  .prog-tr-ticks span[data-impar] {
+    display: none;
+  }
 }
 
 /* ------------------------------------------------------------------ Telefon */
@@ -406,7 +556,11 @@ body:has(.prog) [data-site-widgets] {
 
   .prog-ora {
     font-size: 0.72rem;
-    padding-right: 0.3rem;
+    padding-right: 0.15rem;
+  }
+
+  .prog-ora[data-jumate] > span {
+    font-size: 0.66rem;
   }
 }
 

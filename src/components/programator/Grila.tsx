@@ -11,7 +11,7 @@ import {
   type MouseEvent,
   type PointerEvent,
 } from "react";
-import { ChevronLeft, ChevronRight, KeyRound, LogOut, Printer, Users } from "lucide-react";
+import { CalendarDays, ChevronDown, ChevronLeft, ChevronRight, KeyRound, LogOut, Printer, Users } from "lucide-react";
 import {
   DAY_END,
   DAY_START,
@@ -29,7 +29,9 @@ import {
   type Reservation,
   type Week,
 } from "@/lib/programator/reguli";
+import { Calendar } from "./Calendar";
 import { DialogRezervare, type Draft } from "./DialogRezervare";
+import { durata } from "./Interval";
 import { cere, type Me } from "./comun";
 
 type Zoom = "fit" | "m" | "l";
@@ -43,7 +45,7 @@ const ZOOMS: [Zoom, string, string][] = [
 ];
 
 const unealta =
-  "inline-flex h-10 items-center justify-center gap-1.5 border border-ink/20 bg-cream-warm px-3 font-sans text-[0.88rem] text-ink transition-colors hover:border-ink hover:bg-ink hover:text-cream disabled:opacity-50";
+  "inline-flex h-9 items-center justify-center gap-1.5 border border-ink/20 bg-cream-warm px-2.5 font-sans text-[0.88rem] text-ink transition-colors hover:border-ink hover:bg-ink hover:text-cream disabled:opacity-50";
 
 /** Ora României, în minute de la miezul nopții. */
 function nowMinutes(): number {
@@ -62,7 +64,7 @@ function nowMinutes(): number {
 export function Grila({ initial, me }: { initial: Week; me: Me }) {
   const [week, setWeek] = useState(initial);
   const [loading, setLoading] = useState(false);
-  const [zoom, setZoom] = useState<Zoom>("m");
+  const [zoom, setZoom] = useState<Zoom>("fit");
   const [sel, setSel] = useState<Sel | null>(null);
   const [cursor, setCursor] = useState<Cursor | null>(null);
   const [kbd, setKbd] = useState(false);
@@ -71,10 +73,13 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
   const [now, setNow] = useState<number | null>(null);
+  const [tip, setTip] = useState<{ x: number; y: number; a: number; b: number } | null>(null);
+  const [calOpen, setCalOpen] = useState(false);
+  const calBox = useRef<HTMLDivElement>(null);
 
   const scroller = useRef<HTMLDivElement>(null);
   const grid = useRef<HTMLDivElement>(null);
-  const drag = useRef<{ col: number; r0: number; moved: boolean } | null>(null);
+  const drag = useRef<{ col: number; r0: number; y0: number; moved: boolean } | null>(null);
   const skipClick = useRef(false);
   const busyRef = useRef(false);
 
@@ -173,8 +178,10 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
   }, [idle, week.start, load]);
 
   useEffect(() => {
-    const saved = window.localStorage.getItem("prog-zoom");
+    // implicit toată săptămâna pe ecran; pe telefon, câte o zi
+    const saved = window.localStorage.getItem("prog-marime");
     if (saved === "fit" || saved === "m" || saved === "l") setZoom(saved);
+    else if (window.innerWidth < 900) setZoom("m");
     setNow(nowMinutes());
     const timer = setInterval(() => setNow(nowMinutes()), 60_000);
     return () => clearInterval(timer);
@@ -182,7 +189,7 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
 
   function pickZoom(z: Zoom) {
     setZoom(z);
-    window.localStorage.setItem("prog-zoom", z);
+    window.localStorage.setItem("prog-marime", z);
   }
 
   /* La deschidere și la schimbarea săptămânii, ziua de azi vine în față. */
@@ -240,12 +247,22 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
 
   /* ------------------------------------------------------------------ Mouse */
 
-  function rowAt(clientY: number): number {
-    const g = grid.current!;
-    const head = g.querySelector<HTMLElement>(".prog-colt")?.offsetHeight ?? 0;
-    const rh = g.querySelector<HTMLElement>(".prog-ora")?.offsetHeight ?? 32;
-    const y = clientY - g.getBoundingClientRect().top - head;
-    return Math.max(0, Math.min(ROWS - 1, Math.floor(y / rh)));
+  /** Linia de oră cea mai apropiată de cursor: 0 = 08:00 … ROWS = 22:00. */
+  function lineAt(clientY: number): number {
+    const ore = grid.current!.querySelectorAll<HTMLElement>(".prog-ora");
+    const top = ore[0].getBoundingClientRect().top;
+    const bottom = ore[ore.length - 1].getBoundingClientRect().bottom;
+    const line = Math.round((clientY - top) / ((bottom - top) / ROWS));
+    return Math.max(0, Math.min(ROWS, line));
+  }
+
+  /* Rândurile acoperite când se trage din rândul r0 până la cursor. Capătul e
+     linia cea mai apropiată, nu rândul în care a ajuns cursorul: cine trage
+     „până la 9:30" se oprește pe linia de 9:30, nu ia și jumătatea următoare. */
+  function rowsTo(d: { col: number; r0: number }, clientY: number): [number, number] {
+    const [lo, hi] = freeSpan(d.col, d.r0);
+    const line = Math.max(lo, Math.min(hi + 1, lineAt(clientY)));
+    return line > d.r0 ? [d.r0, line - 1] : [line, d.r0];
   }
 
   function cellOf(target: EventTarget): Cursor | null {
@@ -259,25 +276,31 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
     const cell = cellOf(e.target);
     if (!cell) return;
     setKbd(false);
-    drag.current = { col: cell.col, r0: cell.row, moved: false };
+    drag.current = { col: cell.col, r0: cell.row, y0: e.clientY, moved: false };
     setSel({ col: cell.col, r0: cell.row, r1: cell.row });
     setCursor(cell);
-    e.currentTarget.setPointerCapture(e.pointerId);
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch {
+      // fără captură, tragerea merge cât timp cursorul rămâne deasupra
+    }
   }
 
   function onPointerMove(e: PointerEvent<HTMLDivElement>) {
     const d = drag.current;
     if (!d) return;
-    const [lo, hi] = freeSpan(d.col, d.r0);
-    const row = Math.max(lo, Math.min(hi, rowAt(e.clientY)));
-    if (row !== d.r0) d.moved = true;
-    setSel((s) => (s && s.r1 === row ? s : { col: d.col, r0: d.r0, r1: row }));
+    if (Math.abs(e.clientY - d.y0) > 4) d.moved = true;
+    if (!d.moved) return;
+    const [a, b] = rowsTo(d, e.clientY);
+    setSel((s) => (s && s.r0 === a && s.r1 === b ? s : { col: d.col, r0: a, r1: b }));
+    setTip({ x: e.clientX, y: e.clientY, a, b });
   }
 
   function onPointerUp(e: PointerEvent<HTMLDivElement>) {
     const d = drag.current;
     if (!d) return;
     drag.current = null;
+    setTip(null);
     skipClick.current = true;
     setTimeout(() => (skipClick.current = false), 0);
     if (e.type === "pointercancel") {
@@ -288,8 +311,9 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
       openAt(d.col, d.r0);
       return;
     }
-    const r1 = sel && sel.col === d.col ? sel.r1 : d.r0;
-    openNew(d.col, Math.min(d.r0, r1), Math.max(d.r0, r1));
+    // direct din poziția cursorului, nu din starea afișată, care poate fi cu un pas în urmă
+    const [a, b] = rowsTo(d, e.clientY);
+    openNew(d.col, a, b);
   }
 
   /* Pe ecrane tactile nu se trage (degetul derulează grila): o atingere
@@ -370,6 +394,20 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
       ?.scrollIntoView({ block: "nearest", inline: "nearest" });
   }, [kbd, cursor]);
 
+  useEffect(() => {
+    if (!calOpen) return;
+    const away = (e: globalThis.MouseEvent) => {
+      if (!calBox.current?.contains(e.target as Node)) setCalOpen(false);
+    };
+    const esc = (e: globalThis.KeyboardEvent) => e.key === "Escape" && setCalOpen(false);
+    document.addEventListener("mousedown", away);
+    document.addEventListener("keydown", esc);
+    return () => {
+      document.removeEventListener("mousedown", away);
+      document.removeEventListener("keydown", esc);
+    };
+  }, [calOpen]);
+
   /* ---------------------------------------------------------------- Randare */
 
   const cells = useMemo(() => {
@@ -415,92 +453,108 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
 
   return (
     <div className="prog-app">
-      {/* Bara de sus */}
-      <header className="prog-bara flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-b border-ink/10 bg-cream px-4 py-2.5 lg:px-6">
-        <div className="flex items-baseline gap-3">
-          <h1 className="font-display text-xl text-ink sm:text-2xl">Programator cabinete</h1>
-          <span className="hidden font-sans text-[0.8rem] text-ink-muted sm:inline">Therapy Home · intern</span>
-        </div>
-        <nav className="flex items-center gap-4 font-sans text-[0.85rem] text-ink-soft">
-          <span className="hidden md:inline">{me.name}</span>
-          {me.manager && (
-            <Link href="/oameni" className="inline-flex items-center gap-1.5 transition-colors hover:text-periwinkle">
-              <Users className="h-4 w-4" />
-              Oameni și cabinete
-            </Link>
-          )}
-          {me.personId && (
-            <Link href="/cont" className="inline-flex items-center gap-1.5 transition-colors hover:text-periwinkle">
-              <KeyRound className="h-4 w-4" />
-              <span className="hidden sm:inline">Parola mea</span>
-            </Link>
-          )}
-          <button type="button" onClick={logout} className="inline-flex items-center gap-1.5 transition-colors hover:text-clay">
-            <LogOut className="h-4 w-4" />
-            Ieși
-          </button>
-        </nav>
-      </header>
+      {/* Un singur rând de unelte, ca grila să înceapă cât mai sus */}
+      <header className="prog-bara border-b border-ink/10 bg-cream px-3 py-1.5 lg:px-5">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+          <h1 className="mr-1 font-display text-lg text-ink">Programator cabinete</h1>
 
-      {/* Unelte: săptămâna, mărimea, legenda */}
-      <div className="prog-unelte flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-ink/10 bg-cream px-4 py-2.5 lg:px-6">
-        <div className="flex items-center gap-1.5">
-          <button type="button" onClick={() => go(addDays(week.start, -7))} className={unealta} aria-label="Săptămâna trecută">
-            <ChevronLeft className="h-5 w-5" />
-          </button>
-          <button
-            type="button"
-            onClick={() => go(mondayOf(week.today))}
-            disabled={week.start === mondayOf(week.today)}
-            className={unealta}
-          >
-            Azi
-          </button>
-          <button type="button" onClick={() => go(addDays(week.start, 7))} className={unealta} aria-label="Săptămâna viitoare">
-            <ChevronRight className="h-5 w-5" />
-          </button>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <strong className="font-display text-lg font-semibold text-ink" aria-live="polite">
-            {weekLabel(week.start)}
-          </strong>
-          <input
-            type="date"
-            aria-label="Mergi la o dată"
-            value={week.start}
-            onChange={(e) => e.target.value && go(mondayOf(e.target.value))}
-            className="h-10 border border-ink/20 bg-cream-warm px-2 font-sans text-[0.85rem] text-ink focus:border-periwinkle focus:outline-none"
-          />
-          {loading && <span className="font-sans text-[0.8rem] text-ink-muted">Se încarcă…</span>}
-        </div>
-
-        <div className="ml-auto flex items-center gap-2">
-          <div className="flex border border-ink/20" role="group" aria-label="Mărimea celulelor">
-            {ZOOMS.map(([z, label, title]) => (
-              <button
-                key={z}
-                type="button"
-                title={title}
-                aria-pressed={zoom === z}
-                onClick={() => pickZoom(z)}
-                className={`h-10 px-3 font-sans text-[0.85rem] transition-colors ${
-                  zoom === z ? "bg-periwinkle text-cream" : "bg-cream-warm text-ink hover:bg-periwinkle-pale"
-                }`}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-          <span className="hidden md:inline-flex">
-            <button type="button" onClick={() => window.print()} className={unealta} title="Tipărește săptămâna" aria-label="Tipărește săptămâna">
-              <Printer className="h-4 w-4" />
+          <div className="flex items-center gap-1">
+            <button type="button" onClick={() => go(addDays(week.start, -7))} className={unealta} aria-label="Săptămâna trecută">
+              <ChevronLeft className="h-5 w-5" />
             </button>
-          </span>
+            <button
+              type="button"
+              onClick={() => go(mondayOf(week.today))}
+              disabled={week.start === mondayOf(week.today)}
+              className={unealta}
+            >
+              Azi
+            </button>
+            <button type="button" onClick={() => go(addDays(week.start, 7))} className={unealta} aria-label="Săptămâna viitoare">
+              <ChevronRight className="h-5 w-5" />
+            </button>
+          </div>
+
+          {/* Săptămâna afișată; la apăsare, calendarul pentru salt la altă săptămână */}
+          <div ref={calBox} className="relative">
+            <button
+              type="button"
+              aria-expanded={calOpen}
+              aria-label={`Săptămâna ${weekLabel(week.start)}. Alege altă săptămână`}
+              onClick={() => setCalOpen(!calOpen)}
+              className={`inline-flex h-9 items-center gap-2 border px-2.5 transition-colors ${
+                calOpen ? "border-periwinkle bg-periwinkle-pale" : "border-ink/20 bg-cream-warm hover:border-ink"
+              }`}
+            >
+              <CalendarDays className="h-4 w-4 text-periwinkle" />
+              <strong className="font-display text-[1.05rem] font-semibold text-ink" aria-live="polite">
+                {weekLabel(week.start)}
+              </strong>
+              <ChevronDown className="h-4 w-4 text-ink-soft" />
+            </button>
+            {calOpen && (
+              <div className="absolute left-0 top-full z-30 mt-1 w-[19.5rem] max-w-[calc(100vw-1.5rem)] border border-ink/20 bg-cream p-3 shadow-[0_24px_60px_-24px_rgba(0,0,0,0.55)]">
+                <Calendar
+                  wholeWeek
+                  value={days.includes(week.today) ? week.today : week.start}
+                  today={week.today}
+                  onChange={(d) => {
+                    setCalOpen(false);
+                    go(mondayOf(d));
+                  }}
+                />
+              </div>
+            )}
+          </div>
+          {loading && <span className="font-sans text-[0.8rem] text-ink-muted">Se încarcă…</span>}
+
+          <div className="ml-auto flex items-center gap-2">
+            <div className="flex border border-ink/20" role="group" aria-label="Mărimea celulelor">
+              {ZOOMS.map(([z, label, title]) => (
+                <button
+                  key={z}
+                  type="button"
+                  title={title}
+                  aria-pressed={zoom === z}
+                  onClick={() => pickZoom(z)}
+                  className={`h-9 px-3 font-sans text-[0.85rem] transition-colors ${
+                    zoom === z ? "bg-periwinkle text-cream" : "bg-cream-warm text-ink hover:bg-periwinkle-pale"
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+            <span className="hidden md:inline-flex">
+              <button type="button" onClick={() => window.print()} className={unealta} title="Tipărește săptămâna" aria-label="Tipărește săptămâna">
+                <Printer className="h-4 w-4" />
+              </button>
+            </span>
+          </div>
+
+          <nav className="flex items-center gap-3.5 font-sans text-[0.85rem] text-ink-soft">
+            <span className="hidden xl:inline">{me.name}</span>
+            {me.manager && (
+              <Link href="/oameni" className="inline-flex items-center gap-1.5 transition-colors hover:text-periwinkle">
+                <Users className="h-4 w-4" />
+                <span className="hidden sm:inline">Oameni și cabinete</span>
+              </Link>
+            )}
+            {me.personId && (
+              <Link href="/cont" className="inline-flex items-center gap-1.5 transition-colors hover:text-periwinkle">
+                <KeyRound className="h-4 w-4" />
+                <span className="hidden lg:inline">Parola mea</span>
+              </Link>
+            )}
+            <button type="button" onClick={logout} className="inline-flex items-center gap-1.5 transition-colors hover:text-clay">
+              <LogOut className="h-4 w-4" />
+              Ieși
+            </button>
+          </nav>
         </div>
 
         {/* Legenda: un clic pe un nume îi scoate în față rezervările */}
-        <div className="flex w-full items-center gap-x-4 gap-y-1.5 overflow-x-auto whitespace-nowrap font-sans text-[0.82rem] md:flex-wrap md:overflow-visible">
+        <div className="prog-legenda mt-1.5 flex w-full items-center gap-x-4 gap-y-1 overflow-x-auto whitespace-nowrap font-sans text-[0.8rem] md:flex-wrap md:overflow-visible">
           {(["CENTRU", "CHIRIAS"] as const).map((kind) => {
             const list = legend.filter((p) => p.kind === kind);
             if (list.length === 0) return null;
@@ -513,7 +567,7 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
                     type="button"
                     aria-pressed={focusPerson === p.id}
                     onClick={() => setFocusPerson(focusPerson === p.id ? null : p.id)}
-                    className={`inline-flex items-center gap-1.5 border px-2 py-1 transition-colors ${
+                    className={`inline-flex items-center gap-1.5 border px-2 py-0.5 transition-colors ${
                       focusPerson === p.id ? "border-ink bg-ink text-cream" : "border-ink/15 bg-cream-warm text-ink hover:border-ink/50"
                     }`}
                   >
@@ -529,7 +583,7 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
         {(notice || error) && (
           <p
             role="status"
-            className={`flex w-full items-start justify-between gap-4 px-4 py-2.5 font-sans text-[0.9rem] ${
+            className={`mt-1.5 flex w-full items-start justify-between gap-4 px-4 py-2 font-sans text-[0.9rem] ${
               error ? "bg-clay-pale text-clay" : "bg-periwinkle-pale text-ink"
             }`}
           >
@@ -546,7 +600,7 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
             </button>
           </p>
         )}
-      </div>
+      </header>
 
       {/* Grila */}
       <div
@@ -619,9 +673,11 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
               key={r}
               className="prog-ora"
               data-jumate={r % 2 === 1 ? "" : undefined}
+              data-prima={r === 0 ? "" : undefined}
               style={{ gridRow: r + 3 }}
             >
-              {r % 2 === 0 ? minToTime(DAY_START + r * STEP) : "30"}
+              <span>{minToTime(DAY_START + r * STEP)}</span>
+              {r === ROWS - 1 && <span className="prog-ora-final">{minToTime(DAY_END)}</span>}
             </div>
           ))}
 
@@ -703,15 +759,27 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
           {showNow && (
             <div
               className="prog-acum"
-              style={{
-                gridColumn: `${2 + todayIdx * R} / span ${R}`,
-                gridRow: Math.floor(rowOf(now!)) + 3,
-                transform: `translateY(calc(${(now! - DAY_START) % STEP} / ${STEP} * var(--rh)))`,
-              }}
+              style={
+                {
+                  gridColumn: `${2 + todayIdx * R} / span ${R}`,
+                  gridRow: Math.floor(rowOf(now!)) + 3,
+                  "--f": ((now! - DAY_START) % STEP) / STEP,
+                } as React.CSSProperties
+              }
             />
           )}
         </div>
       </div>
+
+      {tip && (
+        <div
+          className="pointer-events-none fixed z-40 bg-ink px-3 py-1.5 font-sans text-[1.05rem] font-semibold tabular-nums text-cream shadow-lg"
+          style={{ left: tip.x + 18, top: tip.y + 14 }}
+        >
+          {minToTime(DAY_START + tip.a * STEP)}–{minToTime(DAY_START + (tip.b + 1) * STEP)}
+          <span className="ml-2 font-normal opacity-75">{durata((tip.b - tip.a + 1) * STEP)}</span>
+        </div>
+      )}
 
       {draft && <DialogRezervare draft={draft} week={week} me={me} onClose={closeDialog} onDone={doneDialog} />}
     </div>
