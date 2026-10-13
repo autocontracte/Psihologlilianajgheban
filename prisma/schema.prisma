@@ -452,6 +452,12 @@ model CabReservation {
   note      String?
   createdBy String?
   createdAt DateTime  @default(now())
+  /// Ședință anulată târziu (cu mai puțin de 24 de ore înainte): nu se mai ține
+  /// și cabinetul e liber pentru alții, dar rămâne în grilă, fiindcă se plătește
+  /// `cancelFee` la sută din ea. Anulările făcute din timp se șterg pur și simplu.
+  cancelledAt DateTime?
+  cancelledBy String?
+  cancelFee   Int       @default(0)
 
   @@index([date, roomId])
   @@index([personId, date])

@@ -5,9 +5,12 @@ import { db } from "../db";
 import { toDateStr } from "../tz";
 import type { ProgUser } from "./auth";
 import {
+  CANCEL_FEE,
+  CANCEL_FREE_HOURS,
   MAX_REPEAT_DAYS,
   addDays,
   daysLabel,
+  lateToCancel,
   longDate,
   minToTime,
   mondayOf,
@@ -64,6 +67,9 @@ type Row = {
   endMin: number;
   series: string | null;
   note: string | null;
+  cancelledAt: Date | null;
+  cancelledBy: string | null;
+  cancelFee: number;
 };
 
 function fmt(r: Row): Reservation {
@@ -76,6 +82,9 @@ function fmt(r: Row): Reservation {
     end: r.endMin,
     series: r.series,
     note: r.note,
+    cancelledAt: r.cancelledAt ? r.cancelledAt.toISOString() : null,
+    cancelledBy: r.cancelledBy,
+    cancelFee: r.cancelFee,
   };
 }
 
@@ -123,6 +132,8 @@ async function obstacle(
     where: {
       date,
       id: { not: excludeId },
+      // o ședință anulată nu mai ocupă nici cabinetul, nici omul
+      cancelledAt: null,
       startMin: { lt: end },
       endMin: { gt: start },
       OR: [{ roomId: room.id }, { personId }],
@@ -229,6 +240,15 @@ export async function updateReservation(
   const cur = await db.cabReservation.findUnique({ where: { id } });
   if (!cur) throw new ProgError("Rezervarea nu mai există.", 404);
   assertMay(user, cur.personId, cur.date);
+  if (cur.cancelledAt) throw new ProgError("Ședința este anulată.");
+  /* Altfel regula anulării s-ar ocoli simplu: în loc să anuleze cu o oră
+     înainte, chiriașul ar muta ședința în altă săptămână. */
+  if (!user.manager && lateToCancel(cur.date, cur.startMin) && (await isRenter(cur.personId))) {
+    throw new ProgError(
+      `Cu mai puțin de ${CANCEL_FREE_HOURS} de ore înainte, ședința nu mai poate fi mutată, doar anulată.`,
+      403,
+    );
+  }
 
   const n = {
     roomId: a.roomId ?? cur.roomId,
@@ -268,11 +288,20 @@ export async function updateReservation(
   });
 }
 
-/** `following`: șterge și repetările de după aceasta, din aceeași serie. */
+async function isRenter(personId: string): Promise<boolean> {
+  const person = await db.cabPerson.findUnique({ where: { id: personId } });
+  return person?.kind === "CHIRIAS";
+}
+
+/**
+ * Ștergere de tot, fără nicio urmă și fără cost — doar pentru administratori
+ * (rezervări greșite). Chiriașii anulează, vezi `cancelReservation`.
+ * `following`: și repetările de după aceasta, din aceeași serie.
+ */
 export async function deleteReservation(user: ProgUser, id: string, following: boolean) {
+  if (!user.manager) throw new ProgError("Ședințele se anulează, nu se șterg.", 403);
   const cur = await db.cabReservation.findUnique({ where: { id } });
   if (!cur) return 0;
-  assertMay(user, cur.personId, cur.date);
 
   if (following && cur.series) {
     const res = await db.cabReservation.deleteMany({
@@ -282,4 +311,63 @@ export async function deleteReservation(user: ProgUser, id: string, following: b
   }
   await db.cabReservation.delete({ where: { id } });
   return 1;
+}
+
+/**
+ * Anularea unei ședințe (și, la cerere, a repetărilor de după ea).
+ *
+ * Cu cel puțin 24 de ore înainte, rezervarea se șterge — fără cost. Mai târziu,
+ * ședința unui chiriaș rămâne în grilă ca anulată și se plătește pe jumătate;
+ * cabinetul se eliberează oricum. Psihologii centrului nu plătesc chirie, deci
+ * la ei anularea e mereu o simplă ștergere.
+ */
+export async function cancelReservation(user: ProgUser, id: string, following: boolean) {
+  const cur = await db.cabReservation.findUnique({ where: { id } });
+  if (!cur) throw new ProgError("Rezervarea nu mai există.", 404);
+  if (cur.cancelledAt) throw new ProgError("Ședința este deja anulată.");
+  assertMay(user, cur.personId, cur.date);
+
+  const targets =
+    following && cur.series
+      ? await db.cabReservation.findMany({
+          where: { series: cur.series, date: { gte: cur.date }, cancelledAt: null },
+        })
+      : [cur];
+  const renter = await isRenter(cur.personId);
+  const now = Date.now();
+
+  let removed = 0;
+  let charged = 0;
+  for (const t of targets) {
+    if (renter && lateToCancel(t.date, t.startMin, now)) {
+      await db.cabReservation.update({
+        where: { id: t.id },
+        data: { cancelledAt: new Date(now), cancelledBy: user.name, cancelFee: CANCEL_FEE },
+      });
+      charged++;
+    } else {
+      await db.cabReservation.delete({ where: { id: t.id } });
+      removed++;
+    }
+  }
+  return { removed, charged };
+}
+
+/** Un administrator repune în grilă o ședință anulată din greșeală, dacă locul mai e liber. */
+export async function restoreReservation(user: ProgUser, id: string) {
+  if (!user.manager) throw new ProgError("Doar administratorii pot face asta.", 403);
+  const cur = await db.cabReservation.findUnique({ where: { id } });
+  if (!cur) throw new ProgError("Rezervarea nu mai există.", 404);
+  if (!cur.cancelledAt) return;
+
+  const roomList = await rooms();
+  const room = roomList.find((r) => r.id === cur.roomId);
+  if (!room) throw new ProgError("Cabinetul nu mai există.");
+  const why = await obstacle(room, roomList, cur.personId, cur.date, cur.startMin, cur.endMin, id);
+  if (why) throw new ProgError(`Nu se mai poate repune: ${why}`, 409);
+
+  await db.cabReservation.update({
+    where: { id },
+    data: { cancelledAt: null, cancelledBy: null, cancelFee: 0 },
+  });
 }

@@ -320,6 +320,70 @@ body:has(.prog) [data-site-widgets] {
   }
 }
 
+/* Ședință anulată târziu: nu se mai ține, dar se plătește pe jumătate. Fundalul
+   nu prinde clicuri, fiindcă locul e liber și se poate rezerva peste el. */
+.prog-anulat {
+  z-index: 1;
+  margin: 1px 2px 2px 1px;
+  border: 2px dashed color-mix(in srgb, var(--color-ink) 45%, var(--c));
+  background: repeating-linear-gradient(
+    45deg,
+    color-mix(in srgb, var(--c) 45%, white) 0 6px,
+    color-mix(in srgb, var(--c) 12%, white) 6px 12px
+  );
+  pointer-events: none;
+}
+
+.prog-anulat-semn {
+  z-index: 3;
+  align-self: start;
+  justify-self: stretch;
+  margin: 3px 4px 0 3px;
+  padding: 0.1rem 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem;
+  overflow: hidden;
+  container-type: inline-size;
+  border: 1px solid color-mix(in srgb, var(--color-ink) 35%, transparent);
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-size: 0.72rem;
+  line-height: 1.25;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.prog-anulat-semn:hover,
+.prog-anulat-semn:focus-visible {
+  outline: 2px solid var(--color-ink);
+}
+
+.prog-anulat-semn s {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--color-ink-soft);
+}
+
+.prog-anulat-semn b {
+  flex-shrink: 0;
+  font-weight: 700;
+  color: var(--color-clay);
+}
+
+.prog-anulat[data-estompat],
+.prog-anulat-semn[data-estompat] {
+  opacity: 0.25;
+}
+
+@container (max-width: 3.5rem) {
+  .prog-anulat-semn s {
+    display: none;
+  }
+}
+
 /* Zilele în care cabinetul e al proprietarului lui */
 .prog-prop {
   z-index: 1;
@@ -591,6 +655,7 @@ body:has(.prog) [data-site-widgets] {
     position: static;
   }
   .prog-rez,
+  .prog-anulat,
   .prog-prop,
   .prog-zi[data-azi] {
     -webkit-print-color-adjust: exact;

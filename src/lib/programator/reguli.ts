@@ -6,11 +6,19 @@
    nopții (540 = 09:00). O rezervare e deci o celulă din grilă, fără fus orar.
    -------------------------------------------------------------------------- */
 
+import { zonedToUtc } from "../tz";
+
 /** Grila merge de la 08:00 la 22:00, din 30 în 30 de minute. */
 export const DAY_START = 8 * 60;
 export const DAY_END = 22 * 60;
 export const STEP = 30;
 export const ROWS = (DAY_END - DAY_START) / STEP;
+
+/* Anularea unei ședințe de către un chiriaș: cu cel puțin CANCEL_FREE_HOURS
+   înainte e fără cost (rezervarea se șterge); mai târziu, ședința rămâne în
+   grilă ca anulată și se plătește CANCEL_FEE la sută din ea. */
+export const CANCEL_FREE_HOURS = 24;
+export const CANCEL_FEE = 50;
 
 /** Cât de departe poate merge o repetare. */
 export const MAX_REPEAT_DAYS = 366;
@@ -68,6 +76,11 @@ export type Reservation = {
   end: number;
   series: string | null;
   note: string | null;
+  /** când a fost anulată (ISO), dacă e o ședință anulată târziu, rămasă pentru plată */
+  cancelledAt: string | null;
+  cancelledBy: string | null;
+  /** cât la sută se plătește din ședința anulată */
+  cancelFee: number;
 };
 
 export type Week = {
@@ -121,6 +134,16 @@ export function longDate(dateStr: string): string {
 export function weekLabel(start: string): string {
   const end = addDays(start, 6);
   return `${shortDate(start)} – ${shortDate(end)} ${end.slice(0, 4)}`;
+}
+
+/** Momentul la care începe o ședință (data și ora sunt în ora României). */
+export function startsAt(dateStr: string, startMin: number): Date {
+  return zonedToUtc(dateStr, minToTime(startMin));
+}
+
+/** Mai sunt mai puțin de 24 de ore până la ședință (sau a trecut deja). */
+export function lateToCancel(dateStr: string, startMin: number, now: number = Date.now()): boolean {
+  return startsAt(dateStr, startMin).getTime() - now < CANCEL_FREE_HOURS * 60 * 60 * 1000;
 }
 
 /* --------------------------------------------------------------------- Ore */

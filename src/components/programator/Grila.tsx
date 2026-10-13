@@ -81,7 +81,7 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
   const grid = useRef<HTMLDivElement>(null);
   const drag = useRef<{ col: number; r0: number; y0: number; moved: boolean } | null>(null);
   const skipClick = useRef(false);
-  const busyRef = useRef(false);
+  const loadSeq = useRef(0);
 
   const R = week.rooms.length;
   const days = useMemo(() => Array.from({ length: 7 }, (_, i) => addDays(week.start, i)), [week.start]);
@@ -106,6 +106,7 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
   const byCol = useMemo(() => {
     const map = new Map<number, Reservation[]>();
     for (const res of week.reservations) {
+      if (res.cancelledAt) continue;
       const d = days.indexOf(res.date);
       const r = week.rooms.findIndex((x) => x.id === res.roomId);
       if (d < 0 || r < 0) continue;
@@ -114,6 +115,18 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
     }
     return map;
   }, [week.reservations, week.rooms, days, R]);
+
+  /* Ședințele anulate târziu rămân la vedere (se plătesc pe jumătate), dar nu
+     ocupă cabinetul: se poate rezerva peste ele. */
+  const cancelled = useMemo(
+    () =>
+      week.reservations.flatMap((res) => {
+        const d = days.indexOf(res.date);
+        const r = week.rooms.findIndex((x) => x.id === res.roomId);
+        return res.cancelledAt && d >= 0 && r >= 0 ? [{ res, c: d * R + r }] : [];
+      }),
+    [week.reservations, week.rooms, days, R],
+  );
 
   const rowOf = (min: number) => (min - DAY_START) / STEP;
 
@@ -137,20 +150,24 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
 
   /* ------------------------------------------------------------- Încărcare */
 
+  /* Contează doar ultima cerere pornită: un răspuns mai vechi (de exemplu
+     reîmprospătarea automată, plecată înaintea unei salvări) nu are voie să
+     suprascrie unul mai nou și nici să oprească o cerere nouă. */
   const load = useCallback(async (start: string, quiet = false) => {
-    if (busyRef.current) return;
-    busyRef.current = true;
+    const mine = ++loadSeq.current;
     if (!quiet) setLoading(true);
     try {
       const data = await cere<Week>(`/api/programator/saptamana?start=${start}`);
+      if (mine !== loadSeq.current) return;
       setWeek(data);
       setError("");
       if (!quiet) window.history.replaceState(null, "", `?s=${data.start}`);
     } catch (err) {
-      if (!quiet) setError(err instanceof Error ? err.message : "Nu am putut încărca săptămâna.");
+      if (mine === loadSeq.current && !quiet) {
+        setError(err instanceof Error ? err.message : "Nu am putut încărca săptămâna.");
+      }
     } finally {
-      busyRef.current = false;
-      setLoading(false);
+      if (mine === loadSeq.current) setLoading(false);
     }
   }, []);
 
@@ -239,7 +256,7 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
       setDraft(null);
       setSel(null);
       setNotice(msg ?? "");
-      load(week.start, true);
+      load(week.start);
       scroller.current?.focus({ preventScroll: true });
     },
     [load, week.start],
@@ -738,6 +755,38 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
               );
             }),
           )}
+
+          {/* Ședințele anulate: fundalul lasă clicurile să treacă la celule (locul e
+              liber), iar semnul din colț deschide detaliile */}
+          {cancelled.flatMap(({ res, c }) => {
+            const p = people.get(res.personId);
+            const area = {
+              gridColumn: c + 2,
+              gridRow: `${rowOf(res.start) + 3} / span ${rowOf(res.end) - rowOf(res.start)}`,
+              "--c": p?.color ?? "#ddd",
+            } as React.CSSProperties;
+            const dim = focusPerson && focusPerson !== res.personId ? "" : undefined;
+            const text = `${p?.name ?? ""} · ${minToTime(res.start)}–${minToTime(res.end)} · anulată, se plătește ${res.cancelFee}%`;
+            return [
+              <div key={`${res.id}-f`} className="prog-anulat" data-estompat={dim} style={area} />,
+              <button
+                key={res.id}
+                type="button"
+                className="prog-anulat-semn"
+                data-estompat={dim}
+                style={area}
+                title={text}
+                aria-label={text}
+                onClick={() => setDraft({ mode: "edit", res })}
+              >
+                <s>
+                  <span className="prog-lung">{p?.name}</span>
+                  <span className="prog-scurt">{p?.initials}</span>
+                </s>
+                <b>{res.cancelFee}%</b>
+              </button>,
+            ];
+          })}
 
           {sel && (
             <div

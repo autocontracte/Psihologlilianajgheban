@@ -1,13 +1,16 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
-import { Check, Repeat, Trash2, X } from "lucide-react";
+import { Ban, Check, Repeat, RotateCcw, Trash2, X } from "lucide-react";
 import {
+  CANCEL_FEE,
+  CANCEL_FREE_HOURS,
   DAY_END,
   DAY_START,
   KIND_LABEL,
   addDays,
   daysLabel,
+  lateToCancel,
   longDate,
   minToTime,
   mondayOf,
@@ -65,6 +68,7 @@ export function DialogRezervare({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [askDelete, setAskDelete] = useState(false);
+  const [askCancel, setAskCancel] = useState(false);
   const panel = useRef<HTMLDivElement>(null);
 
   /* Rezervările zilei alese. Săptămâna deschisă în grilă le are deja; dacă ziua
@@ -85,7 +89,15 @@ export function DialogRezervare({
 
   const people = useMemo(() => new Map(week.people.map((p) => [p.id, p])), [week.people]);
   const owner = res ? people.get(res.personId) : null;
-  const canEdit = !res || me.manager || (res.personId === me.personId && res.date >= week.today);
+  const mine = !!res && res.personId === me.personId;
+  const canEdit = !res || me.manager || (mine && res.date >= week.today);
+  /* Anularea: doar ședințele chiriașilor se plătesc, deci doar la ele contează
+     cât de târziu e. În ultimele 24 de ore, chiriașul nu mai poate muta
+     ședința, doar o poate anula. */
+  const renter = owner?.kind === "CHIRIAS";
+  const late = !!res && lateToCancel(res.date, res.start);
+  const cancelled = !!res?.cancelledAt;
+  const locked = !!res && !me.manager && renter && late;
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -98,7 +110,7 @@ export function DialogRezervare({
   /* Ce e ocupat într-un cabinet în ziua aleasă: rezervările altora (și ale
      tale) plus, în zilele proprietarului, toată ziua. */
   const dayRes = useMemo(
-    () => (known ? dayWeek.reservations.filter((x) => x.date === date && x.id !== res?.id) : []),
+    () => (known ? dayWeek.reservations.filter((x) => x.date === date && x.id !== res?.id && !x.cancelledAt) : []),
     [known, dayWeek, date, res?.id],
   );
 
@@ -186,6 +198,93 @@ export function DialogRezervare({
     }
   }
 
+  async function cancel(following: boolean) {
+    if (!res) return;
+    setBusy(true);
+    setError("");
+    try {
+      const out = await cere<{ removed: number; charged: number }>(
+        `/api/programator/rezervari/${res.id}/anulare${following ? "?urmatoarele=1" : ""}`,
+        "POST",
+        {},
+      );
+      const taxate =
+        out.charged === 1
+          ? `Ședința a fost anulată. Rămâne în grilă, tăiată: se plătește ${CANCEL_FEE}%.`
+          : `${out.charged} ședințe au fost anulate târziu. Rămân în grilă, tăiate: se plătesc ${CANCEL_FEE}%.`;
+      const gratuite =
+        out.removed === 1 ? "Ședința a fost anulată fără cost." : `${out.removed} ședințe au fost anulate fără cost.`;
+      onDone([out.removed ? gratuite : "", out.charged ? taxate : ""].filter(Boolean).join(" "));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "A apărut o eroare.");
+      setBusy(false);
+    }
+  }
+
+  async function restore() {
+    if (!res) return;
+    setBusy(true);
+    setError("");
+    try {
+      await cere(`/api/programator/rezervari/${res.id}/anulare`, "DELETE");
+      onDone("Ședința a fost repusă în grilă.");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "A apărut o eroare.");
+      setBusy(false);
+    }
+  }
+
+  /* Întrebarea de dinaintea anulării, cu urmarea spusă limpede. */
+  const panouAnulare = res && (
+    <div className="space-y-3 border-t border-ink/10 pt-4">
+      <p className="font-sans text-[1.05rem] font-semibold text-ink">Anulezi ședința?</p>
+      <p className={`px-4 py-3 font-sans text-[0.95rem] ${renter && late ? "bg-clay-pale text-clay" : "bg-periwinkle-pale text-ink"}`}>
+        {renter && late
+          ? `Mai sunt mai puțin de ${CANCEL_FREE_HOURS} de ore până la ședință. Cabinetul se eliberează, dar ședința rămâne trecută ca anulată și se plătește ${CANCEL_FEE}%.`
+          : renter
+            ? `Mai sunt peste ${CANCEL_FREE_HOURS} de ore până la ședință: anularea e fără cost, iar rezervarea dispare din grilă.`
+            : "Rezervarea dispare din grilă."}
+      </p>
+      {res.series && renter && (
+        <p className="font-sans text-[0.85rem] text-ink-muted">
+          La repetări, fiecare zi se judecă separat: cele aflate la peste {CANCEL_FREE_HOURS} de ore se anulează fără cost.
+        </p>
+      )}
+      <div className="flex flex-wrap gap-2">
+        {res.series ? (
+          <>
+            <button type="button" disabled={busy} onClick={() => cancel(false)} className={`${butonPericol} min-h-12`}>
+              Doar {shortDate(res.date)}
+            </button>
+            <button type="button" disabled={busy} onClick={() => cancel(true)} className={`${butonPericol} min-h-12`}>
+              Aceasta și cele următoare
+            </button>
+          </>
+        ) : (
+          <button type="button" disabled={busy} onClick={() => cancel(false)} className={`${butonPericol} min-h-12`}>
+            {busy ? "Se anulează…" : "Da, anulează ședința"}
+          </button>
+        )}
+        <button type="button" disabled={busy} onClick={() => setAskCancel(false)} className={`${butonSimplu} min-h-12`}>
+          Renunță
+        </button>
+      </div>
+    </div>
+  );
+
+  const cine = res && (
+    <p className="flex items-center gap-3 font-sans text-[1rem]">
+      <span className="inline-block h-5 w-5" style={{ background: owner?.color }} />
+      <b>{owner?.name}</b>
+      {owner && <span className="text-ink-soft">{KIND_LABEL[owner.kind]}</span>}
+    </p>
+  );
+  const eroare = error && (
+    <p role="alert" className="bg-clay-pale px-4 py-3 font-sans text-[0.95rem] text-clay">
+      {error}
+    </p>
+  );
+
   const persons = week.people.filter((p) => p.active || p.id === res?.personId);
   const titlu = eticheta.replace("mb-1.5", "mb-2");
 
@@ -206,7 +305,7 @@ export function DialogRezervare({
         <div className="mb-5 flex items-start justify-between gap-4">
           <div>
             <h2 className="font-display text-2xl text-ink">
-              {res ? (canEdit ? "Modifică rezervarea" : "Rezervare") : "Rezervare nouă"}
+              {res ? (cancelled ? "Ședință anulată" : canEdit && !locked ? "Modifică rezervarea" : "Rezervare") : "Rezervare nouă"}
             </h2>
             <p className="mt-1 font-sans text-[0.95rem] text-ink-soft">
               {room.name} · {longDate(date)} · {minToTime(start)}–{minToTime(end)}
@@ -222,22 +321,78 @@ export function DialogRezervare({
           </button>
         </div>
 
-        {!canEdit && res ? (
+        {res && cancelled ? (
           <div className="space-y-4 font-sans text-[1rem]">
-            <p className="flex items-center gap-3">
-              <span className="inline-block h-5 w-5" style={{ background: owner?.color }} />
-              <b>{owner?.name}</b>
-              {owner && <span className="text-ink-soft">{KIND_LABEL[owner.kind]}</span>}
+            {cine}
+            <p className="bg-clay-pale px-4 py-3 text-clay">
+              <b>Se plătește {res.cancelFee}% din ședință.</b> Cabinetul e liber la orele acestea și se poate rezerva.
+            </p>
+            <p className="text-[0.9rem] text-ink-soft">
+              Anulată{" "}
+              {new Date(res.cancelledAt!).toLocaleString("ro-RO", {
+                timeZone: "Europe/Bucharest",
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+              {res.cancelledBy ? `, de ${res.cancelledBy}` : ""}.
             </p>
             {res.note && <p className="text-ink-soft">{res.note}</p>}
+            {eroare}
+            <div className="flex flex-wrap gap-2 border-t border-ink/10 pt-4">
+              {me.manager && (
+                <>
+                  <button type="button" disabled={busy} onClick={restore} className={`${butonPlin} min-h-12`}>
+                    <RotateCcw className="h-4 w-4" />
+                    Repune ședința
+                  </button>
+                  <button type="button" disabled={busy} onClick={() => remove(false)} className={`${butonPericol} min-h-12`}>
+                    <Trash2 className="h-4 w-4" />
+                    Șterge de tot (fără plată)
+                  </button>
+                </>
+              )}
+              <button type="button" disabled={busy} onClick={onClose} className={`${butonSimplu} min-h-12`}>
+                Închide
+              </button>
+            </div>
+          </div>
+        ) : res && !canEdit ? (
+          <div className="space-y-4 font-sans text-[1rem]">
+            {cine}
+            {res.note && <p className="text-ink-soft">{res.note}</p>}
             <p className="text-[0.88rem] text-ink-muted">
-              {res.date < week.today && res.personId === me.personId
+              {res.date < week.today && mine
                 ? "Zilele trecute nu mai pot fi modificate."
                 : "Doar cine a făcut rezervarea sau un administrator o poate modifica."}
             </p>
             <button type="button" onClick={onClose} className={butonSimplu}>
               Închide
             </button>
+          </div>
+        ) : res && locked ? (
+          <div className="space-y-4 font-sans text-[1rem]">
+            {cine}
+            {res.note && <p className="text-ink-soft">{res.note}</p>}
+            <p className="bg-periwinkle-pale px-4 py-3 text-ink">
+              Mai sunt mai puțin de {CANCEL_FREE_HOURS} de ore până la ședință: nu mai poate fi mutată, doar anulată.
+            </p>
+            {eroare}
+            {askCancel ? (
+              panouAnulare
+            ) : (
+              <div className="flex flex-wrap gap-2 border-t border-ink/10 pt-4">
+                <button type="button" onClick={() => setAskCancel(true)} className={`${butonPericol} min-h-12`}>
+                  <Ban className="h-4 w-4" />
+                  Anulează ședința
+                </button>
+                <button type="button" onClick={onClose} className={`${butonSimplu} min-h-12`}>
+                  Închide
+                </button>
+              </div>
+            )}
           </div>
         ) : (
           <form onSubmit={save} className="space-y-5">
@@ -419,7 +574,9 @@ export function DialogRezervare({
               </p>
             )}
 
-            {askDelete ? (
+            {askCancel ? (
+              panouAnulare
+            ) : askDelete ? (
               <div className="space-y-3 border-t border-ink/10 pt-4">
                 <p className="font-sans text-[1rem]">Ce ștergi?</p>
                 <div className="flex flex-wrap gap-2">
@@ -443,15 +600,33 @@ export function DialogRezervare({
                   Renunță
                 </button>
                 {res && (
-                  <button
-                    type="button"
-                    disabled={busy}
-                    onClick={() => (res.series ? setAskDelete(true) : remove(false))}
-                    className={`${butonPericol} ml-auto min-h-12`}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                    Șterge
-                  </button>
+                  <span className="ml-auto flex flex-wrap gap-2">
+                    {/* Chiriașii anulează (din timp fără cost, târziu cu jumătate de preț) */}
+                    {renter && (
+                      <button
+                        type="button"
+                        disabled={busy}
+                        onClick={() => setAskCancel(true)}
+                        className={`${butonPericol} min-h-12`}
+                      >
+                        <Ban className="h-4 w-4" />
+                        Anulează ședința
+                      </button>
+                    )}
+                    {/* Ștergerea fără urmă e doar a administratorilor, pentru rezervări greșite */}
+                    {me.manager && (
+                      <button
+                        type="button"
+                        disabled={busy}
+                        onClick={() => (res.series ? setAskDelete(true) : remove(false))}
+                        className={`${butonPericol} min-h-12`}
+                        title="Șterge rezervarea fără urmă și fără plată"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        Șterge
+                      </button>
+                    )}
+                  </span>
                 )}
               </div>
             )}
