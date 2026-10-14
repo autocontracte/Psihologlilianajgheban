@@ -83,12 +83,23 @@ export type Reservation = {
   cancelFee: number;
 };
 
+/** Un interval eliberat de proprietar dintr-o zi a lui. */
+export type Release = {
+  id: string;
+  roomId: string;
+  date: string;
+  start: number;
+  end: number;
+  series: string | null;
+};
+
 export type Week = {
   start: string;
   today: string;
   rooms: Room[];
   people: Person[];
   reservations: Reservation[];
+  releases: Release[];
 };
 
 /* --------------------------------------------------------------------- Date */
@@ -180,6 +191,25 @@ export function parseDays(csv: string): number[] {
 /** Cabinetul e al proprietarului în ziua aceea, deci nu se poate rezerva. */
 export function ownerDay(room: Room, dateStr: string): boolean {
   return !!room.ownerId && room.ownerDays.includes(isoWeekday(dateStr));
+}
+
+export type Span = { start: number; end: number };
+
+/**
+ * Ce ține proprietarul din cabinet într-o zi: toată ziua, minus intervalele
+ * eliberate. Lista e goală în zilele care nu sunt ale proprietarului.
+ */
+export function ownerSegments(room: Room, dateStr: string, releases: Span[]): Span[] {
+  if (!ownerDay(room, dateStr)) return [];
+  const free = [...releases].sort((a, b) => a.start - b.start);
+  const out: Span[] = [];
+  let t = DAY_START;
+  for (const r of free) {
+    if (r.start > t) out.push({ start: t, end: Math.min(r.start, DAY_END) });
+    t = Math.max(t, r.end);
+  }
+  if (t < DAY_END) out.push({ start: t, end: DAY_END });
+  return out.filter((s) => s.end > s.start);
 }
 
 /** „luni–joi", „luni, miercuri" — pentru mesaje și pentru pagina cabinetelor. */

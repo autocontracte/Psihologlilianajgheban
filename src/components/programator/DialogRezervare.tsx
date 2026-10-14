@@ -14,7 +14,7 @@ import {
   longDate,
   minToTime,
   mondayOf,
-  ownerDay,
+  ownerSegments,
   shortDate,
   type Reservation,
   type Week,
@@ -108,17 +108,27 @@ export function DialogRezervare({
   }, [onClose]);
 
   /* Ce e ocupat într-un cabinet în ziua aleasă: rezervările altora (și ale
-     tale) plus, în zilele proprietarului, toată ziua. */
+     tale) plus, în zilele proprietarului, tot ce n-a eliberat el. */
   const dayRes = useMemo(
     () => (known ? dayWeek.reservations.filter((x) => x.date === date && x.id !== res?.id && !x.cancelledAt) : []),
     [known, dayWeek, date, res?.id],
   );
 
+  const segsIn = (room: Week["rooms"][number]) =>
+    ownerSegments(
+      room,
+      date,
+      known ? dayWeek.releases.filter((x) => x.roomId === room.id && x.date === date) : [],
+    );
+
   function busyIn(room: Week["rooms"][number]): Busy[] {
-    if (ownerDay(room, date)) {
-      const who = people.get(room.ownerId!);
-      return [{ a: DAY_START, b: DAY_END, label: who?.name ?? "proprietar", color: who?.color ?? "#ddd" }];
-    }
+    const who = people.get(room.ownerId ?? "");
+    const held = segsIn(room).map((x) => ({
+      a: x.start,
+      b: x.end,
+      label: who?.name ?? "proprietar",
+      color: who?.color ?? "#ddd",
+    }));
     return dayRes
       .filter((x) => x.roomId === room.id)
       .map((x) => ({
@@ -126,7 +136,8 @@ export function DialogRezervare({
         b: x.end,
         label: people.get(x.personId)?.name ?? "ocupat",
         color: people.get(x.personId)?.color ?? "#ddd",
-      }));
+      }))
+      .concat(held);
   }
 
   const room = week.rooms.find((r) => r.id === roomId) ?? week.rooms[0];
@@ -462,7 +473,9 @@ export function DialogRezervare({
               <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-4">
                 {week.rooms.map((r) => {
                   const on = r.id === roomId;
-                  const owned = ownerDay(r, date);
+                  const segs = segsIn(r);
+                  // toată ziua a proprietarului: nu se poate alege; parțial eliberat: da
+                  const owned = segs.length === 1 && segs[0].start === DAY_START && segs[0].end === DAY_END;
                   const c = clashOf(busyIn(r), start, end);
                   return (
                     <button

@@ -248,9 +248,13 @@ body:has(.prog) [data-site-widgets] {
 .prog-rez {
   z-index: 2;
   margin: 1px 2px 2px 1px;
-  padding: 0.2rem 0.4rem;
+  padding: 0.35rem 0.15rem;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
   overflow: hidden;
-  container-type: inline-size;
+  /* înălțimea contează: numele stă pe verticală */
+  container-type: size;
   border-left: 3px solid color-mix(in srgb, var(--color-ink) 38%, var(--c));
   background: var(--c);
   color: #262b33;
@@ -274,48 +278,82 @@ body:has(.prog) [data-site-widgets] {
   opacity: 0.22;
 }
 
-.prog-rez b {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  font-weight: 600;
+/* Numele pe verticală, ca la zilele Dianei și ale Lilianei: încape și în
+   coloanele înguste, iar lângă el, ora. Se citește de jos în sus. */
+.prog-rez-v {
+  align-self: stretch;
+  height: 100%;
+  max-width: 100%;
   overflow: hidden;
-  overflow-wrap: anywhere;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  /* după rotire, „end" înseamnă sus: textul pornește din capul blocului */
+  text-align: end;
+}
+
+.prog-rez-v > * {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.prog-rez b {
+  font-weight: 600;
 }
 
 .prog-rez-ora {
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   font-size: 0.72rem;
   font-variant-numeric: tabular-nums;
   opacity: 0.78;
-}
-
-/* o singură jumătate de oră: încape un singur rând */
-.prog-rez[data-mic] b {
-  display: block;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.prog-rez[data-mic] .prog-rez-ora {
-  display: none;
 }
 
 .prog-scurt {
   display: none;
 }
 
-/* pe coloane înguste: doar inițialele (și C1 în loc de „Cabinet 1") */
-@container (max-width: 3.5rem) {
-  .prog-lung,
-  .prog-rez-ora {
+/* blocuri scurte: doar inițialele, tot pe verticală */
+@container (max-height: 4.4rem) {
+  .prog-rez .prog-lung,
+  .prog-rez .prog-rez-ora {
     display: none;
   }
-  .prog-scurt {
+  .prog-rez .prog-scurt {
+    display: inline;
+  }
+}
+
+/* coloane foarte înguste: doar numele, fără oră */
+@container (max-width: 2.4rem) {
+  .prog-rez .prog-rez-ora {
+    display: none;
+  }
+}
+
+/* o singură jumătate de oră: inițialele pe orizontală, altfel nu încap */
+.prog-rez[data-mic] .prog-rez-v {
+  height: auto;
+  align-self: center;
+  writing-mode: horizontal-tb;
+  transform: none;
+  text-align: center;
+}
+
+.prog-rez[data-mic] .prog-lung,
+.prog-rez[data-mic] .prog-rez-ora {
+  display: none;
+}
+
+.prog-rez[data-mic] .prog-scurt {
+  display: inline;
+}
+
+/* antetul cabinetelor, pe coloane înguste: C1 în loc de „Cabinet 1" */
+@container (max-width: 3.5rem) {
+  .prog-cab .prog-lung {
+    display: none;
+  }
+  .prog-cab .prog-scurt {
     display: inline;
   }
 }
@@ -397,7 +435,18 @@ body:has(.prog) [data-site-widgets] {
     color-mix(in srgb, var(--c) 34%, white) 9px 18px
   );
   color: #262b33;
-  cursor: not-allowed;
+  cursor: pointer;
+  padding: 0;
+  /* clip, nu hidden: hidden ar face din bloc un container de derulare și numele
+     ar sta lipit de el, nu de antetul grilei */
+  overflow: clip;
+}
+
+.prog-prop:hover,
+.prog-prop:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: -2px;
+  z-index: 3;
 }
 
 .prog-prop > span {

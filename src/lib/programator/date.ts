@@ -5,6 +5,8 @@ import { db } from "../db";
 import { toDateStr } from "../tz";
 import type { ProgUser } from "./auth";
 import {
+  DAY_END,
+  DAY_START,
   CANCEL_FEE,
   CANCEL_FREE_HOURS,
   MAX_REPEAT_DAYS,
@@ -15,11 +17,13 @@ import {
   minToTime,
   mondayOf,
   ownerDay,
+  ownerSegments,
   parseDays,
   validDate,
   validSlot,
   type Kind,
   type Person,
+  type Release,
   type Reservation,
   type Room,
   type Week,
@@ -91,15 +95,40 @@ function fmt(r: Row): Reservation {
 /** Tot ce are nevoie grila pentru o săptămână (de luni până duminică). */
 export async function week(anyDay: string): Promise<Week> {
   const start = mondayOf(validDate(anyDay) ? anyDay : todayStr());
-  const [r, p, res] = await Promise.all([
+  const range = { gte: start, lte: addDays(start, 6) };
+  const [r, p, res, rel] = await Promise.all([
     rooms(),
     people(),
     db.cabReservation.findMany({
-      where: { date: { gte: start, lte: addDays(start, 6) } },
+      where: { date: range },
       orderBy: [{ date: "asc" }, { startMin: "asc" }],
     }),
+    db.cabRelease.findMany({ where: { date: range }, orderBy: [{ date: "asc" }, { startMin: "asc" }] }),
   ]);
-  return { start, today: todayStr(), rooms: r, people: p, reservations: res.map(fmt) };
+  return {
+    start,
+    today: todayStr(),
+    rooms: r,
+    people: p,
+    reservations: res.map(fmt),
+    releases: rel.map(fmtRelease),
+  };
+}
+
+function fmtRelease(r: {
+  id: string;
+  roomId: string;
+  date: string;
+  startMin: number;
+  endMin: number;
+  series: string | null;
+}): Release {
+  return { id: r.id, roomId: r.roomId, date: r.date, start: r.startMin, end: r.endMin, series: r.series };
+}
+
+async function releasesOf(roomId: string, date: string) {
+  const rows = await db.cabRelease.findMany({ where: { roomId, date } });
+  return rows.map((x) => ({ start: x.startMin, end: x.endMin }));
 }
 
 /* ---------------------------------------------------------------- Reguli */
@@ -124,8 +153,16 @@ async function obstacle(
   excludeId = "",
 ): Promise<string | null> {
   if (ownerDay(room, date)) {
-    const owner = await db.cabPerson.findUnique({ where: { id: room.ownerId! } });
-    return `${room.name} este rezervat pentru ${owner?.name ?? "proprietar"} ${daysLabel(room.ownerDays)}.`;
+    const held = ownerSegments(room, date, await releasesOf(room.id, date)).find(
+      (s) => s.start < end && s.end > start,
+    );
+    if (held) {
+      const owner = await db.cabPerson.findUnique({ where: { id: room.ownerId! } });
+      const who = owner?.name ?? "proprietar";
+      return held.start === DAY_START && held.end === DAY_END
+        ? `${room.name} este rezervat pentru ${who} ${daysLabel(room.ownerDays)}.`
+        : `${room.name} este ocupat de ${who} ${minToTime(held.start)}–${minToTime(held.end)}, ${longDate(date)}.`;
+    }
   }
 
   const clash = await db.cabReservation.findFirst({
@@ -370,4 +407,118 @@ export async function restoreReservation(user: ProgUser, id: string) {
     where: { id },
     data: { cancelledAt: null, cancelledBy: null, cancelFee: 0 },
   });
+}
+
+/* ------------------------------------------------------------- Eliberări */
+
+/** Proprietarul cabinetului își poate elibera singur zilele; administratorii, oricui. */
+function assertOwnerOrManager(user: ProgUser, room: Room) {
+  if (user.manager || (user.personId && user.personId === room.ownerId)) return;
+  throw new ProgError("Doar proprietarul cabinetului sau un administrator poate face asta.", 403);
+}
+
+export type NewRelease = {
+  roomId: string;
+  date: string;
+  start: number;
+  end: number;
+  /** 0 = o singură dată, 1 = săptămânal, 2 = la două săptămâni */
+  everyWeeks?: number;
+  until?: string;
+};
+
+/**
+ * Eliberează un interval din ziua proprietarului, ca să-l poată rezerva alții.
+ * Repetat, sare peste zilele care nu sunt ale proprietarului sau în care
+ * intervalul e deja eliberat.
+ */
+export async function createRelease(user: ProgUser, a: NewRelease) {
+  if (!validDate(a.date) || !validSlot(a.start, a.end)) {
+    throw new ProgError("Data sau orele nu sunt valide.");
+  }
+  const room = (await rooms()).find((r) => r.id === a.roomId);
+  if (!room) throw new ProgError("Cabinetul nu există.");
+  assertOwnerOrManager(user, room);
+
+  const every = a.everyWeeks === 1 || a.everyWeeks === 2 ? a.everyWeeks : 0;
+  const dates = [a.date];
+  let series: string | null = null;
+  if (every && validDate(a.until) && a.until > a.date) {
+    const limit = addDays(a.date, MAX_REPEAT_DAYS);
+    const until = a.until < limit ? a.until : limit;
+    for (let d = addDays(a.date, 7 * every); d <= until; d = addDays(d, 7 * every)) dates.push(d);
+    if (dates.length > 1) series = randomBytes(9).toString("base64url");
+  }
+
+  let created = 0;
+  const skipped: string[] = [];
+  for (const date of dates) {
+    if (!ownerDay(room, date)) {
+      skipped.push(date);
+      continue;
+    }
+    const overlap = await db.cabRelease.findFirst({
+      where: { roomId: room.id, date, startMin: { lt: a.end }, endMin: { gt: a.start } },
+    });
+    if (overlap) {
+      skipped.push(date);
+      continue;
+    }
+    await db.cabRelease.create({
+      data: { roomId: room.id, date, startMin: a.start, endMin: a.end, series, createdBy: user.name },
+    });
+    created++;
+  }
+  if (created === 0) {
+    throw new ProgError(
+      ownerDay(room, a.date) ? "Intervalul e deja eliberat." : "În ziua aceasta cabinetul e deja liber.",
+      409,
+    );
+  }
+  return { created, skipped };
+}
+
+/**
+ * Proprietarul își ia înapoi intervalul eliberat. Nu se poate cât timp
+ * altcineva are o rezervare acolo — întâi se mută sau se anulează rezervarea.
+ */
+export async function deleteRelease(user: ProgUser, id: string, following: boolean) {
+  const cur = await db.cabRelease.findUnique({ where: { id } });
+  if (!cur) return { removed: 0, kept: [] as string[] };
+  const room = (await rooms()).find((r) => r.id === cur.roomId);
+  if (!room) throw new ProgError("Cabinetul nu mai există.");
+  assertOwnerOrManager(user, room);
+
+  const targets =
+    following && cur.series
+      ? await db.cabRelease.findMany({ where: { series: cur.series, date: { gte: cur.date } } })
+      : [cur];
+
+  let removed = 0;
+  const kept: string[] = [];
+  for (const t of targets) {
+    const taken = await db.cabReservation.findFirst({
+      where: {
+        roomId: t.roomId,
+        date: t.date,
+        cancelledAt: null,
+        startMin: { lt: t.endMin },
+        endMin: { gt: t.startMin },
+        NOT: { personId: room.ownerId ?? "" },
+      },
+      include: { person: true },
+    });
+    if (taken) {
+      kept.push(
+        `${longDate(t.date)}: ${taken.person.name} are rezervare ${minToTime(taken.startMin)}–${minToTime(taken.endMin)}`,
+      );
+      continue;
+    }
+    await db.cabRelease.delete({ where: { id: t.id } });
+    removed++;
+  }
+  if (removed === 0 && kept.length) {
+    throw new ProgError(`Intervalul nu se poate lua înapoi: ${kept[0]}. Mută sau anulează întâi rezervarea.`, 409);
+  }
+  return { removed, kept };
 }

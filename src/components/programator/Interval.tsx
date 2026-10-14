@@ -37,6 +37,7 @@ export function Interval({
   onChange,
   busy,
   problem,
+  okText,
 }: {
   start: number;
   end: number;
@@ -45,6 +46,8 @@ export function Interval({
   busy: Busy[];
   /** altă piedică decât cabinetul ocupat (de ex. omul e în alt cabinet la ora aceea) */
   problem?: string | null;
+  /** textul când intervalul e bun (implicit: liber / toată ziua liberă) */
+  okText?: string;
 }) {
   const track = useRef<HTMLDivElement>(null);
   const drag = useRef<{ mode: "a" | "b" | "move"; a0: number; b0: number; x0: number } | null>(null);
@@ -179,7 +182,7 @@ export function Interval({
           {bad ? <CircleAlert className="h-4.5 w-4.5 shrink-0" /> : <CircleCheck className="h-4.5 w-4.5 shrink-0" />}
           {clash
             ? `Ocupat: ${clash.label}, ${minToTime(clash.a)}–${minToTime(clash.b)}`
-            : (problem ?? (busy.length ? "Intervalul e liber" : "Toată ziua e liberă"))}
+            : (problem ?? okText ?? (busy.length ? "Intervalul e liber" : "Toată ziua e liberă"))}
         </p>
       </div>
 

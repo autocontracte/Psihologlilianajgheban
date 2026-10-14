@@ -398,6 +398,7 @@ model CabRoom {
   /// Zilele proprietarului, ca listă: 1 = luni … 7 = duminică („1,2,3,4").
   ownerWeekdays String           @default("")
   reservations  CabReservation[]
+  releases      CabRelease[]
 }
 
 /// Cine folosește cabinetele. `kind` este CENTRU (psiholog al Therapy Home)
@@ -461,5 +462,25 @@ model CabReservation {
 
   @@index([date, roomId])
   @@index([personId, date])
+  @@index([series])
+}
+
+/// Un interval eliberat de proprietar dintr-o zi a lui (de exemplu Diana lasă
+/// cabinetul 2 liber marți 14–18). În intervalul acesta, cabinetul se poate
+/// rezerva; în rest, ziua rămâne a proprietarului.
+model CabRelease {
+  id        String   @id @default(cuid())
+  roomId    String
+  room      CabRoom  @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  /// "YYYY-MM-DD", ca la rezervări
+  date      String
+  startMin  Int
+  endMin    Int
+  /// Același cod pentru eliberările create împreună, ca repetare.
+  series    String?
+  createdBy String?
+  createdAt DateTime @default(now())
+
+  @@index([roomId, date])
   @@index([series])
 }

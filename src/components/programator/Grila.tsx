@@ -30,16 +30,16 @@ import {
   STEP,
   ZILE,
   addDays,
-  daysLabel,
   minToTime,
   mondayOf,
-  ownerDay,
+  ownerSegments,
   shortDate,
   weekLabel,
   type Reservation,
   type Week,
 } from "@/lib/programator/reguli";
 import { Calendar } from "./Calendar";
+import { DialogCabinet } from "./DialogCabinet";
 import { DialogRezervare, type Draft } from "./DialogRezervare";
 import { durata } from "./Interval";
 import { cere, type Me } from "./comun";
@@ -79,6 +79,7 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
   const [cursor, setCursor] = useState<Cursor | null>(null);
   const [kbd, setKbd] = useState(false);
   const [draft, setDraft] = useState<Draft | null>(null);
+  const [cab, setCab] = useState<{ col: number; row: number } | null>(null);
   const [focusPerson, setFocusPerson] = useState<string | null>(null);
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
@@ -101,16 +102,26 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
   const cols = useMemo(
     () =>
       days.flatMap((date, d) =>
-        week.rooms.map((room, r) => ({
-          date,
-          d,
-          r,
-          room,
-          owned: ownerDay(room, date),
-          last: r === R - 1,
-        })),
+        week.rooms.map((room, r) => {
+          const segs = ownerSegments(
+            room,
+            date,
+            week.releases.filter((x) => x.roomId === room.id && x.date === date),
+          );
+          return {
+            date,
+            d,
+            r,
+            room,
+            /** intervalele ținute de proprietar în ziua aceasta */
+            segs,
+            /** toată ziua a proprietarului: coloana îngustă, fără celule */
+            full: segs.length === 1 && segs[0].start === DAY_START && segs[0].end === DAY_END,
+            last: r === R - 1,
+          };
+        }),
       ),
-    [days, week.rooms, R],
+    [days, week.rooms, week.releases, R],
   );
 
   const byCol = useMemo(() => {
@@ -146,16 +157,26 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
     [byCol],
   );
 
+  /** Rândul e ținut de proprietarul cabinetului (zi a lui, neeliberată). */
+  const ownerAt = useCallback(
+    (col: number, row: number) => {
+      const m = DAY_START + row * STEP;
+      return !!cols[col]?.segs.some((x) => x.start <= m && x.end > m);
+    },
+    [cols],
+  );
+
   /** Rândurile libere, legate, din jurul unui rând — cât se poate întinde o selecție. */
   const freeSpan = useCallback(
     (col: number, row: number): [number, number] => {
+      const busy = (r: number) => !!resAt(col, r) || ownerAt(col, r);
       let lo = row;
       let hi = row;
-      while (lo > 0 && !resAt(col, lo - 1)) lo--;
-      while (hi < ROWS - 1 && !resAt(col, hi + 1)) hi++;
+      while (lo > 0 && !busy(lo - 1)) lo--;
+      while (hi < ROWS - 1 && !busy(hi + 1)) hi++;
       return [lo, hi];
     },
-    [resAt],
+    [resAt, ownerAt],
   );
 
   /* ------------------------------------------------------------- Încărcare */
@@ -190,7 +211,7 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
 
   /* Grila e folosită de mai mulți oameni: se reîmprospătează singură la un
      minut și când fereastra revine în față, dar nu peste o fereastră deschisă. */
-  const idle = !draft;
+  const idle = !draft && !cab;
   useEffect(() => {
     if (!idle) return;
     const refresh = () => {
@@ -233,7 +254,11 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
   const openNew = useCallback(
     (col: number, lo: number, hi: number) => {
       const c = cols[col];
-      if (!c || c.owned) return;
+      if (!c || c.full) return;
+      if (ownerAt(col, lo)) {
+        setCab({ col, row: lo });
+        return;
+      }
       setSel({ col, r0: lo, r1: hi });
       setDraft({
         mode: "new",
@@ -243,7 +268,7 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
         end: DAY_START + (hi + 1) * STEP,
       });
     },
-    [cols],
+    [cols, ownerAt],
   );
 
   /** Un clic simplu propune o oră întreagă, dacă e loc. */
@@ -355,7 +380,7 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
 
   function stepCol(from: number, dir: 1 | -1): number {
     for (let c = from + dir; c >= 0 && c < cols.length; c += dir) {
-      if (!cols[c].owned) return c;
+      if (!cols[c].full) return c;
     }
     return from;
   }
@@ -371,7 +396,7 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
       cursor ??
       (() => {
         const today = Math.max(0, days.indexOf(week.today));
-        const first = cols.findIndex((c) => c.d === today && !c.owned);
+        const first = cols.findIndex((c) => c.d === today && !c.full);
         return { col: Math.max(0, first), row: now ? Math.max(0, Math.min(ROWS - 1, Math.floor(rowOf(now)))) : 2 };
       })();
 
@@ -410,6 +435,7 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
       }
       const res = resAt(cursor.col, cursor.row);
       if (res) setDraft({ mode: "edit", res });
+      else if (ownerAt(cursor.col, cursor.row)) setCab(cursor);
       else openAt(cursor.col, cursor.row);
     }
   }
@@ -441,7 +467,7 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
     const out = [];
     for (let c = 0; c < cols.length; c++) {
       const col = cols[c];
-      if (col.owned) continue;
+      if (col.full) continue;
       for (let r = 0; r < ROWS; r++) {
         out.push(
           <div
@@ -463,7 +489,7 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
   }, [cols, week.today]);
 
   const template = `var(--tw) ${cols
-    .map((c) => (c.owned ? "var(--cwp)" : "minmax(var(--cw), 1fr)"))
+    .map((c) => (c.full ? "var(--cwp)" : "minmax(var(--cw), 1fr)"))
     .join(" ")}`;
 
   const todayIdx = days.indexOf(week.today);
@@ -716,24 +742,37 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
 
           {cells}
 
-          {/* Zilele în care cabinetul e al proprietarului */}
-          {cols.map((c, i) => {
-            if (!c.owned) return null;
+          {/* Ce ține proprietarul din zilele lui (toată ziua sau ce n-a eliberat).
+              Un clic deschide fereastra cabinetului: acolo își eliberează intervale. */}
+          {cols.flatMap((c, i) => {
             const owner = people.get(c.room.ownerId!);
-            return (
-              <div
-                key={`p${i}`}
-                className="prog-prop"
-                data-capat={c.last ? "" : undefined}
-                data-estompat={focusPerson && focusPerson !== owner?.id ? "" : undefined}
-                style={{ gridColumn: i + 2, gridRow: `3 / span ${ROWS}`, "--c": owner?.color } as React.CSSProperties}
-                title={`${c.room.name} — ${owner?.name ?? ""}, ${daysLabel(c.room.ownerDays)}`}
-              >
-                <span>
-                  <b>{owner?.name}</b>
-                </span>
-              </div>
-            );
+            return c.segs.map((seg) => {
+              const row = (seg.start - DAY_START) / STEP;
+              const span = (seg.end - seg.start) / STEP;
+              const text = `${c.room.name} — ${owner?.name ?? ""}, ${minToTime(seg.start)}–${minToTime(seg.end)}`;
+              return (
+                <button
+                  type="button"
+                  key={`p${i}-${seg.start}`}
+                  className="prog-prop"
+                  data-capat={c.last ? "" : undefined}
+                  data-estompat={focusPerson && focusPerson !== owner?.id ? "" : undefined}
+                  style={{ gridColumn: i + 2, gridRow: `${row + 3} / span ${span}`, "--c": owner?.color } as React.CSSProperties}
+                  title={text}
+                  aria-label={text}
+                  onClick={(e) => {
+                    // rândul pe care s-a dat clic, ca eliberarea să pornească de acolo
+                    const box = e.currentTarget.getBoundingClientRect();
+                    const at = Math.floor(((e.clientY - box.top) / box.height) * span);
+                    setCab({ col: i, row: row + Math.max(0, Math.min(span - 1, at)) });
+                  }}
+                >
+                  <span>
+                    <b>{owner?.name}</b>
+                  </span>
+                </button>
+              );
+            });
           })}
 
           {/* Rezervările */}
@@ -758,15 +797,16 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
                   title={`${p?.name ?? ""} · ${minToTime(res.start)}–${minToTime(res.end)}${res.note ? ` · ${res.note}` : ""}`}
                   onClick={() => setDraft({ mode: "edit", res })}
                 >
-                  <b>
-                    <span className="prog-lung">{p?.name}</span>
-                    <span className="prog-scurt">{p?.initials}</span>
-                  </b>
-                  <span className="prog-rez-ora">
-                    {minToTime(res.start)}–{minToTime(res.end)}
-                    {mine ? " · tu" : ""}
+                  <span className="prog-rez-v">
+                    <b>
+                      <span className="prog-lung">{p?.name}</span>
+                      <span className="prog-scurt">{p?.initials}</span>
+                    </b>
+                    <span className="prog-rez-ora">
+                      {minToTime(res.start)}–{minToTime(res.end)}
+                      {mine ? " · tu" : ""}
+                    </span>
                   </span>
-                  {res.note && <span className="prog-rez-ora">{res.note}</span>}
                 </button>
               );
             }),
@@ -844,6 +884,25 @@ export function Grila({ initial, me }: { initial: Week; me: Me }) {
           {minToTime(DAY_START + tip.a * STEP)}–{minToTime(DAY_START + (tip.b + 1) * STEP)}
           <span className="ml-2 font-normal opacity-75">{durata((tip.b - tip.a + 1) * STEP)}</span>
         </div>
+      )}
+
+      {cab && (
+        <DialogCabinet
+          room={cols[cab.col].room}
+          date={cols[cab.col].date}
+          from={DAY_START + cab.row * STEP}
+          week={week}
+          me={me}
+          onClose={() => {
+            setCab(null);
+            scroller.current?.focus({ preventScroll: true });
+          }}
+          onDone={(msg) => {
+            setCab(null);
+            setNotice(msg ?? "");
+            load(week.start);
+          }}
+        />
       )}
 
       {draft && <DialogRezervare draft={draft} week={week} me={me} onClose={closeDialog} onDone={doneDialog} />}
