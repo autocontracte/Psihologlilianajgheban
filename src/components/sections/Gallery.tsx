@@ -154,9 +154,7 @@ export function Gallery() {
                     {String(activ + 1).padStart(2, "0")}
                     <span className="text-cream/50"> / {String(poze.length).padStart(2, "0")}</span>
                   </p>
-                  <p className="mt-2 line-clamp-2 font-sans text-[0.82rem] leading-snug text-cream/85 sm:text-[0.95rem]">
-                    {poze[activ].alt}
-                  </p>
+                  {/* Descrierea fotografiei nu se mai afișează; rămâne doar în alt, pentru cititoarele de ecran. */}
                   <div className="pointer-events-auto mt-3 hidden gap-2 sm:flex">
                     {poze.map((p, i) => (
                       <button
