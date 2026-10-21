@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 const LINKS = [
   { href: "/admin", label: "Prezentare" },
   { href: "/admin/programari", label: "Programări" },
+  { href: "/calendar", label: "Calendar (aplicația de telefon)" },
   { href: "/admin/program", label: "Program și zile libere" },
   { href: "/admin/clienti", label: "Clienți" },
   { href: "/admin/plati", label: "Plăți și facturi" },

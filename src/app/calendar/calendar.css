@@ -1,0 +1,80 @@
+/* ============================================================================
+   Calendarul Lilianei (/calendar) — ce nu se poate spune cu clasele Tailwind.
+   ========================================================================== */
+
+/* Butonul de WhatsApp și asistentul Ana sunt pentru vizitatorii site-ului. */
+body:has(.cal-app) [data-site-widgets] {
+  display: none;
+}
+
+.cal-app {
+  min-height: 100dvh;
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  overscroll-behavior-y: none;
+}
+
+/* Un eveniment într-o zi a lunii: bara colorată din stânga și numele. */
+.cal-bara {
+  display: block;
+  height: 18px;
+  overflow: hidden;
+  border-left: 3px solid var(--c);
+  padding-left: 3px;
+  color: var(--color-ink);
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 18px;
+  white-space: nowrap;
+}
+
+/* Evenimentele pe toată ziua: plin, ca barele lungi din calendarul telefonului. */
+.cal-bara-plina {
+  border-left: 0;
+  border-radius: 4px;
+  padding: 0 4px;
+  font-weight: 600;
+}
+
+.cal-luna {
+  animation: cal-intra 0.28s ease-out;
+  touch-action: pan-y;
+}
+
+@keyframes cal-intra {
+  from {
+    opacity: 0.35;
+    transform: translateY(6px);
+  }
+}
+
+.cal-foaie {
+  animation: cal-urca 0.25s ease-out;
+}
+
+@keyframes cal-urca {
+  from {
+    transform: translateY(40px);
+    opacity: 0.4;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cal-luna,
+  .cal-foaie {
+    animation: none;
+  }
+}
+
+/* Bara de derulare subțire, ca în aplicații. */
+.cal-app ::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+.cal-app ::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--color-ink) 25%, transparent);
+}
+.cal-app ::-webkit-scrollbar-track {
+  background: transparent;
+}

@@ -17,7 +17,7 @@ const PREVIZUALIZARE = [
 ];
 
 export default function robots(): MetadataRoute.Robots {
-  const previzualizare = { userAgent: PREVIZUALIZARE, allow: "/", disallow: ["/api/", "/admin/", "/cont/"] };
+  const previzualizare = { userAgent: PREVIZUALIZARE, allow: "/", disallow: ["/api/", "/admin/", "/cont/", "/calendar"] };
 
   // Cât timp site-ul nu e public, motoarele de căutare nu au voie nicăieri
   // și nu anunțăm sitemap-ul.
@@ -31,7 +31,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/api/", "/admin/", "/cont/"],
+        disallow: ["/api/", "/admin/", "/cont/", "/calendar"],
       },
     ],
     sitemap: `${SITE.url}/sitemap.xml`,

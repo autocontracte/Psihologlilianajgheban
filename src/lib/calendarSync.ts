@@ -29,10 +29,11 @@ import { addMinutes, zonedToUtc } from "@/lib/tz";
 
 const ACTIVE = ["PENDING", "CONFIRMED", "COMPLETED"];
 
-type EvenimentGoogle = {
+export type EvenimentGoogle = {
   id: string;
   status?: string;
   summary?: string;
+  htmlLink?: string;
   transparency?: string;
   start?: { dateTime?: string; date?: string };
   end?: { dateTime?: string; date?: string };
@@ -123,7 +124,7 @@ export async function ocupatInGoogle(startsAt: Date, endsAt: Date): Promise<bool
 
 /* ------------------------------------------------------------- Google → site */
 
-function intervalul(ev: EvenimentGoogle): { start: Date; end: Date; allDay: boolean } | null {
+export function intervalul(ev: EvenimentGoogle): { start: Date; end: Date; allDay: boolean } | null {
   if (ev.start?.dateTime && ev.end?.dateTime) {
     return { start: new Date(ev.start.dateTime), end: new Date(ev.end.dateTime), allDay: false };
   }
@@ -138,7 +139,7 @@ function intervalul(ev: EvenimentGoogle): { start: Date; end: Date; allDay: bool
   return null;
 }
 
-async function toateEvenimentele(timeMin: Date, timeMax: Date): Promise<EvenimentGoogle[]> {
+export async function toateEvenimentele(timeMin: Date, timeMax: Date): Promise<EvenimentGoogle[]> {
   const out: EvenimentGoogle[] = [];
   let pageToken: string | undefined;
 
