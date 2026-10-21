@@ -22,7 +22,7 @@ export const SITE = {
   role: "Psihoterapeut integrativ · Psiholog clinician",
   url: "https://psihologlilianajgheban.ro",
   description:
-    "Psihoterapeut integrativ în București: psihoterapie pentru adulți, copii și adolescenți, pentru anxietate, depresie, traumă și burnout. În cabinet și online.",
+    "Psihoterapeut integrativ în București (Sector 3) și online: psihoterapie pentru adulți, copii și adolescenți, pentru anxietate, depresie, traumă și burnout.",
 
   phone: "+40 764 802 536",
   phoneHref: "+40764802536",
@@ -119,7 +119,7 @@ export const AUDIENCES = {
       foto: "/foto/cabinet-camera-2.jpg",
       title: "Adulți",
       description:
-        "Anxietate, atacuri de panică, depresie, burnout, traumă, stimă de sine scăzută, perioade de blocaj sau de tranziție.",
+        "Psihoterapie individuală pentru anxietate, atacuri de panică, depresie, burnout, traumă, stimă de sine scăzută, perioade de blocaj sau de tranziție.",
       /** Textul din fereastra deschisă cu „+". E în pagină de la început, deci îl vede și Google. */
       detalii: {
         text: [
@@ -264,7 +264,7 @@ export const SERVICES = {
       title: "Psihoterapie integrativă individuală pentru adulți",
       audience: "Adulți",
       description:
-        "Ședințe de psihoterapie în care lucrăm în profunzime cu anxietatea, atacurile de panică, depresia, trauma și tiparele care se repetă în viața și în relațiile tale. Abordarea integrativă îmi permite să combin metode validate din mai multe școli de psihoterapie, în funcție de nevoia ta.",
+        "Ședințe de psihoterapie (terapie psihologică individuală) în care lucrăm în profunzime cu anxietatea, atacurile de panică, depresia, trauma și tiparele care se repetă în viața și în relațiile tale. Psihoterapia integrativă îmi permite să combin metode validate din mai multe școli de psihoterapie, în funcție de nevoia ta.",
       situatii: [
         "anxietate, atacuri de panică, fobii, stres și insomnie",
         "stări depresive, lipsă de motivație, epuizare (burnout)",
@@ -343,7 +343,7 @@ export const SERVICES = {
 
 export const FORMATS = {
   eyebrow: "Format",
-  title: "Terapie în cabinet, în București, sau *online*",
+  title: "Psihoterapie în cabinet, în București, sau *online*",
   subtitle:
     "Alegi varianta care ți se potrivește. Ambele au aceeași structură, aceeași durată și aceeași confidențialitate.",
   items: [
@@ -351,7 +351,7 @@ export const FORMATS = {
       icon: "office",
       title: "În cabinet",
       description:
-        "Un spațiu liniștit, gândit ca să te simți în siguranță. Recomandat mai ales pentru terapia copiilor, pentru evaluări și pentru lucrul experiențial Sandtray.",
+        "Cabinetul de psihoterapie e pe strada Armenească nr. 10, în Sectorul 3, în centrul Bucureștiului, ușor de ajuns și din Sectorul 2. Un spațiu liniștit, gândit ca să te simți în siguranță, recomandat mai ales pentru psihoterapia copiilor, pentru evaluări și pentru lucrul experiențial Sandtray.",
       points: [
         "Cadru dedicat, fără întreruperi",
         "Potrivit pentru copii și ateliere experiențiale",
@@ -362,7 +362,7 @@ export const FORMATS = {
       icon: "online",
       title: "Terapie online",
       description:
-        "Ședințe prin video, de oriunde te-ai afla. O variantă potrivită dacă ai un program încărcat, locuiești în alt oraș sau în străinătate.",
+        "Psihoterapie online, prin video, de oriunde te-ai afla. O variantă potrivită dacă ai un program încărcat, locuiești în alt oraș sau în străinătate.",
       points: [
         "Flexibilitate de program și de loc",
         "Aceeași confidențialitate ca în cabinet",
@@ -543,7 +543,7 @@ export const FAQ = {
   title: "Ce e bine să știi înainte de *prima ședință*",
   items: [
     {
-      q: "Cât costă o ședință de psihoterapie?",
+      q: "Cât costă o ședință de psihoterapie în București?",
       a: `O ședință de psihoterapie individuală costă ${PRICE.standard} de ${PRICE.currency} și durează 50 de minute, în cabinet sau online. Evaluările psihologice și atelierele au tarife separate, pe care le găsești la programare.`,
     },
     {
@@ -571,12 +571,20 @@ export const FAQ = {
       a: "Deloc. Dimpotrivă: să îți pui întrebări despre starea ta și să ceri sprijin e un semn de grijă față de tine, nu de slăbiciune.",
     },
     {
-      q: "Care e diferența dintre psihoterapeut, psiholog și psihiatru?",
+      q: "Psiholog, psihoterapeut sau psihiatru: la cine să merg?",
       a: "Psihiatrul este medic: pune diagnostice medicale și poate prescrie medicamente. Psihoterapeutul lucrează prin ședințe de psihoterapie, fără medicamente, cu cauzele suferinței: emoții, gânduri, tipare și relații. Psihologul clinician face evaluări și intervenții psihologice. Eu sunt psihoterapeut integrativ și psiholog clinician, deci nu prescriu medicamente. Pentru depresie severă, anxietate foarte intensă sau alte situații în care tratamentul medicamentos ajută, colaborez cu medicul psihiatru: psihoterapia și tratamentul se completează.",
     },
     {
       q: "Ce este psihoterapia integrativă?",
       a: "Este o formă de psihoterapie care îmbină, într-un mod coerent, metode validate din mai multe școli terapeutice, alese după nevoile fiecărui om, nu după o singură teorie. În centrul ei stă relația terapeutică, iar scopul nu e doar ameliorarea simptomelor, ci înțelegerea și schimbarea tiparelor care le întrețin.",
+    },
+    {
+      q: "Unde este cabinetul de psihoterapie?",
+      a: `Cabinetul este pe ${SITE.street}, în Sectorul 3, în centrul Bucureștiului, ușor de ajuns și din Sectorul 2. Indicațiile de acces îți vin odată cu confirmarea programării. Dacă nu poți ajunge la cabinet, putem lucra prin psihoterapie online.`,
+    },
+    {
+      q: "Lucrați și cu copiii? Ce este psihoterapia copilului?",
+      a: "Da. Am formare completă în psihoterapia integrativă a copilului și adolescentului. Cu copiii lucrez prin joc, desen, poveste și Sandtray, limbajul lor firesc, iar părinții sunt parteneri în proces, inclusiv prin consiliere parentală. Când e nevoie, facem întâi o evaluare, de exemplu pentru suspiciunea de ADHD.",
     },
     {
       q: "Ședințele online sunt la fel de eficiente?",
