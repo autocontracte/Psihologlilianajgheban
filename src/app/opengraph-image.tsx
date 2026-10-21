@@ -1,5 +1,5 @@
 import { miniatura, OG_MARIME, OG_TIP } from "@/lib/og";
-import { PHOTOS, PRICE, SITE } from "@/content/site";
+import { PHOTOS, SITE } from "@/content/site";
 
 export const alt = `${SITE.name}, psihoterapeut integrativ în ${SITE.city}`;
 export const size = OG_MARIME;
@@ -9,7 +9,7 @@ export default function Image() {
   return miniatura({
     eticheta: "Psihoterapeut integrativ",
     titlu: `Psihoterapie în ${SITE.city} și online`,
-    subtitlu: `Pentru adulți, adolescenți, copii și părinți. ${PRICE.standard} ${PRICE.currency}, ședința de 50 de minute.`,
+    subtitlu: "Pentru adulți, adolescenți, copii și părinți. În cabinet și online.",
     imagine: { src: PHOTOS.heroPortret, pozitie: "50% 22%" },
   });
 }

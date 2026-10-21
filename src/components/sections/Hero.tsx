@@ -12,7 +12,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { HERO, PRICE, PHOTOS } from "@/content/site";
+import { HERO, PHOTOS } from "@/content/site";
 import { IconArrow, IconOffice, IconSend } from "../ui/Icons";
 import { AnaFace } from "../ana/AnaFace";
 import { AnaMesaje } from "../ana/AnaMesaje";
@@ -157,10 +157,9 @@ export function Hero() {
               transition={{ duration: 0.9, delay: 1.05, ease: [0.22, 1, 0.36, 1] }}
               className="glass-strong absolute bottom-[8%] right-3 px-5 py-3.5 sm:-right-6 sm:bottom-[12%] lg:-right-10"
             >
-              <p className="font-display text-2xl leading-none text-ink">
-                {PRICE.standard} {PRICE.currency}
-              </p>
-              <p className="mt-1.5 font-sans text-[0.78rem] text-ink-soft">ședința de 50 de minute</p>
+              {/* Fără preț la vedere: tariful e în întrebările frecvente și la programare. */}
+              <p className="font-display text-2xl leading-none text-ink">50 de minute</p>
+              <p className="mt-1.5 font-sans text-[0.78rem] text-ink-soft">o ședință de psihoterapie</p>
             </motion.div>
           </motion.div>
         </motion.div>

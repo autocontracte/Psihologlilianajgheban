@@ -5,7 +5,6 @@ import { Button } from "../ui/Button";
 import { Lumina } from "../ui/Lumina";
 import { Accent } from "../ui/Accent";
 import { IconCheck } from "../ui/Icons";
-import { PRET_KIT_LEI } from "@/lib/kit/pret";
 
 /* Trusa de ajutor „Cum stai, de fapt, în relația ta?" pe prima pagină: în stânga,
    fotografia alb-negru cu voal întunecat și textul; în dreapta, ghidul. */
@@ -58,10 +57,8 @@ export function TestsTeaser() {
                 sizes="(min-width: 1024px) 560px, 95vw"
                 className="w-full"
               />
-              <p className="mt-2 font-display text-[2rem] leading-none text-ink">
-                {PRET_KIT_LEI} <span className="text-[1rem] text-ink-soft">lei</span>
-              </p>
-              <p className="mt-2 font-sans text-[0.8rem] text-ink-muted">Test, raport personal și ghid</p>
+              {/* Prețul trusei e pe pagina ei, nu pe prima pagină. */}
+              <p className="mt-3 font-sans text-[0.85rem] text-ink-muted">Test, raport personal și ghid</p>
             </div>
           </div>
         </Reveal>
