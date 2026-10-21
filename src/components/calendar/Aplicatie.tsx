@@ -16,7 +16,7 @@ import { cere, type Strat, type Vedere } from "./comun";
 import { Detalii } from "./Detalii";
 import { Formular, type Propunere } from "./Formular";
 import { Luna } from "./Luna";
-import { Sertar } from "./Sertar";
+import { BaraLaterala, Sertar } from "./Sertar";
 import { An, FoaieZi, Ore, Program, Rand } from "./Vederi";
 
 /* ----------------------------------------------------------------------------
@@ -237,149 +237,160 @@ export function Aplicatie({ initial }: { initial: LunaCal }) {
   const unealta = "flex h-12 w-12 items-center justify-center rounded-full text-ink transition-colors hover:bg-cream-deep";
   const saptamana = Array.from({ length: 7 }, (_, i) => addDays(mondayOf(selected), i));
 
+  const meniu = {
+    vedere,
+    onVedere: alegeVedere,
+    ascunse,
+    onAscunse: alegeAscunse,
+    google: data.google.activ,
+    onSincronizat: (msg: string) => {
+      setNotice(msg);
+      load(selected, true);
+    },
+    install: install
+      ? () => {
+          install.prompt().catch(() => {});
+          setInstall(null);
+        }
+      : null,
+  };
+
   return (
-    <div className="flex h-dvh flex-col bg-cream">
-      <header className="flex shrink-0 items-center gap-1 px-2 pb-1 pt-[max(0.5rem,env(safe-area-inset-top))] sm:px-4">
-        {cauta === null ? (
-          <>
-            <button type="button" onClick={() => setSertar(true)} aria-label="Meniu" className={unealta}>
-              <Menu className="h-7 w-7" />
-            </button>
+    <div className="flex h-dvh bg-cream">
+      {/* pe calculator, meniul stă mereu la vedere */}
+      <BaraLaterala {...meniu} data={data} selected={selected} onSelect={setSelected} onAdauga={() => setNou({ date: selected })} />
+
+      <div className="flex min-w-0 flex-1 flex-col">
+        <header className="flex shrink-0 items-center gap-1 px-2 pb-1 pt-[max(0.5rem,env(safe-area-inset-top))] sm:px-4 lg:gap-2 lg:border-b lg:border-ink/10 lg:px-6 lg:py-3">
+          {cauta === null ? (
+            <>
+              <button type="button" onClick={() => setSertar(true)} aria-label="Meniu" className={`${unealta} lg:hidden`}>
+                <Menu className="h-7 w-7" />
+              </button>
+              <button
+                type="button"
+                onClick={() => vedere === "luna" && alegeVedere("an", true)}
+                className="ml-1 min-w-0 truncate rounded-[0.8rem] px-2 py-1 text-left font-sans text-[1.85rem] font-bold tracking-tight text-ink lg:order-2 lg:first-letter:uppercase lg:ml-2 lg:text-[1.7rem] lg:font-semibold"
+              >
+                {titlu}
+              </button>
+              {vedere !== "program" && (
+                <span className="hidden items-center md:flex lg:order-1">
+                  <button type="button" onClick={() => muta(-1)} aria-label="Înapoi" className={unealta}>
+                    <ChevronLeft className="h-6 w-6" />
+                  </button>
+                  <button type="button" onClick={() => muta(1)} aria-label="Înainte" className={unealta}>
+                    <ChevronRight className="h-6 w-6" />
+                  </button>
+                </span>
+              )}
+              <span className="flex-1 lg:order-3" />
+              <button
+                type="button"
+                onClick={() => setSelected(data.today)}
+                className="hidden h-11 items-center rounded-full border border-ink/20 px-5 font-sans text-[1rem] font-semibold text-ink transition-colors hover:border-ink lg:order-first lg:flex"
+              >
+                Azi
+              </button>
+              <button type="button" onClick={() => setCauta("")} aria-label="Caută" className={`${unealta} lg:order-4`}>
+                <Search className="h-6 w-6" />
+              </button>
+              <button type="button" onClick={() => setSelected(data.today)} aria-label="Azi" title="Azi" className={`${unealta} lg:hidden`}>
+                <span className="flex h-8 w-8 items-center justify-center rounded-[0.55rem] border-2 border-ink font-sans text-[0.95rem] font-bold tabular-nums">
+                  {Number(data.today.slice(8))}
+                </span>
+              </button>
+            </>
+          ) : (
+            <>
+              <input
+                autoFocus
+                value={cauta}
+                onChange={(e) => setCauta(e.target.value)}
+                placeholder="Caută un client, un telefon, un eveniment"
+                className="h-12 min-w-0 flex-1 rounded-full bg-cream-warm px-5 font-sans text-[1.1rem] text-ink placeholder:text-ink-muted focus:outline-none focus:ring-4 focus:ring-periwinkle/20"
+              />
+              <button type="button" onClick={() => setCauta(null)} aria-label="Închide căutarea" className={unealta}>
+                <X className="h-6 w-6" />
+              </button>
+            </>
+          )}
+        </header>
+
+        {(error || data.google.eroare) && (
+          <p role="alert" className="mx-3 mb-2 rounded-[1rem] bg-clay-pale px-4 py-2.5 font-sans text-[0.95rem] text-clay">
+            {error || data.google.eroare}
+          </p>
+        )}
+
+        {cauta !== null ? (
+          <div className="mx-auto min-h-0 w-full max-w-3xl flex-1 overflow-y-auto px-3 pb-10 lg:pt-3">
+            <p className="px-1 py-2 font-sans text-[0.9rem] text-ink-muted">
+              {cauta.trim().length < 2 ? "Scrie cel puțin două litere." : `${rezultate.length} rezultate în ${numeLuna} (și zilele vecine)`}
+            </p>
+            <div className="space-y-2">
+              {rezultate.map((e) => (
+                <div key={e.id}>
+                  <p className="px-1 pb-1 font-sans text-[0.85rem] text-ink-muted">{phoneDate(e.date)}</p>
+                  <Rand e={e} onClick={() => setDetalii(e)} />
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : vedere === "luna" ? (
+          <Luna data={data} selected={selected} ascunse={ascunse} onSelect={setSelected} onOpen={setFoaie} onSwipe={muta} />
+        ) : vedere === "an" ? (
+          <An
+            year={Number(selected.slice(0, 4))}
+            today={data.today}
+            onMonth={(first) => {
+              setSelected(first.slice(0, 7) === data.today.slice(0, 7) ? data.today : first);
+              alegeVedere("luna", true);
+            }}
+            onSwipe={muta}
+          />
+        ) : vedere === "zi" || vedere === "saptamana" ? (
+          <Ore
+            data={data}
+            dates={vedere === "zi" ? [selected] : saptamana}
+            ascunse={ascunse}
+            onEv={setDetalii}
+            onNew={(date, start) => setNou({ date, start })}
+            onSwipe={muta}
+            onDay={(d) => {
+              setSelected(d);
+              alegeVedere("zi", true);
+            }}
+          />
+        ) : (
+          <Program data={data} from={selected} ascunse={ascunse} onEv={setDetalii} onNext={() => muta(1)} />
+        )}
+
+        {/* Adăugare 22 oct. + */}
+        {vedere !== "an" && cauta === null && (
+          <div className="pointer-events-none fixed inset-x-0 bottom-0 z-20 flex justify-center pb-[max(1.25rem,env(safe-area-inset-bottom))] lg:hidden">
             <button
               type="button"
-              onClick={() => vedere === "luna" && alegeVedere("an", true)}
-              className="ml-1 min-w-0 truncate rounded-[0.8rem] px-2 py-1 text-left font-sans text-[1.85rem] font-bold tracking-tight text-ink"
+              onClick={() => setNou({ date: selected })}
+              className="pointer-events-auto flex w-[min(30rem,calc(100%-6rem))] items-center justify-between rounded-full bg-cream-warm py-3.5 pl-7 pr-5 font-sans text-[1.25rem] text-ink-soft shadow-[0_12px_40px_-12px_rgba(0,0,0,0.35)] ring-1 ring-ink/5 transition-colors hover:bg-white"
             >
-              {titlu}
+              Adăugare {shortDate(selected)}
+              <Plus className="h-8 w-8 text-ink" strokeWidth={1.75} />
             </button>
-            {vedere !== "program" && (
-              <span className="hidden items-center md:flex">
-                <button type="button" onClick={() => muta(-1)} aria-label="Înapoi" className={unealta}>
-                  <ChevronLeft className="h-6 w-6" />
-                </button>
-                <button type="button" onClick={() => muta(1)} aria-label="Înainte" className={unealta}>
-                  <ChevronRight className="h-6 w-6" />
-                </button>
-              </span>
-            )}
-            <span className="flex-1" />
-            <button type="button" onClick={() => setCauta("")} aria-label="Caută" className={unealta}>
-              <Search className="h-6 w-6" />
-            </button>
-            <button type="button" onClick={() => setSelected(data.today)} aria-label="Azi" title="Azi" className={unealta}>
-              <span className="flex h-8 w-8 items-center justify-center rounded-[0.55rem] border-2 border-ink font-sans text-[0.95rem] font-bold tabular-nums">
-                {Number(data.today.slice(8))}
-              </span>
-            </button>
-          </>
-        ) : (
-          <>
-            <input
-              autoFocus
-              value={cauta}
-              onChange={(e) => setCauta(e.target.value)}
-              placeholder="Caută un client, un telefon, un eveniment"
-              className="h-12 min-w-0 flex-1 rounded-full bg-cream-warm px-5 font-sans text-[1.1rem] text-ink placeholder:text-ink-muted focus:outline-none focus:ring-4 focus:ring-periwinkle/20"
-            />
-            <button type="button" onClick={() => setCauta(null)} aria-label="Închide căutarea" className={unealta}>
-              <X className="h-6 w-6" />
-            </button>
-          </>
-        )}
-      </header>
-
-      {(error || data.google.eroare) && (
-        <p role="alert" className="mx-3 mb-2 rounded-[1rem] bg-clay-pale px-4 py-2.5 font-sans text-[0.95rem] text-clay">
-          {error || data.google.eroare}
-        </p>
-      )}
-
-      {cauta !== null ? (
-        <div className="min-h-0 flex-1 overflow-y-auto px-3 pb-10">
-          <p className="px-1 py-2 font-sans text-[0.9rem] text-ink-muted">
-            {cauta.trim().length < 2 ? "Scrie cel puțin două litere." : `${rezultate.length} rezultate în ${numeLuna} (și zilele vecine)`}
-          </p>
-          <div className="space-y-2">
-            {rezultate.map((e) => (
-              <div key={e.id}>
-                <p className="px-1 pb-1 font-sans text-[0.85rem] text-ink-muted">{phoneDate(e.date)}</p>
-                <Rand e={e} onClick={() => setDetalii(e)} />
-              </div>
-            ))}
           </div>
-        </div>
-      ) : vedere === "luna" ? (
-        <Luna data={data} selected={selected} ascunse={ascunse} onSelect={setSelected} onOpen={setFoaie} onSwipe={muta} />
-      ) : vedere === "an" ? (
-        <An
-          year={Number(selected.slice(0, 4))}
-          today={data.today}
-          onMonth={(first) => {
-            setSelected(first.slice(0, 7) === data.today.slice(0, 7) ? data.today : first);
-            alegeVedere("luna", true);
-          }}
-          onSwipe={muta}
-        />
-      ) : vedere === "zi" || vedere === "saptamana" ? (
-        <Ore
-          data={data}
-          dates={vedere === "zi" ? [selected] : saptamana}
-          ascunse={ascunse}
-          onEv={setDetalii}
-          onNew={(date, start) => setNou({ date, start })}
-          onSwipe={muta}
-          onDay={(d) => {
-            setSelected(d);
-            alegeVedere("zi", true);
-          }}
-        />
-      ) : (
-        <Program data={data} from={selected} ascunse={ascunse} onEv={setDetalii} onNext={() => muta(1)} />
-      )}
+        )}
 
-      {/* Adăugare 22 oct. + */}
-      {vedere !== "an" && cauta === null && (
-        <div className="pointer-events-none fixed inset-x-0 bottom-0 z-20 flex justify-center pb-[max(1.25rem,env(safe-area-inset-bottom))]">
-          <button
-            type="button"
-            onClick={() => setNou({ date: selected })}
-            className="pointer-events-auto flex w-[min(30rem,calc(100%-6rem))] items-center justify-between rounded-full bg-cream-warm py-3.5 pl-7 pr-5 font-sans text-[1.25rem] text-ink-soft shadow-[0_12px_40px_-12px_rgba(0,0,0,0.35)] ring-1 ring-ink/5 transition-colors hover:bg-white"
-          >
-            Adăugare {shortDate(selected)}
-            <Plus className="h-8 w-8 text-ink" strokeWidth={1.75} />
-          </button>
-        </div>
-      )}
+      </div>
 
       {notice && (
-        <div className="fixed inset-x-0 bottom-24 z-30 flex justify-center px-4" role="status">
+        <div className="fixed inset-x-0 bottom-24 z-30 flex justify-center px-4 lg:bottom-8 lg:left-[17.5rem]" role="status">
           <button type="button" onClick={() => setNotice("")} className="max-w-md rounded-[1rem] bg-ink px-5 py-3 font-sans text-[1rem] text-cream shadow-lg">
             {notice}
           </button>
         </div>
       )}
 
-      <Sertar
-        open={sertar}
-        onClose={() => setSertar(false)}
-        vedere={vedere}
-        onVedere={alegeVedere}
-        ascunse={ascunse}
-        onAscunse={alegeAscunse}
-        google={data.google.activ}
-        onSincronizat={(msg) => {
-          setNotice(msg);
-          load(selected, true);
-        }}
-        install={
-          install
-            ? () => {
-                install.prompt().catch(() => {});
-                setInstall(null);
-              }
-            : null
-        }
-      />
+      <Sertar {...meniu} open={sertar} onClose={() => setSertar(false)} />
 
       {foaie && (
         <FoaieZi

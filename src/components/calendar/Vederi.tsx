@@ -200,7 +200,7 @@ export function Ore({
   const now = acum();
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col pb-[5.5rem]" {...swipe}>
+    <div className="flex min-h-0 flex-1 flex-col pb-[5.5rem] lg:px-3 lg:pb-3" {...swipe}>
       {dates.length > 1 && (
         <div className="flex shrink-0 pl-[3.25rem] pr-2">
           {dates.map((d) => (
@@ -276,12 +276,10 @@ export function Ore({
                   }}
                 >
                   <b className="block w-full truncate text-[0.88rem]">{e.title}</b>
-                  {dates.length === 1 && (
-                    <span className="block w-full truncate text-[0.8rem] tabular-nums text-ink-soft">
-                      {minToTime(e.start)}–{minToTime(e.end % (24 * 60))}
-                      {e.kind === "prog" ? ` · ${e.service}` : ""}
-                    </span>
-                  )}
+                  <span className={`w-full truncate text-[0.8rem] tabular-nums text-ink-soft ${dates.length > 1 ? "hidden lg:block" : "block"}`}>
+                    {minToTime(e.start)}–{minToTime(e.end % (24 * 60))}
+                    {e.kind === "prog" && dates.length === 1 ? ` · ${e.service}` : ""}
+                  </span>
                 </button>
               ))}
               {z.date === data.today && now >= ZI_START && now < ZI_END && (
@@ -312,7 +310,7 @@ export function An({
 }) {
   const swipe = useSwipe(onSwipe);
   return (
-    <div className="grid flex-1 grid-cols-2 content-start gap-x-4 gap-y-5 overflow-y-auto px-4 pb-10 pt-2 sm:grid-cols-3 lg:grid-cols-4" {...swipe}>
+    <div className="grid flex-1 grid-cols-2 content-start gap-x-4 gap-y-5 overflow-y-auto px-4 pb-10 pt-2 sm:grid-cols-3 lg:grid-cols-4 lg:gap-x-8 lg:gap-y-8 lg:px-8 lg:pt-6" {...swipe}>
       {LUNI_LUNGI.map((nume, m) => {
         const first = `${year}-${String(m + 1).padStart(2, "0")}-01`;
         const start = mondayOf(first);
@@ -368,7 +366,7 @@ export function Program({
   }, [data, from, ascunse]);
 
   return (
-    <div className="min-h-0 flex-1 overflow-y-auto px-3 pb-28 pt-1">
+    <div className="mx-auto min-h-0 w-full max-w-3xl flex-1 overflow-y-auto px-3 pb-28 pt-1 lg:pb-10 lg:pt-4">
       {zile.length === 0 && <p className="py-10 text-center font-sans text-[1.05rem] text-ink-muted">Nimic de aici până la sfârșitul lunii.</p>}
       {zile.map(({ date, list }) => (
         <section key={date} className="mb-4">

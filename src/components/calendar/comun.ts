@@ -1,6 +1,6 @@
 /* Bucăți comune aplicației de calendar a Lilianei (/calendar). */
 
-import { PAS, ZI_END, ZI_START, type Ev, type LunaCal } from "@/lib/calendarTelefon";
+import { PAS, ZI_END, type Ev, type LunaCal } from "@/lib/calendarTelefon";
 
 export type Vedere = "an" | "luna" | "saptamana" | "zi" | "program";
 
@@ -50,12 +50,11 @@ export function idGoogle(e: Ev): string {
   return e.id.slice(0, e.id.lastIndexOf(":"));
 }
 
-/** Prima jumătate de oră care n-a trecut încă (azi) sau 10:00 (altă zi). */
+/** Prima jumătate de oră care n-a trecut încă (azi, din timpul zilei) sau 10:00. */
 export function oraImplicita(date: string, today: string): number {
-  if (date !== today) return 10 * 60;
-  const m = acum();
-  const next = Math.ceil(m / PAS) * PAS;
-  return Math.min(Math.max(next, ZI_START), ZI_END - 60);
+  const next = Math.ceil(acum() / PAS) * PAS;
+  if (date !== today || next < 9 * 60) return 10 * 60;
+  return Math.min(next, ZI_END - 60);
 }
 
 /** Ora României, în minute de la miezul nopții. */

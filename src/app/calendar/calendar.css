@@ -78,3 +78,13 @@ body:has(.cal-app) [data-site-widgets] {
 .cal-app ::-webkit-scrollbar-track {
   background: transparent;
 }
+
+/* Pe calculator, barele din lună sunt mai mari și au numele întreg. */
+@media (min-width: 1024px) {
+  .cal-bara {
+    height: 20px;
+    font-size: 0.86rem;
+    line-height: 20px;
+    padding-left: 5px;
+  }
+}

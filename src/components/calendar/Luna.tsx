@@ -9,8 +9,10 @@ import { aleZilei, culoare, fundal, prenume, type Strat } from "./comun";
    al doilea o deschide. Glisarea stânga–dreapta schimbă luna. */
 
 const ZILE = ["L", "M", "M", "J", "V", "S", "D"];
-const RAND = 21; // înălțimea unei bare, în pixeli
-const CAP = 30; // numărul zilei, deasupra barelor
+const ZILE_LUNGI = ["Luni", "Marți", "Miercuri", "Joi", "Vineri", "Sâmbătă", "Duminică"];
+/* Înălțimea unei bare și a numărului zilei, în pixeli; pe calculator, mai mari
+   (vezi .cal-bara în calendar.css). */
+const MASURI = { telefon: { rand: 21, cap: 30 }, mare: { rand: 25, cap: 36 } };
 
 export function Luna({
   data,
@@ -41,7 +43,10 @@ export function Luna({
   useLayoutEffect(() => {
     const el = box.current;
     if (!el) return;
-    const measure = () => setFit(Math.max(1, Math.floor((el.clientHeight / 6 - CAP - 4) / RAND)));
+    const measure = () => {
+      const { rand, cap } = window.matchMedia("(min-width: 1024px)").matches ? MASURI.mare : MASURI.telefon;
+      setFit(Math.max(1, Math.floor((el.clientHeight / 6 - cap - 4) / rand)));
+    };
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(el);
@@ -66,11 +71,12 @@ export function Luna({
   }
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col px-1.5 pb-[5.5rem] sm:px-3">
+    <div className="flex min-h-0 flex-1 flex-col px-1.5 pb-[5.5rem] sm:px-3 lg:px-5 lg:pb-5 lg:pt-1">
       <div className="grid grid-cols-7 pb-1 pt-1">
         {ZILE.map((z, i) => (
           <div key={i} className={`text-center font-sans text-[0.95rem] font-semibold ${i === 6 ? "text-clay" : "text-ink-soft"}`}>
-            {z}
+            <span className="lg:hidden">{z}</span>
+            <span className="hidden lg:inline">{ZILE_LUNGI[i]}</span>
           </div>
         ))}
       </div>
@@ -78,7 +84,7 @@ export function Luna({
       <div
         ref={box}
         key={anim}
-        className="cal-luna grid min-h-0 flex-1 grid-cols-7 grid-rows-6 gap-[3px]"
+        className="cal-luna grid min-h-0 flex-1 grid-cols-7 grid-rows-6 gap-[3px] lg:gap-1.5"
         onPointerDown={down}
         onPointerUp={up}
         onPointerCancel={() => (swipe.current = null)}
@@ -103,19 +109,19 @@ export function Luna({
                 else onSelect(date);
               }}
               className={`relative flex min-w-0 flex-col overflow-hidden rounded-[0.6rem] text-left transition-colors ${
-                sunday ? "bg-sage-pale/60" : "bg-cream-warm"
-              } ${sel ? "ring-2 ring-inset ring-ink/70" : ""} ${inMonth ? "" : "opacity-45"}`}
+                sunday ? "bg-sage-pale/60 lg:bg-sage-pale/50" : "bg-cream-warm lg:bg-white/80"
+              } lg:border lg:border-ink/[0.07] lg:hover:border-ink/25 ${sel ? "ring-2 ring-inset ring-ink/70" : ""} ${inMonth ? "" : "opacity-45"}`}
             >
-              <span className="flex h-[30px] shrink-0 items-center justify-center">
+              <span className="flex h-[30px] shrink-0 items-center justify-center lg:h-[36px]">
                 <span
-                  className={`flex h-[24px] min-w-[24px] items-center justify-center rounded-[0.45rem] px-1 font-sans text-[1.02rem] font-semibold tabular-nums ${
+                  className={`flex h-[24px] min-w-[24px] items-center justify-center rounded-[0.45rem] px-1 font-sans text-[1.02rem] font-semibold tabular-nums lg:h-[28px] lg:min-w-[28px] lg:text-[1.05rem] ${
                     today ? "bg-periwinkle text-cream" : sunday ? "text-clay" : "text-ink"
                   }`}
                 >
                   {Number(date.slice(8))}
                 </span>
               </span>
-              <span className="flex min-w-0 flex-col gap-[3px] px-[2px]">
+              <span className="flex min-w-0 flex-col gap-[3px] px-[2px] lg:gap-[5px] lg:px-1.5">
                 {shown.map((e) =>
                   e.allDay ? (
                     <span key={e.id} className="cal-bara cal-bara-plina" style={{ background: fundal(e, 45) }}>
@@ -124,11 +130,12 @@ export function Luna({
                   ) : (
                     <span key={e.id} className="cal-bara" style={{ "--c": culoare(e) } as React.CSSProperties}>
                       <span className="hidden md:inline">{minToTime(e.start)} </span>
-                      {prenume(e)}
+                      <span className="lg:hidden">{prenume(e)}</span>
+                      <span className="hidden lg:inline">{e.title}</span>
                     </span>
                   ),
                 )}
-                {more > 0 && <span className="pl-1 font-sans text-[0.8rem] font-semibold text-ink-soft">+{more}</span>}
+                {more > 0 && <span className="pl-1 font-sans text-[0.8rem] font-semibold text-ink-soft lg:text-[0.85rem]">+{more}</span>}
               </span>
             </button>
           );
