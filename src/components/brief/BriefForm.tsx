@@ -200,7 +200,7 @@ export function BriefForm({
               className="mt-1 font-sans text-[0.78rem]"
               style={{ color: readableOn(p.accent, p.bg) }}
             >
-              Psiholog clinician și psihoterapeut
+              Psihoterapeut integrativ
             </p>
             <p
               className="mt-2.5 font-sans text-[0.76rem] leading-relaxed"

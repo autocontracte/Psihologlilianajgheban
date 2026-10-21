@@ -19,10 +19,10 @@ export const SITE = {
   indexable: true,
 
   name: "Liliana Jgheban",
-  role: "Psiholog clinician & Psihoterapeut integrativ",
+  role: "Psihoterapeut integrativ · Psiholog clinician",
   url: "https://psihologlilianajgheban.ro",
   description:
-    "Psiholog clinician și psihoterapeut integrativ în București: psihoterapie pentru adulți, copii și adolescenți, consiliere parentală, evaluare psihologică (inclusiv ADHD), NLP și terapie Sandtray. Ședințe în cabinet și online.",
+    "Psihoterapeut integrativ în București: psihoterapie pentru adulți, copii și adolescenți, pentru anxietate, depresie, traumă și burnout. În cabinet și online.",
 
   phone: "+40 764 802 536",
   phoneHref: "+40764802536",
@@ -87,10 +87,10 @@ export const NAV = [
 /* -------------------------------------------------------------------------- */
 
 export const HERO = {
-  eyebrow: "Psiholog clinician și psihoterapeut integrativ în București",
+  eyebrow: "Psihoterapeut integrativ în București",
   name: "Liliana Jgheban",
   intro:
-    "Psihoterapie pentru adulți, adolescenți și copii, consiliere parentală și evaluare psihologică, în cabinetul din București sau online. Privim împreună, cu blândețe, ce se ascunde în spatele a ceea ce simți și construim, pas cu pas, resursele de care ai nevoie.",
+    "Psihoterapie individuală pentru adulți, adolescenți și copii, în cabinetul din București sau online. Lucrăm cu anxietatea, atacurile de panică, depresia, trauma și tiparele care se repetă: privim împreună, cu blândețe, ce se ascunde în spatele a ceea ce simți și construim, pas cu pas, schimbarea de care ai nevoie.",
   ctaPrimary: { label: "Programează o ședință", href: "/programari" },
 };
 
@@ -101,7 +101,7 @@ export const WELCOME = {
     "Psihoterapia nu e doar o conversație între doi oameni. E o întâlnire în care trecutul e privit cu blândețe și curiozitate, ca prezentul să devină mai ușor de trăit.",
   body: [
     "Sunt momente în care viața devine mai grea decât putem duce singuri: o anxietate care nu mai trece, atacuri de panică, o tristețe care se așază peste tot, o despărțire, un doliu, epuizarea de la muncă sau o schimbare care ne depășește.",
-    "A merge la psiholog nu înseamnă că ceva e în neregulă cu tine. Înseamnă că alegi să îți acorzi atenție, sprijin și timp. Rolul meu este să te însoțesc în acest drum, cu răbdare, fără judecată și în ritmul tău.",
+    "A merge la psihoterapie nu înseamnă că ceva e în neregulă cu tine. Înseamnă că alegi să îți acorzi atenție, sprijin și timp. Ca psihoterapeut, rolul meu este să te însoțesc în acest drum, cu răbdare, fără judecată și în ritmul tău.",
   ],
 };
 
@@ -257,14 +257,14 @@ export const SERVICES = {
   eyebrow: "Servicii",
   title: "Cum putem lucra *împreună*",
   subtitle:
-    "De la psihoterapie individuală la evaluare clinică și intervenții de grup. Alegem împreună forma potrivită pentru tine.",
+    "Psihoterapia e centrul muncii mele: individuală, pentru adulți, adolescenți și copii, completată de consiliere parentală, evaluare clinică și intervenții de grup. Alegem împreună forma potrivită pentru tine.",
   items: [
     {
       number: "01",
-      title: "Psihoterapie integrativă individuală",
-      audience: "Adulți și adolescenți",
+      title: "Psihoterapie integrativă individuală pentru adulți",
+      audience: "Adulți",
       description:
-        "Ședințe individuale în care lucrăm asupra dificultăților emoționale, a anxietății, a traumei sau a perioadelor de blocaj. Abordarea integrativă îmi permite să combin metode din mai multe școli terapeutice, în funcție de nevoia ta.",
+        "Ședințe de psihoterapie în care lucrăm în profunzime cu anxietatea, atacurile de panică, depresia, trauma și tiparele care se repetă în viața și în relațiile tale. Abordarea integrativă îmi permite să combin metode validate din mai multe școli de psihoterapie, în funcție de nevoia ta.",
       situatii: [
         "anxietate, atacuri de panică, fobii, stres și insomnie",
         "stări depresive, lipsă de motivație, epuizare (burnout)",
@@ -275,6 +275,19 @@ export const SERVICES = {
     },
     {
       number: "02",
+      title: "Psihoterapia copilului și adolescentului",
+      audience: "Copii și adolescenți",
+      description:
+        "Psihoterapie adaptată vârstei, prin joc, desen, poveste și Sandtray pentru cei mici și prin dialog pentru adolescenți. Am formare completă în psihoterapia integrativă a copilului și adolescentului, iar părinții sunt parteneri în proces.",
+      situatii: [
+        "frici, anxietate de separare, atacuri de panică",
+        "crize de furie, opoziție, refuzul de a merge la școală",
+        "tristețe, retragere, încredere scăzută în sine",
+        "divorțul părinților, doliu, experiențe traumatice",
+      ],
+    },
+    {
+      number: "03",
       title: "Consiliere parentală",
       audience: "Părinți",
       description:
@@ -287,28 +300,15 @@ export const SERVICES = {
       ],
     },
     {
-      number: "03",
-      title: "Evaluare clinică psihologică pentru copii și adolescenți",
-      audience: "Copii și adolescenți",
-      description:
-        "Evaluarea dezvoltării emoționale și comportamentale, a suspiciunii de ADHD și a dificultăților de învățare. Rezultatul este un raport clar, cu recomandări practice pentru familie și școală.",
-      situatii: [
-        "suspiciune de ADHD sau dificultăți de atenție",
-        "dificultăți de învățare",
-        "dezvoltare emoțională și comportamentală",
-        "evaluarea relației părinte-copil m&M („mic și Mare”)",
-      ],
-    },
-    {
       number: "04",
-      title: "Evaluare clinică psihologică pentru adulți",
-      audience: "Adulți",
+      title: "Evaluare clinică psihologică",
+      audience: "Copii, adolescenți și adulți",
       description:
-        "Evaluare pentru anxietate, depresie, tulburări de personalitate, tulburări afective și alte dificultăți psihologice, cu instrumente validate științific.",
+        "Când e nevoie de o imagine clară înainte de psihoterapie: evaluarea dezvoltării emoționale și comportamentale, a suspiciunii de ADHD, a anxietății sau a depresiei, cu instrumente validate științific și un raport cu recomandări practice.",
       situatii: [
-        "anxietate și depresie",
-        "tulburări afective",
-        "trăsături și tulburări de personalitate",
+        "suspiciune de ADHD sau dificultăți de învățare, la copii",
+        "anxietate, depresie, tulburări afective, la adulți",
+        "evaluarea relației părinte-copil m&M („mic și Mare”)",
         "evaluare la cererea medicului",
       ],
     },
@@ -379,7 +379,7 @@ export const ABOUT = {
   title: "Bună, sunt *Liliana*",
   /* ⚠️ Nu adăuga informații care nu pot fi susținute documentar. */
   paragraphs: [
-    "Sunt psiholog clinician și psihoterapeut integrativ. Lucrez cu adulți, adolescenți și copii și am însoțit oameni aflați în momente foarte diferite ale vieții: anxietate și epuizare, pierderi și despărțiri, traume, dar și perioade în care pur și simplu nu mai știau încotro să meargă.",
+    "Sunt psihoterapeut integrativ, cu atestat de liberă practică de la Colegiul Psihologilor din România, și psiholog clinician. Psihoterapia este centrul muncii mele: lucrez cu adulți, adolescenți și copii și am însoțit oameni aflați în momente foarte diferite ale vieții: anxietate și epuizare, pierderi și despărțiri, traume, dar și perioade în care pur și simplu nu mai știau încotro să meargă.",
     "Pornesc de la convingerea că fiecare dintre noi are resursele de care are nevoie ca să facă față vieții, chiar dacă uneori nu le mai vede. Iar schimbarea reală nu vine din sfaturi, ci dintr-o relație în care cineva te ascultă cu atenție, fără să te grăbească și fără să te judece.",
     "Ca psihoterapeut integrativ, îmbin tehnici fundamentate științific din mai multe orientări, alese după nevoile tale, păstrând în centru relația terapeutică. Cu copiii lucrez prin joc, poveste și Sandtray, iar cu părinții ca parteneri: nimeni nu își cunoaște copilul mai bine decât ei.",
     "Învăț din fiecare om cu care lucrez, atât ca terapeut, cât și ca om, și mă întreb mereu cum te pot însoți mai bine pe drumul tău.",
@@ -387,9 +387,10 @@ export const ABOUT = {
   credentials: [
     /* ⚠️ DE VERIFICAT cu Liliana: denumirile exacte ale instituțiilor
        (facultate, master, asociația de psihoterapie integrativă). */
+    "Psihoterapeut integrativ, atestat de Colegiul Psihologilor din România",
+    "Formare completă în psihoterapie integrativă, 650 de ore (IESTCA)",
+    "Specializare în lucrul cu trauma în psihoterapia integrativă (ARPI)",
     "Psiholog clinician, Colegiul Psihologilor din România",
-    "Psihoterapeut integrativ, cu formare în psihoterapie integrativă",
-    "Formare în psihoterapia copilului și adolescentului (IESTCA)",
     "Evaluarea relației părinte-copil m&M („mic și Mare”)",
     "Practician în programare neuro-lingvistică (NLP)",
     "Formare în terapia experiențială Sandtray",
@@ -409,16 +410,16 @@ export const DIPLOME = {
     "Formarea nu se oprește niciodată. Iată câteva dintre documentele care o atestă.",
   documente: [
     {
-      src: "/diplome/atestat-psihologie-clinica-2025.webp",
-      titlu: "Atestat de liberă practică: psihologie clinică, autonom",
-      emitent: "Colegiul Psihologilor din România",
-      an: "2025",
-    },
-    {
       src: "/diplome/atestat-psihoterapie-integrativa-2023.webp",
       titlu: "Atestat de liberă practică: psihoterapie integrativă",
       emitent: "Colegiul Psihologilor din România",
       an: "2023",
+    },
+    {
+      src: "/diplome/atestat-psihologie-clinica-2025.webp",
+      titlu: "Atestat de liberă practică: psihologie clinică, autonom",
+      emitent: "Colegiul Psihologilor din România",
+      an: "2025",
     },
     {
       src: "/diplome/iestca-psihoterapie-integrativa-2022.webp",
@@ -566,8 +567,16 @@ export const FAQ = {
       a: "Pentru că terapia nu e doar pentru momentele de criză. Poți veni ca să te cunoști mai bine, să înveți să răspunzi altfel situațiilor dificile, să fii mai blând cu tine sau să crești în direcția pe care ți-o dorești.",
     },
     {
-      q: "E ceva în neregulă cu mine dacă mă gândesc să merg la psiholog?",
+      q: "E ceva în neregulă cu mine dacă mă gândesc să merg la psihoterapeut?",
       a: "Deloc. Dimpotrivă: să îți pui întrebări despre starea ta și să ceri sprijin e un semn de grijă față de tine, nu de slăbiciune.",
+    },
+    {
+      q: "Care e diferența dintre psihoterapeut, psiholog și psihiatru?",
+      a: "Psihiatrul este medic: pune diagnostice medicale și poate prescrie medicamente. Psihoterapeutul lucrează prin ședințe de psihoterapie, fără medicamente, cu cauzele suferinței: emoții, gânduri, tipare și relații. Psihologul clinician face evaluări și intervenții psihologice. Eu sunt psihoterapeut integrativ și psiholog clinician, deci nu prescriu medicamente. Pentru depresie severă, anxietate foarte intensă sau alte situații în care tratamentul medicamentos ajută, colaborez cu medicul psihiatru: psihoterapia și tratamentul se completează.",
+    },
+    {
+      q: "Ce este psihoterapia integrativă?",
+      a: "Este o formă de psihoterapie care îmbină, într-un mod coerent, metode validate din mai multe școli terapeutice, alese după nevoile fiecărui om, nu după o singură teorie. În centrul ei stă relația terapeutică, iar scopul nu e doar ameliorarea simptomelor, ci înțelegerea și schimbarea tiparelor care le întrețin.",
     },
     {
       q: "Ședințele online sunt la fel de eficiente?",
@@ -598,7 +607,7 @@ export const CONTACT = {
   eyebrow: "Contact",
   title: "Primul pas e *cel mai greu*",
   subtitle:
-    "Dacă te gândești de ceva vreme să mergi la psiholog, scrie-mi. Nu trebuie să știi de la început ce vrei să spui.",
+    "Dacă te gândești de ceva vreme să începi psihoterapia, scrie-mi. Nu trebuie să știi de la început ce vrei să spui.",
 };
 
 /* -------------------------------------------------------------------------- */

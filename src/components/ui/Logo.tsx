@@ -16,7 +16,7 @@ export function Logo({
   return (
     <Image
       src={ton === "deschis" ? "/logo-deschis.svg" : "/logo.svg"}
-      alt="Liliana Jgheban, psiholog și psihoterapeut"
+      alt="Liliana Jgheban, psihoterapeut integrativ"
       width={marime}
       height={marime}
       className={`shrink-0 ${className}`}

@@ -334,7 +334,7 @@ export async function genereazaRaportPdf(date: DateRaport): Promise<Uint8Array> 
   }
 
   d.doc.setTitle("Cum stai, de fapt, în relația ta? · Raport personal");
-  d.doc.setAuthor("Liliana Jgheban, psiholog");
+  d.doc.setAuthor("Liliana Jgheban, psihoterapeut");
   d.doc.setSubject("Raport personal din trusa de ajutor „Cum stai, de fapt, în relația ta?”");
   d.doc.setCreator(SITE.url);
 
@@ -662,7 +662,7 @@ export async function genereazaRaportPdf(date: DateRaport): Promise<Uint8Array> 
   d.scrie("Liliana Jgheban", tx, ay - 30, f.titluBold, 15, C.cerneala);
   let yb = ay - 48;
   for (const l of d.rupe(
-    "Psiholog clinician și psihoterapeut integrativ, cu cabinet în București. Lucrează cu adulți, cupluri, copii și părinți, și e autoarea ghidului practic despre cuplu, divorț și familie din această trusă.",
+    "Psihoterapeut integrativ și psiholog clinician, cu cabinet în București. Lucrează cu adulți, cupluri, copii și părinți, și e autoarea ghidului practic despre cuplu, divorț și familie din această trusă.",
     f.text,
     9.5,
     W - MX - tx,

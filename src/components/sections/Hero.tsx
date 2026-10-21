@@ -185,7 +185,7 @@ function Portret() {
       <div className="relative aspect-[4/5] w-full overflow-hidden">
         <Image
           src={PHOTOS.heroPortret}
-          alt="Liliana Jgheban, psiholog clinician și psihoterapeut integrativ în București"
+          alt="Liliana Jgheban, psihoterapeut integrativ în București"
           fill
           priority
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 352px, 31rem"
@@ -255,8 +255,8 @@ function CasetaHero() {
         aria-hidden={chat || undefined}
         className="glass-strong px-6 pb-8 pt-7 sm:px-10 sm:pb-10 sm:pt-10 lg:!bg-white/45 lg:px-12 lg:pb-12 lg:pt-12"
       >
-        {/* Titlul principal. Pentru Google se citește „Liliana Jgheban — Psiholog
-            clinician și psihoterapeut integrativ în București" (numele întâi, apoi
+        {/* Titlul principal. Pentru Google se citește „Liliana Jgheban — Psihoterapeut
+            integrativ în București" (numele întâi, apoi
             ce și unde); pe ecran rândul mic stă deasupra numelui. */}
         <h1 className="flex flex-col-reverse">
           <motion.span

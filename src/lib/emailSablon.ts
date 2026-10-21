@@ -122,7 +122,7 @@ function html(c: ContinutEmail): string {
   if (c.semnatura) {
     parti.push(`<p style="margin:28px 0 0;font-family:${SANS};font-size:16px;line-height:1.7;color:${C.cernealaMoale};">Cu drag,</p>
 <p style="margin:4px 0 0;font-family:${SERIF};font-size:20px;line-height:1.3;color:${C.cerneala};">Liliana Jgheban</p>
-<p style="margin:2px 0 0;font-family:${SANS};font-size:13px;color:${C.cernealaStearsa};">Psiholog clinician și psihoterapeut integrativ</p>`);
+<p style="margin:2px 0 0;font-family:${SANS};font-size:13px;color:${C.cernealaStearsa};">Psihoterapeut integrativ și psiholog clinician</p>`);
   }
 
   const subsol = c.intern
@@ -182,7 +182,7 @@ function text(c: ContinutEmail): string {
   b.push(...(c.dupaDetalii ?? []));
   if (c.buton) b.push(`${c.buton.text}: ${c.buton.href}`);
   if (c.linkuri?.length) b.push(c.linkuri.map((l) => `${l.text}: ${l.href}`).join("\n"));
-  if (c.semnatura) b.push("Cu drag,\nLiliana Jgheban\nPsiholog clinician și psihoterapeut integrativ");
+  if (c.semnatura) b.push("Cu drag,\nLiliana Jgheban\nPsihoterapeut integrativ și psiholog clinician");
   if (!c.intern) b.push(`—\nLiliana Jgheban · Cabinet individual de psihologie\n${SITE.phone} · ${SITE.email}\n${SITE.url}`);
   return b.join("\n\n");
 }

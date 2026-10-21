@@ -11,7 +11,7 @@ import { Lumina } from "@/components/ui/Lumina";
 export const metadata: Metadata = metaPagina({
   titlu: "Blog",
   descriere:
-    "Articole despre psihoterapie, relații, parenting și dezvoltare personală, scrise de psiholog Liliana Jgheban.",
+    "Articole despre psihoterapie, anxietate, depresie, traumă, relații și parenting, scrise de psihoterapeutul Liliana Jgheban, din București.",
   cale: "/blog",
 });
 

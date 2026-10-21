@@ -43,8 +43,7 @@ export function Footer() {
               {SITE.role}
             </p>
             <p className="mt-6 max-w-sm font-sans text-[0.87rem] leading-[1.85] text-cream/55">
-              Cabinet de psihologie și psihoterapie pentru adulți, adolescenți și
-              copii. Ședințe în cabinet și online.
+              Cabinet de psihoterapie pentru adulți, adolescenți și copii. Ședințe în cabinet și online.
             </p>
 
             {activeSocials.length > 0 && (

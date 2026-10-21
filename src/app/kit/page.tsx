@@ -40,7 +40,7 @@ import { SITE } from "@/content/site";
 
 export const metadata: Metadata = metaPagina({
   titlu: `Trusa de ajutor „${NUME_KIT}”: test, raport personal și ghid`,
-  descriere: `Test de 30 de întrebări despre relația ta, raport personal detaliat în PDF și ghidul practic de 79 de pagini despre cuplu, divorț și familie, creat de psihologul Liliana Jgheban. ${PRET_KIT_LEI} lei.`,
+  descriere: `Test de 30 de întrebări despre relația ta, raport personal detaliat în PDF și ghidul practic de 79 de pagini despre cuplu, divorț și familie, creat de psihoterapeutul Liliana Jgheban. ${PRET_KIT_LEI} lei.`,
   cale: "/kit",
 });
 
@@ -142,7 +142,7 @@ export default function KitPage() {
               </h1>
               <p className="mt-6 max-w-xl font-sans text-[1.02rem] leading-[1.85] text-ink-soft">
                 O trusă de ajutor completă, făcută acasă, în ritmul tău: un test de 30 de întrebări, un raport personal detaliat pe
-                care îl descarci în PDF și ghidul practic de 79 de pagini scris de Liliana Jgheban, psiholog clinician.
+                care îl descarci în PDF și ghidul practic de 79 de pagini scris de Liliana Jgheban, psihoterapeut.
               </p>
               <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
                 <a
@@ -157,7 +157,7 @@ export default function KitPage() {
                 <span className="font-sans text-[0.84rem] text-ink-muted">Plătești abia după ce termini testul</span>
               </div>
               <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2">
-                {["Raport personal în PDF", "Creat de un psiholog clinician", "Confidențial"].map((t) => (
+                {["Raport personal în PDF", "Creat de un psihoterapeut", "Confidențial"].map((t) => (
                   <li key={t} className="flex items-center gap-2 font-sans text-[0.88rem] text-ink">
                     <IconCheck className="h-4 w-4 text-periwinkle" />
                     {t}
@@ -353,7 +353,7 @@ export default function KitPage() {
             <Reveal>
               <Image
                 src="/foto/liliana-portret-2.jpg"
-                alt="Liliana Jgheban, psiholog clinician"
+                alt="Liliana Jgheban, psihoterapeut integrativ"
                 width={800}
                 height={1000}
                 sizes="(min-width: 768px) 360px, 100vw"
@@ -366,7 +366,7 @@ export default function KitPage() {
                 Liliana <em className="not-italic text-periwinkle">Jgheban</em>
               </h2>
               <p className="mt-5 font-sans text-[0.96rem] leading-[1.85] text-ink-soft">
-                Psiholog clinician și psihoterapeut integrativ, cu cabinet în București. Lucrează cu adulți, cupluri,
+                Psihoterapeut integrativ și psiholog clinician, cu cabinet în București. Lucrează cu adulți, cupluri,
                 copii și părinți, și a scris ghidul inclus în trusă pentru oamenii care trec printr-o criză de cuplu, o
                 separare sau începutul unei familii noi.
               </p>

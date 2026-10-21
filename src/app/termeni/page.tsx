@@ -21,7 +21,7 @@ const sections: LegalSection[] = [
   {
     heading: "1. Cine suntem",
     paragraphs: [
-      `Site-ul ${SITE.url.replace("https://", "")} aparține ${F.denumire} (${F.scurt}), CIF ${F.cif}, cu sediul în ${F.sediu}, prin care ${SITE.name}, psiholog clinician și psihoterapeut, oferă servicii psihologice.`,
+      `Site-ul ${SITE.url.replace("https://", "")} aparține ${F.denumire} (${F.scurt}), CIF ${F.cif}, cu sediul în ${F.sediu}, prin care ${SITE.name}, psihoterapeut integrativ și psiholog clinician, oferă servicii psihologice.`,
       `Ședințele au loc la cabinetul din ${SITE.address} sau online. Prin folosirea site-ului confirmi că ai citit și accepți acești termeni.`,
     ],
   },
