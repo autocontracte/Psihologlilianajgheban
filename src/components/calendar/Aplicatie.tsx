@@ -65,6 +65,8 @@ export function Aplicatie({ initial }: { initial: LunaCal }) {
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
   const [install, setInstall] = useState<InstallEvent | null>(null);
+  /** vederile de dinainte, pentru „înapoi" (din Zi înapoi în Lună etc.) */
+  const [istoric, setIstoric] = useState<Vedere[]>([]);
   const loadSeq = useRef(0);
 
   /* ---------------------------------------------------------- Încărcare */
@@ -130,10 +132,67 @@ export function Aplicatie({ initial }: { initial: LunaCal }) {
     return () => clearTimeout(t);
   }, [notice]);
 
-  function alegeVedere(v: Vedere) {
+  /** `adanc`: s-a intrat dintr-o vedere în alta (lună → zi), deci „înapoi" revine.
+      Din meniu, vederea nouă devine punctul de pornire. */
+  function alegeVedere(v: Vedere, adanc = false) {
     scrie("cal-vedere", v);
+    setIstoric(adanc ? [...istoric, vedere].slice(-10) : []);
     setVedere(v);
   }
+
+  /* ------------------------------------------------- Butonul „înapoi"
+
+     Pe Android, „înapoi" ar scoate din aplicație: pagina nu are istoric.
+     Cât e ceva de închis sau de întors, ținem o intrare în plus în istoricul
+     browserului; „înapoi" o consumă, iar noi închidem ce e deasupra (detaliile,
+     formularul, foaia zilei, meniul, căutarea) sau revenim la vederea de
+     dinainte. Când nu mai e nimic, intrarea dispare și „înapoi" iese. */
+
+  const adanc = !!detalii || !!nou || !!foaie || sertar || cauta !== null || istoric.length > 0;
+  const armat = useRef(false);
+  const ignora = useRef(false);
+  const [rearmeaza, setRearmeaza] = useState(0);
+
+  useEffect(() => {
+    if (adanc && !armat.current) {
+      window.history.pushState({ calendar: true }, "");
+      armat.current = true;
+    } else if (!adanc && armat.current) {
+      // s-a închis din aplicație: scoatem intrarea, fără să mai facem nimic la ea
+      armat.current = false;
+      ignora.current = true;
+      window.history.back();
+    }
+  }, [adanc, rearmeaza]);
+
+  const inapoi = useRef<() => void>(() => {});
+  inapoi.current = () => {
+    if (detalii) setDetalii(null);
+    else if (nou) setNou(null);
+    else if (foaie) setFoaie(null);
+    else if (sertar) setSertar(false);
+    else if (cauta !== null) setCauta(null);
+    else if (istoric.length) {
+      const prev = istoric[istoric.length - 1];
+      setIstoric(istoric.slice(0, -1));
+      scrie("cal-vedere", prev);
+      setVedere(prev);
+    }
+  };
+
+  useEffect(() => {
+    const onPop = () => {
+      if (ignora.current) {
+        ignora.current = false;
+        return;
+      }
+      armat.current = false;
+      inapoi.current();
+      setRearmeaza((n) => n + 1);
+    };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
 
   function alegeAscunse(a: Strat[]) {
     setAscunse(a);
@@ -188,7 +247,7 @@ export function Aplicatie({ initial }: { initial: LunaCal }) {
             </button>
             <button
               type="button"
-              onClick={() => vedere === "luna" && alegeVedere("an")}
+              onClick={() => vedere === "luna" && alegeVedere("an", true)}
               className="ml-1 min-w-0 truncate rounded-[0.8rem] px-2 py-1 text-left font-sans text-[1.85rem] font-bold tracking-tight text-ink"
             >
               {titlu}
@@ -257,7 +316,7 @@ export function Aplicatie({ initial }: { initial: LunaCal }) {
           today={data.today}
           onMonth={(first) => {
             setSelected(first.slice(0, 7) === data.today.slice(0, 7) ? data.today : first);
-            alegeVedere("luna");
+            alegeVedere("luna", true);
           }}
           onSwipe={muta}
         />
@@ -271,7 +330,7 @@ export function Aplicatie({ initial }: { initial: LunaCal }) {
           onSwipe={muta}
           onDay={(d) => {
             setSelected(d);
-            alegeVedere("zi");
+            alegeVedere("zi", true);
           }}
         />
       ) : (
@@ -339,7 +398,7 @@ export function Aplicatie({ initial }: { initial: LunaCal }) {
           onDay={() => {
             setFoaie(null);
             setSelected(foaie);
-            alegeVedere("zi");
+            alegeVedere("zi", true);
           }}
         />
       )}
