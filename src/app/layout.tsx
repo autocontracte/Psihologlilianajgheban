@@ -21,7 +21,7 @@ const sourceSans = Source_Sans_3({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
-    default: `Psihoterapeut în ${SITE.city} · Psihoterapie integrativă | ${SITE.name}`,
+    default: `Psihoterapeut integrativ în ${SITE.city} | ${SITE.name}`,
     template: `%s | ${SITE.name}`,
   },
   description: SITE.description,
@@ -59,12 +59,12 @@ export const metadata: Metadata = {
     locale: "ro_RO",
     url: SITE.url,
     siteName: SITE.name,
-    title: `Psihoterapeut în ${SITE.city} · Psihoterapie integrativă | ${SITE.name}`,
+    title: `Psihoterapeut integrativ în ${SITE.city} | ${SITE.name}`,
     description: SITE.description,
   },
   twitter: {
     card: "summary_large_image",
-    title: `Psihoterapeut în ${SITE.city} · Psihoterapie integrativă | ${SITE.name}`,
+    title: `Psihoterapeut integrativ în ${SITE.city} | ${SITE.name}`,
     description: SITE.description,
   },
   /* Codurile de verificare pentru Google Search Console și Bing Webmaster
