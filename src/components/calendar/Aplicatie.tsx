@@ -17,7 +17,7 @@ import { Detalii } from "./Detalii";
 import { Formular, type Propunere } from "./Formular";
 import { Luna } from "./Luna";
 import { BaraLaterala, Sertar } from "./Sertar";
-import { An, FoaieZi, Ore, Program, Rand } from "./Vederi";
+import { An, FoaieZi, Ore, PanouZi, Program, Rand } from "./Vederi";
 
 /* ----------------------------------------------------------------------------
    Calendarul Lilianei, ca aplicația de calendar a telefonului: programările
@@ -338,7 +338,25 @@ export function Aplicatie({ initial }: { initial: LunaCal }) {
             </div>
           </div>
         ) : vedere === "luna" ? (
-          <Luna data={data} selected={selected} ascunse={ascunse} onSelect={setSelected} onOpen={setFoaie} onSwipe={muta} />
+          <div className="flex min-h-0 flex-1">
+            <Luna
+              data={data}
+              selected={selected}
+              ascunse={ascunse}
+              onSelect={setSelected}
+              // pe ecran lat ziua e deja în panoul din dreapta: al doilea atac o deschide pe ore
+              onOpen={(d) => (window.matchMedia("(min-width: 600px)").matches ? alegeVedere("zi", true) : setFoaie(d))}
+              onSwipe={muta}
+            />
+            <PanouZi
+              data={data}
+              date={selected}
+              ascunse={ascunse}
+              onEv={setDetalii}
+              onAdd={() => setNou({ date: selected })}
+              onDay={() => alegeVedere("zi", true)}
+            />
+          </div>
         ) : vedere === "an" ? (
           <An
             year={Number(selected.slice(0, 4))}
@@ -368,7 +386,7 @@ export function Aplicatie({ initial }: { initial: LunaCal }) {
 
         {/* Adăugare 22 oct. + */}
         {vedere !== "an" && cauta === null && (
-          <div className="pointer-events-none fixed inset-x-0 bottom-0 z-20 flex justify-center pb-[max(1.25rem,env(safe-area-inset-bottom))] lg:hidden">
+          <div className={`pointer-events-none fixed inset-x-0 bottom-0 z-20 flex justify-center pb-[max(1.25rem,env(safe-area-inset-bottom))] lg:hidden ${vedere === "luna" ? "min-[600px]:hidden" : ""}`}>
             <button
               type="button"
               onClick={() => setNou({ date: selected })}

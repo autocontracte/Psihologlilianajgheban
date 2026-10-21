@@ -46,7 +46,7 @@ export function Rand({ e, onClick }: { e: Ev; onClick: () => void }) {
     <button
       type="button"
       onClick={onClick}
-      className="flex w-full items-stretch gap-3 rounded-[1rem] bg-cream-warm px-3 py-3 text-left transition-colors hover:bg-cream-deep"
+      className="flex w-full items-stretch gap-3 rounded-[1rem] border border-ink/[0.06] bg-white/85 px-3 py-3 text-left transition-colors hover:border-ink/20"
     >
       <span className="w-1.5 shrink-0 rounded-full" style={{ background: culoare(e) }} />
       <span className="w-[4.6rem] shrink-0 font-sans text-[1rem] tabular-nums text-ink-soft">
@@ -385,5 +385,66 @@ export function Program({
         Luna următoare →
       </button>
     </div>
+  );
+}
+
+/* --------------------------------------------- Panoul zilei (ecran lat) */
+
+/** Lângă lună, pe ecranele late (Fold desfăcut, tabletă, calculator): ziua aleasă, ca listă. */
+export function PanouZi({
+  data,
+  date,
+  ascunse,
+  onEv,
+  onAdd,
+  onDay,
+}: {
+  data: LunaCal;
+  date: string;
+  ascunse: Strat[];
+  onEv: (e: Ev) => void;
+  onAdd: () => void;
+  onDay: () => void;
+}) {
+  const list = aleZilei(data, date, ascunse);
+  const programari = list.filter((e) => e.kind === "prog").length;
+  return (
+    <aside aria-label={longDate(date)} className="hidden w-[16.5rem] shrink-0 flex-col border-l border-ink/10 bg-cream-warm min-[600px]:flex lg:w-[19rem]">
+      <div className="flex items-start justify-between gap-2 px-4 pb-2 pt-4">
+        <button type="button" onClick={onDay} className="text-left hover:text-periwinkle">
+          <span className="block font-sans text-[0.9rem] font-semibold text-ink-soft first-letter:uppercase">
+            {date === data.today ? "Azi" : ["luni", "marți", "miercuri", "joi", "vineri", "sâmbătă", "duminică"][isoWeekday(date) - 1]}
+          </span>
+          <span className="block font-display text-[1.6rem] leading-tight text-ink">{shortDate(date).replace(".", "")}</span>
+        </button>
+        <button
+          type="button"
+          onClick={onAdd}
+          aria-label="Adăugare"
+          className="mt-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-periwinkle text-cream shadow-[0_8px_20px_-10px_rgba(110,133,103,0.9)] transition-colors hover:bg-ink"
+        >
+          <Plus className="h-6 w-6" />
+        </button>
+      </div>
+      <p className="px-4 pb-3 font-sans text-[0.9rem] text-ink-muted">
+        {programari === 0 ? "Nicio programare" : programari === 1 ? "O programare" : `${programari} programări`}
+        {list.length > programari ? ` · ${list.length - programari} în Google` : ""}
+      </p>
+      <div className="min-h-0 flex-1 space-y-2 overflow-y-auto px-3 pb-4">
+        {list.map((e) => (
+          <Rand key={e.id} e={e} onClick={() => onEv(e)} />
+        ))}
+        {list.length === 0 && (
+          <button type="button" onClick={onAdd} className="w-full rounded-[1rem] border border-dashed border-ink/20 px-4 py-6 text-center font-sans text-[0.98rem] text-ink-muted hover:border-ink/40">
+            Ziua e liberă.
+            <br />
+            <span className="text-periwinkle">Adaugă ceva</span>
+          </button>
+        )}
+      </div>
+      <button type="button" onClick={onDay} className="mx-3 mb-4 rounded-full border border-ink/15 py-3 font-sans text-[0.98rem] font-semibold text-ink hover:border-ink">
+        Vezi ziua pe ore
+      </button>
+    </aside>
   );
 }

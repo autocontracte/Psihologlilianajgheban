@@ -1,17 +1,17 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type PointerEvent } from "react";
-import { addDays, minToTime, type LunaCal } from "@/lib/calendarTelefon";
+import { addDays, isoWeekday, minToTime, type LunaCal } from "@/lib/calendarTelefon";
 import { aleZilei, culoare, fundal, prenume, type Strat } from "./comun";
 
-/* Vederea pe lună, ca în calendarul telefonului: 6 săptămâni, în fiecare zi
-   evenimentele ca bare colorate, câte încap, apoi „+N". Un atac alege ziua,
-   al doilea o deschide. Glisarea stânga–dreapta schimbă luna. */
+/* Vederea pe lună, ca în calendarul telefonului: doar săptămânile lunii (4–6),
+   în fiecare zi evenimentele ca bare colorate, câte încap, apoi „+N". Un atac
+   alege ziua, al doilea o deschide. Glisarea stânga–dreapta schimbă luna. */
 
 const ZILE = ["L", "M", "M", "J", "V", "S", "D"];
 const ZILE_LUNGI = ["Luni", "Marți", "Miercuri", "Joi", "Vineri", "Sâmbătă", "Duminică"];
-/* Înălțimea unei bare și a numărului zilei, în pixeli; pe calculator, mai mari
-   (vezi .cal-bara în calendar.css). */
+/* Înălțimea unei bare (cu spațiul de sub ea) și a numărului zilei, în pixeli;
+   pe calculator, mai mari (vezi .cal-bara în calendar.css). */
 const MASURI = { telefon: { rand: 21, cap: 30 }, mare: { rand: 25, cap: 36 } };
 
 export function Luna({
@@ -30,8 +30,14 @@ export function Luna({
   onOpen: (date: string) => void;
   onSwipe: (dir: 1 | -1) => void;
 }) {
-  const days = useMemo(() => Array.from({ length: 42 }, (_, i) => addDays(data.start, i)), [data.start]);
   const month = data.month.slice(0, 7);
+  // câte săptămâni are luna pe ecran: fără rândul gol din luna următoare
+  const rows = useMemo(() => {
+    const [y, m] = month.split("-").map(Number);
+    const zile = new Date(Date.UTC(y, m, 0)).getUTCDate();
+    return Math.ceil((isoWeekday(data.month) - 1 + zile) / 7);
+  }, [month, data.month]);
+  const days = useMemo(() => Array.from({ length: rows * 7 }, (_, i) => addDays(data.start, i)), [data.start, rows]);
 
   // la schimbarea lunii grila intră cu o mică animație (e montată din nou)
   const [anim, setAnim] = useState(0);
@@ -45,13 +51,13 @@ export function Luna({
     if (!el) return;
     const measure = () => {
       const { rand, cap } = window.matchMedia("(min-width: 1024px)").matches ? MASURI.mare : MASURI.telefon;
-      setFit(Math.max(1, Math.floor((el.clientHeight / 6 - cap - 4) / rand)));
+      setFit(Math.max(1, Math.floor((el.clientHeight / rows - cap - 4) / rand)));
     };
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [anim]);
+  }, [anim, rows]);
 
   /* Glisarea cu degetul; cu mouse-ul se folosesc săgețile din bară. */
   const swipe = useRef<{ x: number; y: number; moved: boolean } | null>(null);
@@ -71,12 +77,12 @@ export function Luna({
   }
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col px-1.5 pb-[5.5rem] sm:px-3 lg:px-5 lg:pb-5 lg:pt-1">
-      <div className="grid grid-cols-7 pb-1 pt-1">
+    <div className="flex min-h-0 min-w-0 flex-1 flex-col px-1.5 pb-[5.5rem] sm:px-3 min-[600px]:pb-3 lg:px-5 lg:pb-5">
+      <div className="grid grid-cols-7 pb-1.5 pt-1">
         {ZILE.map((z, i) => (
           <div key={i} className={`text-center font-sans text-[0.95rem] font-semibold ${i === 6 ? "text-clay" : "text-ink-soft"}`}>
-            <span className="lg:hidden">{z}</span>
-            <span className="hidden lg:inline">{ZILE_LUNGI[i]}</span>
+            <span className="xl:hidden">{z}</span>
+            <span className="hidden xl:inline">{ZILE_LUNGI[i]}</span>
           </div>
         ))}
       </div>
@@ -84,7 +90,8 @@ export function Luna({
       <div
         ref={box}
         key={anim}
-        className="cal-luna grid min-h-0 flex-1 grid-cols-7 grid-rows-6 gap-[3px] lg:gap-1.5"
+        className="cal-luna grid min-h-0 flex-1 grid-cols-7 gap-[3px] lg:gap-1.5"
+        style={{ gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))` }}
         onPointerDown={down}
         onPointerUp={up}
         onPointerCancel={() => (swipe.current = null)}
@@ -108,9 +115,9 @@ export function Luna({
                 if (sel) onOpen(date);
                 else onSelect(date);
               }}
-              className={`relative flex min-w-0 flex-col overflow-hidden rounded-[0.6rem] text-left transition-colors ${
-                sunday ? "bg-sage-pale/60 lg:bg-sage-pale/50" : "bg-cream-warm lg:bg-white/80"
-              } lg:border lg:border-ink/[0.07] lg:hover:border-ink/25 ${sel ? "ring-2 ring-inset ring-ink/70" : ""} ${inMonth ? "" : "opacity-45"}`}
+              className={`relative flex min-w-0 flex-col overflow-hidden rounded-[0.7rem] border text-left transition-colors ${
+                sunday ? "border-clay/10 bg-clay-pale/45" : "border-ink/[0.06] bg-white/85 hover:border-ink/20"
+              } ${sel ? "!border-ink/70 ring-1 ring-inset ring-ink/70" : ""} ${inMonth ? "" : "opacity-40"}`}
             >
               <span className="flex h-[30px] shrink-0 items-center justify-center lg:h-[36px]">
                 <span
@@ -121,7 +128,7 @@ export function Luna({
                   {Number(date.slice(8))}
                 </span>
               </span>
-              <span className="flex min-w-0 flex-col gap-[3px] px-[2px] lg:gap-[5px] lg:px-1.5">
+              <span className="flex min-w-0 flex-col gap-[3px] px-[3px] lg:gap-[5px] lg:px-1.5">
                 {shown.map((e) =>
                   e.allDay ? (
                     <span key={e.id} className="cal-bara cal-bara-plina" style={{ background: fundal(e, 45) }}>
@@ -129,7 +136,7 @@ export function Luna({
                     </span>
                   ) : (
                     <span key={e.id} className="cal-bara" style={{ "--c": culoare(e) } as React.CSSProperties}>
-                      <span className="hidden md:inline">{minToTime(e.start)} </span>
+                      <span className="hidden 2xl:inline">{minToTime(e.start)} </span>
                       <span className="lg:hidden">{prenume(e)}</span>
                       <span className="hidden lg:inline">{e.title}</span>
                     </span>
