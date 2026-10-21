@@ -19,7 +19,6 @@ import {
   ClipboardList,
   KeyRound,
   LogOut,
-  Menu,
   Printer,
   Users,
 } from "lucide-react";
@@ -72,16 +71,7 @@ function nowMinutes(): number {
   return h * 60 + m;
 }
 
-export function Grila({
-  initial,
-  me,
-  onMenu,
-}: {
-  initial: Week;
-  me: Me;
-  /** deschide meniul lateral al aplicației */
-  onMenu?: () => void;
-}) {
+export function Grila({ initial, me }: { initial: Week; me: Me }) {
   const [week, setWeek] = useState(initial);
   const [loading, setLoading] = useState(false);
   const [zoom, setZoom] = useState<Zoom>("fit");
@@ -519,11 +509,6 @@ export function Grila({
       {/* Un singur rând de unelte, ca grila să înceapă cât mai sus */}
       <header className="prog-bara border-b border-ink/10 bg-cream px-3 py-1.5 lg:px-5">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
-          {onMenu && (
-            <button type="button" onClick={onMenu} className={unealta} aria-label="Meniu">
-              <Menu className="h-5 w-5" />
-            </button>
-          )}
           <h1 className="mr-1 font-display text-lg text-ink">Programator cabinete</h1>
 
           <div className="flex items-center gap-1">

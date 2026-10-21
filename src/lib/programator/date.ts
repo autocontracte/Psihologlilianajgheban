@@ -22,7 +22,6 @@ import {
   validDate,
   validSlot,
   type Kind,
-  type Month,
   type Person,
   type Release,
   type Reservation,
@@ -108,35 +107,6 @@ export async function week(anyDay: string): Promise<Week> {
   ]);
   return {
     start,
-    today: todayStr(),
-    rooms: r,
-    people: p,
-    reservations: res.map(fmt),
-    releases: rel.map(fmtRelease),
-  };
-}
-
-/**
- * Tot ce are nevoie vederea pe lună: cele 6 săptămâni afișate, de la lunea
- * dinaintea zilei de 1 până la duminica de după. `start` e acea primă luni,
- * ca ferestrele care primesc o săptămână să găsească datele zilei alese.
- */
-export async function month(anyDay: string): Promise<Month> {
-  const day = validDate(anyDay) ? anyDay : todayStr();
-  const first = `${day.slice(0, 7)}-01`;
-  const start = mondayOf(first);
-  const end = addDays(start, 41);
-  const range = { gte: start, lte: end };
-  const [r, p, res, rel] = await Promise.all([
-    rooms(),
-    people(),
-    db.cabReservation.findMany({ where: { date: range }, orderBy: [{ date: "asc" }, { startMin: "asc" }] }),
-    db.cabRelease.findMany({ where: { date: range }, orderBy: [{ date: "asc" }, { startMin: "asc" }] }),
-  ]);
-  return {
-    start,
-    end,
-    month: first,
     today: todayStr(),
     rooms: r,
     people: p,
