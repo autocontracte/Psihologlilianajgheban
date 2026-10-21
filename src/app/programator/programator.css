@@ -711,3 +711,72 @@ body:has(.prog) [data-site-widgets] {
     print-color-adjust: exact;
   }
 }
+
+/* ---------------------------------------------- Vederile de telefon (lună) */
+
+/* O programare într-o zi a lunii: bara colorată din stânga și numele. */
+.prog-bara-zi {
+  display: block;
+  height: 18px;
+  overflow: hidden;
+  border-left: 3px solid var(--c);
+  padding-left: 3px;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 18px;
+  white-space: nowrap;
+}
+
+.prog-luna {
+  animation: prog-intra 0.28s ease-out;
+  touch-action: pan-y;
+}
+
+@keyframes prog-intra {
+  from {
+    opacity: 0.35;
+    transform: translateY(6px);
+  }
+}
+
+.prog-foaie {
+  animation: prog-urca 0.25s ease-out;
+}
+
+@keyframes prog-urca {
+  from {
+    transform: translateY(40px);
+    opacity: 0.4;
+  }
+}
+
+/* Ce ține proprietarul în vederea pe zi: dungi în culoarea lui. */
+.prog-zi-prop {
+  background: repeating-linear-gradient(
+    -45deg,
+    color-mix(in srgb, var(--c) 22%, transparent) 0 8px,
+    color-mix(in srgb, var(--c) 10%, transparent) 8px 16px
+  );
+  border: 1px solid color-mix(in srgb, var(--c) 45%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prog-luna,
+  .prog-foaie {
+    animation: none;
+  }
+}
+
+/* În vederile de telefon, bara de derulare subțire, ca în aplicații. */
+.prog-telefon ::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+.prog-telefon ::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--color-ink) 25%, transparent);
+}
+.prog-telefon ::-webkit-scrollbar-track {
+  background: transparent;
+}

@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
-import { Grila } from "@/components/programator/Grila";
+import { AplicatieProgramator } from "@/components/programator/AplicatieProgramator";
 import { getProgUser } from "@/lib/programator/auth";
-import { week } from "@/lib/programator/date";
+import { month, week } from "@/lib/programator/date";
 
 export default async function ProgramatorPage({
   searchParams,
@@ -12,11 +12,12 @@ export default async function ProgramatorPage({
   if (!user) redirect("/intra");
 
   const { s } = await searchParams;
-  const data = await week(s ?? "");
+  const [m, w] = await Promise.all([month(s ?? ""), week(s ?? "")]);
 
   return (
-    <Grila
-      initial={data}
+    <AplicatieProgramator
+      initialMonth={m}
+      initialWeek={w}
       me={{ personId: user.personId, name: user.name, manager: user.manager }}
     />
   );

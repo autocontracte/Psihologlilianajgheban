@@ -102,6 +102,34 @@ export type Week = {
   releases: Release[];
 };
 
+/** Vederea pe lună: 6 săptămâni, de la `start` (o luni) până la `end` (o duminică). */
+export type Month = Week & {
+  /** ziua de 1 a lunii afișate */
+  month: string;
+  end: string;
+};
+
+export const LUNI_LUNGI = [
+  "ianuarie",
+  "februarie",
+  "martie",
+  "aprilie",
+  "mai",
+  "iunie",
+  "iulie",
+  "august",
+  "septembrie",
+  "octombrie",
+  "noiembrie",
+  "decembrie",
+];
+
+/** „sâm., 10 oct." — ca în calendarul telefonului. */
+export function phoneDate(dateStr: string): string {
+  const zi = ["lun.", "mar.", "mie.", "joi", "vin.", "sâm.", "dum."][isoWeekday(dateStr) - 1];
+  return `${zi}, ${shortDate(dateStr)}`;
+}
+
 /* --------------------------------------------------------------------- Date */
 
 export function validDate(s: unknown): s is string {
