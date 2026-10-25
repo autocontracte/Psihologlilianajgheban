@@ -1,3 +1,4 @@
+import { setDefaultResultOrder } from "node:dns";
 import { sincronizeazaDinGoogle } from "@/lib/calendarSync";
 import { elibereazaNeplatite } from "@/lib/plataProgramare";
 
@@ -8,6 +9,10 @@ import { elibereazaNeplatite } from "@/lib/plataProgramare";
 
    Aplicația rulează într-un singur proces (pm2), deci nu e nevoie de cron.
    -------------------------------------------------------------------------- */
+
+/* Pe VPS, IPv6 spre Google cade din când în când (timeout de 10 s), iar
+   sincronizarea pica. IPv4 merge mereu, deci îl încercăm primul. */
+setDefaultResultOrder("ipv4first");
 
 const INTERVAL_MS = 2 * 60_000;
 

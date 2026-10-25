@@ -98,10 +98,12 @@ export const HERO = {
 
 export const WELCOME = {
   quote:
-    "Psihoterapia nu e doar o conversație între doi oameni. E o întâlnire în care trecutul e privit cu blândețe și curiozitate, ca prezentul să devină mai ușor de trăit.",
+    "Psihoterapia începe în clipa în care alegi să te privești cu blândețe și să descoperi, într-o relație sigură, resursele pe care le ai deja.",
   body: [
-    "Sunt momente în care viața devine mai grea decât putem duce singuri: o anxietate care nu mai trece, atacuri de panică, o tristețe care se așază peste tot, o despărțire, un doliu, epuizarea de la muncă sau o schimbare care ne depășește.",
-    "A merge la psihoterapie nu înseamnă că ceva e în neregulă cu tine. Înseamnă că alegi să îți acorzi atenție, sprijin și timp. Ca psihoterapeut, rolul meu este să te însoțesc în acest drum, cu răbdare, fără judecată și în ritmul tău.",
+    "Poate fi vorba despre anxietate care nu te lasă să te relaxezi, atacuri de panică, burnout, tristețe care nu trece, stres cronic, o pierdere (doliu), o despărțire sau o schimbare majoră în viața ta. Poate fi vorba și despre un copil sau un adolescent pe care nu știi cum să îl înțelegi și să îl ajuți să își regleze emoțiile.",
+    "A începe psihoterapia nu înseamnă că ceva e în neregulă cu tine. Înseamnă că îți acorzi atenție, timp și un spațiu în care poți vorbi despre tine fără teamă de judecată.",
+    "Ca psihoterapeut integrativ și psiholog clinician în București, îmi adaptez abordarea la fiecare persoană, inclusiv în lucrul cu trauma, iar ședințele au loc în cabinet sau online.",
+    "Te voi însoți în ritmul tău, cu răbdare și încredere în tine.",
   ],
 };
 

@@ -89,26 +89,47 @@ export class GoogleError extends Error {
   }
 }
 
-/** Cerere către API. Aruncă GoogleError, cu statusul HTTP, la orice eșec. */
+const INCERCARI = 3;
+
+/**
+ * Cerere către API. Aruncă GoogleError, cu statusul HTTP, la orice eșec.
+ * Căderile de rețea și erorile trecătoare (429, 5xx) se reîncearcă de două
+ * ori, ca o singură conexiune ratată să nu lase sincronizarea pe jumătate.
+ */
 export async function google<T>(
   path: string,
   init: { method?: string; body?: unknown; query?: Record<string, string> } = {},
 ): Promise<T> {
   const url = new URL(API + path);
   for (const [k, v] of Object.entries(init.query ?? {})) url.searchParams.set(k, v);
+  // un eveniment nou nu se retrimite: dacă a ajuns totuși, ar apărea de două ori
+  const repetabila = init.method !== "POST" || path === "/freeBusy";
 
-  const res = await fetch(url, {
-    method: init.method ?? "GET",
-    headers: {
-      Authorization: `Bearer ${await accessToken()}`,
-      ...(init.body ? { "Content-Type": "application/json" } : {}),
-    },
-    body: init.body ? JSON.stringify(init.body) : undefined,
-    signal: AbortSignal.timeout(15_000),
-  });
+  for (let incercare = 1; ; incercare++) {
+    let res: Response;
+    try {
+      res = await fetch(url, {
+        method: init.method ?? "GET",
+        headers: {
+          Authorization: `Bearer ${await accessToken()}`,
+          ...(init.body ? { "Content-Type": "application/json" } : {}),
+        },
+        body: init.body ? JSON.stringify(init.body) : undefined,
+        signal: AbortSignal.timeout(15_000),
+      });
+    } catch (err) {
+      if (!repetabila || incercare >= INCERCARI) throw err;
+      await new Promise((r) => setTimeout(r, 1000 * incercare));
+      continue;
+    }
 
-  if (!res.ok) throw new GoogleError(res.status, `Google ${res.status}: ${await res.text()}`);
-  return (res.status === 204 ? undefined : await res.json()) as T;
+    if (res.ok) return (res.status === 204 ? undefined : await res.json()) as T;
+    const trecatoare = repetabila && (res.status === 429 || res.status >= 500);
+    if (!trecatoare || incercare >= INCERCARI) {
+      throw new GoogleError(res.status, `Google ${res.status}: ${await res.text()}`);
+    }
+    await new Promise((r) => setTimeout(r, 1000 * incercare));
+  }
 }
 
 export function caleEvenimente(eventId?: string): string {

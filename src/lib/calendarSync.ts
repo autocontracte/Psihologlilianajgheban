@@ -163,7 +163,11 @@ export async function toateEvenimentele(timeMin: Date, timeMax: Date): Promise<E
   return out;
 }
 
-let ruleaza = false;
+/** Trecerea în curs; o cerere nouă o așteaptă pe aceasta în loc să raporteze un succes fals. */
+let inCurs: Promise<RezultatSincronizare> | null = null;
+
+/** Cât se citește din Google pentru orele ocupate: un an înapoi și un an înainte. */
+const ZILE_BLOCARI = 365;
 
 export type RezultatSincronizare = {
   ok: boolean;
@@ -175,10 +179,15 @@ export type RezultatSincronizare = {
 };
 
 /** O trecere completă de sincronizare. Rulează periodic și la cerere. */
-export async function sincronizeazaDinGoogle(): Promise<RezultatSincronizare> {
-  if (!googleActiv) return { ok: false, eroare: "Google Calendar nu este configurat." };
-  if (ruleaza) return { ok: true };
-  ruleaza = true;
+export function sincronizeazaDinGoogle(): Promise<RezultatSincronizare> {
+  if (!googleActiv) return Promise.resolve({ ok: false, eroare: "Google Calendar nu este configurat." });
+  inCurs ??= oTrecere().finally(() => {
+    inCurs = null;
+  });
+  return inCurs;
+}
+
+async function oTrecere(): Promise<RezultatSincronizare> {
 
   const rezultat = { ok: true, evenimenteExterne: 0, mutate: 0, anulate: 0, trimise: 0 };
   await db.calendarSync.upsert({
@@ -192,8 +201,13 @@ export async function sincronizeazaDinGoogle(): Promise<RezultatSincronizare> {
     const timeMax = addMinutes(new Date(), (BOOKING_HORIZON_DAYS + 7) * 24 * 60);
 
     /* Dacă lista nu poate fi citită, ne oprim aici: fără ea nu putem ști ce
-       s-a șters, iar o listă goală ar anula pe nedrept programările. */
-    const evenimente = await toateEvenimentele(timeMin, timeMax);
+       s-a șters, iar o listă goală ar anula pe nedrept programările.
+       Se citește un an în ambele sensuri, ca blocările păstrate pe site să
+       fie o copie întreagă a calendarului, nu doar a zilelor următoare. */
+    const evenimente = await toateEvenimentele(
+      addMinutes(new Date(), -ZILE_BLOCARI * 24 * 60),
+      addMinutes(new Date(), ZILE_BLOCARI * 24 * 60),
+    );
 
     const vazuteLegate = new Set<string>();
     const externe: { googleEventId: string; title: string; start: Date; end: Date; allDay: boolean }[] = [];
@@ -231,7 +245,8 @@ export async function sincronizeazaDinGoogle(): Promise<RezultatSincronizare> {
           p.startsAt.getTime() !== interval.start.getTime() ||
           p.endsAt.getTime() !== interval.end.getTime();
 
-        if (mutata && !interval.allDay && p.status !== "COMPLETED") {
+        // ședințele trecute nu se mai mută (și nu se mai trimit emailuri despre ele)
+        if (mutata && !interval.allDay && p.status !== "COMPLETED" && interval.start >= timeMin) {
           const actualizata = await db.appointment.update({
             where: { id: p.id },
             data: {
@@ -358,7 +373,5 @@ export async function sincronizeazaDinGoogle(): Promise<RezultatSincronizare> {
       data: { lastError: eroare.slice(0, 500) },
     });
     return { ok: false, eroare };
-  } finally {
-    ruleaza = false;
   }
 }
