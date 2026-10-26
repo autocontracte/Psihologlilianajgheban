@@ -12,7 +12,7 @@ import {
   type Ev,
   type LunaCal,
 } from "@/lib/calendarTelefon";
-import { cere, type Strat, type Vedere } from "./comun";
+import { cere, stareSync, type Strat, type Vedere } from "./comun";
 import { Detalii } from "./Detalii";
 import { Formular, type Propunere } from "./Formular";
 import { Luna } from "./Luna";
@@ -243,6 +243,7 @@ export function Aplicatie({ initial }: { initial: LunaCal }) {
     ascunse,
     onAscunse: alegeAscunse,
     google: data.google.activ,
+    sync: data.sync,
     onSincronizat: (msg: string) => {
       setNotice(msg);
       load(selected, true);
@@ -317,6 +318,11 @@ export function Aplicatie({ initial }: { initial: LunaCal }) {
           )}
         </header>
 
+        {data.google.activ && !error && stareSync(data.sync).intarziat && (
+          <p role="alert" className="mx-3 mb-2 rounded-[1rem] bg-clay-pale px-4 py-2.5 font-sans text-[0.95rem] font-semibold text-clay">
+            {stareSync(data.sync).text} Ce vezi aici poate să nu fie la zi; apasă „Sincronizează acum" din meniu.
+          </p>
+        )}
         {(error || data.google.eroare) && (
           <p role="alert" className="mx-3 mb-2 rounded-[1rem] bg-clay-pale px-4 py-2.5 font-sans text-[0.95rem] text-clay">
             {error || data.google.eroare}

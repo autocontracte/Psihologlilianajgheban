@@ -80,7 +80,7 @@ export async function lunaCalendar(anyDay: string): Promise<LunaCal> {
   const t0 = zonedToUtc(start, "00:00");
   const t1 = zonedToUtc(addDays(end, 1), "00:00");
 
-  const [rows, services] = await Promise.all([
+  const [rows, services, sync] = await Promise.all([
     db.appointment.findMany({
       where: {
         startsAt: { gte: t0, lt: t1 },
@@ -92,6 +92,7 @@ export async function lunaCalendar(anyDay: string): Promise<LunaCal> {
       orderBy: { startsAt: "asc" },
     }),
     db.service.findMany({ where: { active: true }, orderBy: { position: "asc" } }),
+    db.calendarSync.findUnique({ where: { id: "google" } }),
   ]);
 
   const events: Ev[] = rows.map((r) => {
@@ -161,6 +162,7 @@ export async function lunaCalendar(anyDay: string): Promise<LunaCal> {
     events,
     services: services.map((s) => ({ id: s.id, name: s.name, duration: s.duration })),
     google: { activ: googleActiv, eroare },
+    sync: { lastOkAt: sync?.lastOkAt?.toISOString() ?? null, lastError: sync?.lastError ?? null },
   };
 }
 

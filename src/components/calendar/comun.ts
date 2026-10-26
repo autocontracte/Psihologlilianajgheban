@@ -1,8 +1,28 @@
 /* Bucăți comune aplicației de calendar a Lilianei (/calendar). */
 
-import { PAS, ZI_END, type Ev, type LunaCal } from "@/lib/calendarTelefon";
+import { PAS, SYNC_INTARZIAT_MIN, ZI_END, type Ev, type LunaCal } from "@/lib/calendarTelefon";
 
 export type Vedere = "an" | "luna" | "saptamana" | "zi" | "program";
+
+function deCat(min: number): string {
+  if (min < 1) return "chiar acum";
+  if (min < 60) return `acum ${min} min`;
+  const ore = Math.floor(min / 60);
+  if (ore < 48) return `acum ${ore} ${ore === 1 ? "oră" : "ore"}`;
+  return `acum ${Math.floor(ore / 24)} zile`;
+}
+
+/** Cât de proaspătă e sincronizarea cu Google: textul din meniu și dacă e cazul de avertisment. */
+export function stareSync(sync: LunaCal["sync"]): { intarziat: boolean; text: string; eroare: string | null } {
+  if (!sync.lastOkAt) return { intarziat: true, text: "Google nu s-a sincronizat niciodată.", eroare: sync.lastError };
+  const min = Math.floor((Date.now() - new Date(sync.lastOkAt).getTime()) / 60_000);
+  const intarziat = min >= SYNC_INTARZIAT_MIN;
+  return {
+    intarziat,
+    text: intarziat ? `Google nu s-a mai sincronizat de ${deCat(min).replace("acum ", "")}.` : `Sincronizat cu Google ${deCat(min)}.`,
+    eroare: intarziat ? sync.lastError : null,
+  };
+}
 
 /** Ce se poate ascunde din meniul lateral. */
 export type Strat = "PENDING" | "CONFIRMED" | "COMPLETED" | "google";

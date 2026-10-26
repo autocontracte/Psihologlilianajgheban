@@ -19,7 +19,7 @@ import {
   Settings,
 } from "lucide-react";
 import { LUNI_LUNGI, addDays, isoWeekday, lunaPlus, mondayOf, type LunaCal } from "@/lib/calendarTelefon";
-import { CULOARE, STRATURI, cere, type Strat, type Vedere } from "./comun";
+import { CULOARE, STRATURI, cere, stareSync, type Strat, type Vedere } from "./comun";
 
 /* Meniul calendarului: vederile, apoi ce se vede (programările după status
    și Google Calendar), apoi panoul și contul. Pe telefon e un sertar care
@@ -40,10 +40,28 @@ type MeniuProps = {
   ascunse: Strat[];
   onAscunse: (a: Strat[]) => void;
   google: boolean;
+  /** ultima sincronizare reușită, arătată sub butonul „Sincronizează acum" */
+  sync: LunaCal["sync"];
   onSincronizat: (msg: string) => void;
   /** promptul de instalare primit de la Chrome, dacă aplicația se poate instala */
   install: (() => void) | null;
 };
+
+/** Sub butonul de sincronizare: când a mers ultima dată; roșu dacă a trecut prea mult. */
+function StareSync({ sync, mic }: { sync: LunaCal["sync"]; mic: boolean }) {
+  const s = stareSync(sync);
+  return (
+    <p
+      role={s.intarziat ? "alert" : undefined}
+      className={`font-sans leading-snug ${mic ? "px-3 pb-1 text-[0.85rem]" : "px-4 pb-2 text-[0.95rem]"} ${
+        s.intarziat ? "rounded-[0.8rem] bg-clay-pale py-2 font-semibold text-clay" : "text-ink-soft"
+      }`}
+    >
+      {s.text}
+      {s.eroare && <span className="mt-1 block break-words font-normal">{s.eroare.slice(0, 160)}</span>}
+    </p>
+  );
+}
 
 /** Conținutul meniului. `mic`: rândurile mai strânse ale barei de pe calculator. */
 export function Meniu({
@@ -52,6 +70,7 @@ export function Meniu({
   ascunse,
   onAscunse,
   google,
+  sync: ultima,
   onSincronizat,
   install,
   mic = false,
@@ -143,6 +162,7 @@ export function Meniu({
           {sync ? "Se sincronizează…" : "Sincronizează acum"}
         </button>
       )}
+      {google && <StareSync sync={ultima} mic={mic} />}
       <Link href="/admin/programari" className={rand}>
         <CalendarClock className={icon} />
         Toate programările

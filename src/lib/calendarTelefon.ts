@@ -50,7 +50,12 @@ export type LunaCal = {
   events: Ev[];
   services: Serviciu[];
   google: { activ: boolean; eroare: string | null };
+  /** ultima sincronizare reușită cu Google (ISO) și ultima eroare, pentru semnalul din meniu */
+  sync: { lastOkAt: string | null; lastError: string | null };
 };
+
+/** După atâtea minute fără o sincronizare reușită, aplicația arată un avertisment roșu. */
+export const SYNC_INTARZIAT_MIN = 15;
 
 export const ZI_START = 7 * 60;
 export const ZI_END = 22 * 60;

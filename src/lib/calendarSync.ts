@@ -9,8 +9,11 @@ import {
   GoogleError,
 } from "@/lib/googleCalendar";
 import { emailProgramareMutata, emailStatusProgramare } from "@/lib/emailProgramari";
+import { CABINET_EMAIL, trimiteEmail } from "@/lib/email";
+import { compuneEmail } from "@/lib/emailSablon";
+import { SITE } from "@/content/site";
 import { BOOKING_HORIZON_DAYS } from "@/lib/slots";
-import { addMinutes, zonedToUtc } from "@/lib/tz";
+import { TZ, addMinutes, zonedToUtc } from "@/lib/tz";
 
 /* ----------------------------------------------------------------------------
    Sincronizarea în ambele sensuri între site și Google Calendar.
@@ -166,6 +169,48 @@ export async function toateEvenimentele(timeMin: Date, timeMax: Date): Promise<E
 /** Trecerea în curs; o cerere nouă o așteaptă pe aceasta în loc să raporteze un succes fals. */
 let inCurs: Promise<RezultatSincronizare> | null = null;
 
+/* ------------------------------------------------- alerta când se oprește */
+
+/** După atâtea minute fără nicio sincronizare reușită, cabinetul primește un email. */
+const ALERTA_DUPA_MIN = 30;
+
+/** Unde ajunge alerta: ALERTA_EMAIL din .env (pot fi mai multe, cu virgulă), altfel emailul cabinetului. */
+const ALERTA_CATRE = process.env.ALERTA_EMAIL || CABINET_EMAIL;
+
+async function alerteazaDacaPicaDeMult(lastOkAt: Date | null, alertSentAt: Date | null, eroare: string) {
+  if (alertSentAt) return; // o singură alertă pe căzătură
+  if (lastOkAt && Date.now() - lastOkAt.getTime() < ALERTA_DUPA_MIN * 60_000) return;
+  if (await emailAlerta(true, eroare, lastOkAt)) {
+    await db.calendarSync.update({ where: { id: "google" }, data: { alertSentAt: new Date() } });
+  }
+}
+
+function ora(d: Date): string {
+  return d.toLocaleString("ro-RO", { timeZone: TZ, day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" });
+}
+
+/** Emailul „sincronizarea s-a oprit" sau „și-a revenit". */
+async function emailAlerta(oprita: boolean, eroare: string | null, deLa: Date | null = null): Promise<boolean> {
+  return trimiteEmail({
+    to: ALERTA_CATRE,
+    subject: oprita ? "Google Calendar nu se mai sincronizează cu site-ul" : "Google Calendar se sincronizează din nou",
+    ...compuneEmail({
+      intern: true,
+      eticheta: "Sincronizare Google Calendar",
+      titlu: oprita ? "Sincronizarea s-a oprit" : "Sincronizarea și-a revenit",
+      paragrafe: oprita
+        ? [
+            `De peste ${ALERTA_DUPA_MIN} de minute site-ul nu reușește să se sincronizeze cu Google Calendar.` +
+              (deLa ? ` Ultima sincronizare reușită: ${ora(deLa)}.` : ""),
+            "Până își revine, ce pui în Google nu ajunge pe site (orele pot apărea libere), iar programările noi de pe site nu apar în Google. Site-ul încearcă singur la fiecare 2 minute; când merge din nou, primești un email.",
+          ]
+        : ["Site-ul și Google Calendar sunt din nou la zi. Tot ce s-a schimbat între timp a fost recuperat."],
+      ...(eroare ? { citat: { eticheta: "Eroarea", text: eroare.slice(0, 500) } } : {}),
+      buton: { text: "Deschide calendarul", href: `${SITE.url}/calendar` },
+    }),
+  });
+}
+
 /** Cât se citește din Google pentru orele ocupate: un an înapoi și un an înainte. */
 const ZILE_BLOCARI = 365;
 
@@ -188,6 +233,8 @@ export function sincronizeazaDinGoogle(): Promise<RezultatSincronizare> {
 }
 
 async function oTrecere(): Promise<RezultatSincronizare> {
+  const stare = await db.calendarSync.findUnique({ where: { id: "google" }, select: { alertSentAt: true } });
+  const alertaTrimisa = stare?.alertSentAt ?? null;
 
   const rezultat = { ok: true, evenimenteExterne: 0, mutate: 0, anulate: 0, trimise: 0 };
   await db.calendarSync.upsert({
@@ -362,16 +409,19 @@ async function oTrecere(): Promise<RezultatSincronizare> {
 
     await db.calendarSync.update({
       where: { id: "google" },
-      data: { lastOkAt: new Date(), lastError: null },
+      data: { lastOkAt: new Date(), lastError: null, alertSentAt: null },
     });
+    // dacă s-a trimis alerta că s-a oprit, anunțăm și că și-a revenit
+    if (alertaTrimisa) await emailAlerta(false, null);
     return rezultat;
   } catch (err) {
     const eroare = err instanceof Error ? err.message : String(err);
     console.error("[calendar] sincronizare esuata", err);
-    await db.calendarSync.update({
+    const sync = await db.calendarSync.update({
       where: { id: "google" },
       data: { lastError: eroare.slice(0, 500) },
     });
+    await alerteazaDacaPicaDeMult(sync.lastOkAt, sync.alertSentAt, eroare);
     return { ok: false, eroare };
   }
 }
