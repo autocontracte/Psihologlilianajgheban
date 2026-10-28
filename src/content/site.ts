@@ -22,7 +22,7 @@ export const SITE = {
   role: "Psihoterapeut integrativ · Psiholog clinician",
   url: "https://psihologlilianajgheban.ro",
   description:
-    "Psihoterapeut integrativ în București (Sector 3) și online: psihoterapie pentru adulți, copii și adolescenți, pentru anxietate, depresie, traumă și burnout.",
+    "Psihoterapeut integrativ în București (Sector 2) și online: psihoterapie pentru adulți, copii și adolescenți, pentru anxietate, depresie, traumă și burnout.",
 
   phone: "+40 764 802 536",
   phoneHref: "+40764802536",
@@ -102,7 +102,7 @@ export const WELCOME = {
   body: [
     "Poate fi vorba despre anxietate care nu te lasă să te relaxezi, atacuri de panică, burnout, tristețe care nu trece, stres cronic, o pierdere (doliu), o despărțire sau o schimbare majoră în viața ta. Poate fi vorba și despre un copil sau un adolescent pe care nu știi cum să îl înțelegi și să îl ajuți să își regleze emoțiile.",
     "A începe psihoterapia nu înseamnă că ceva e în neregulă cu tine. Înseamnă că îți acorzi atenție, timp și un spațiu în care poți vorbi despre tine fără teamă de judecată.",
-    "Ca psihoterapeut integrativ și psiholog clinician în București, îmi adaptez abordarea la fiecare persoană, inclusiv în lucrul cu trauma, iar ședințele au loc în cabinet sau online.",
+    "Ca psihoterapeut integrativ și psiholog clinician, îmi adaptez abordarea la fiecare persoană, inclusiv în lucrul cu trauma, iar ședințele au loc în București, în cabinet, și online, oriunde te-ai afla.",
     "Te voi însoți în ritmul tău, cu răbdare și încredere în tine.",
   ],
 };
@@ -353,11 +353,12 @@ export const FORMATS = {
       icon: "office",
       title: "În cabinet",
       description:
-        "Cabinetul de psihoterapie e pe strada Armenească nr. 10, în Sectorul 3, în centrul Bucureștiului, ușor de ajuns și din Sectorul 2. Un spațiu liniștit, gândit ca să te simți în siguranță, recomandat mai ales pentru psihoterapia copiilor, pentru evaluări și pentru lucrul experiențial Sandtray.",
+        "Cabinetul de psihoterapie e pe strada Armenească nr. 10, în Sectorul 2, în centrul Bucureștiului. Aici se întâlnesc granițele aproape tuturor sectoarelor, așa că ajungi ușor din orice zonă a orașului. Recomandat pentru evaluări clinice cu instrumente standardizate și, în special, pentru psihoterapia adultului, a copiilor și a adolescenților, cu diferite tehnici de lucru, inclusiv Sandtray (lădița cu nisip).",
       points: [
-        "Cadru dedicat, fără întreruperi",
-        "Potrivit pentru copii și ateliere experiențiale",
-        "Instrumente de evaluare la fața locului",
+        "Cadru de lucru securizant",
+        "Potrivit pentru adulți, adolescenți și copii",
+        "Instrumente de lucru specifice",
+        "Potrivit atelierelor experiențiale",
       ],
     },
     {
@@ -387,15 +388,16 @@ export const ABOUT = {
     "Învăț din fiecare om cu care lucrez, atât ca terapeut, cât și ca om, și mă întreb mereu cum te pot însoți mai bine pe drumul tău.",
   ],
   credentials: [
-    /* ⚠️ DE VERIFICAT cu Liliana: denumirile exacte ale instituțiilor
-       (facultate, master, asociația de psihoterapie integrativă). */
-    "Psihoterapeut integrativ, atestat de Colegiul Psihologilor din România",
-    "Formare completă în psihoterapie integrativă, 650 de ore (IESTCA)",
-    "Specializare în lucrul cu trauma în psihoterapia integrativă (ARPI)",
-    "Psiholog clinician, Colegiul Psihologilor din România",
-    "Evaluarea relației părinte-copil m&M („mic și Mare”)",
-    "Practician în programare neuro-lingvistică (NLP)",
-    "Formare în terapia experiențială Sandtray",
+    /* Lista și ordinea ei, exact cum le-a cerut Liliana (28 oct 2026). */
+    "Psihoterapeut integrativ",
+    "Psiholog clinician",
+    "Specializare în psihoterapia copiilor și adolescenților din perspectiva psihoterapiei integrative",
+    "Specializare în lucrul cu trauma din perspectiva psihoterapiei integrative",
+    "Specializare în evaluarea, conceptualizarea și intervenția relației părinte-copil prin metoda m&M („mic și Mare”)",
+    "Specializare în tehnici proiective",
+    "Specializare în tehnica Sandtray, în procesele de psihoterapie cu adulți, adolescenți, copii și relații",
+    "Specializare în analiza comportamentală (ABA) în terapia copiilor cu autism",
+    "Specializare în programare neuro-lingvistică (NLP)",
     "Evaluare clinică psihologică pentru copii, adolescenți și adulți",
   ],
 };
@@ -582,11 +584,11 @@ export const FAQ = {
     },
     {
       q: "Unde este cabinetul de psihoterapie?",
-      a: `Cabinetul este pe ${SITE.street}, în Sectorul 3, în centrul Bucureștiului, ușor de ajuns și din Sectorul 2. Indicațiile de acces îți vin odată cu confirmarea programării. Dacă nu poți ajunge la cabinet, putem lucra prin psihoterapie online.`,
+      a: `Cabinetul este pe ${SITE.street}, în Sectorul 2, în centrul Bucureștiului. Aici se întâlnesc granițele aproape tuturor sectoarelor, așa că ajungi ușor din orice zonă a orașului. Indicațiile de acces îți vin odată cu confirmarea programării. Dacă nu poți ajunge la cabinet, putem lucra prin psihoterapie online.`,
     },
     {
       q: "Lucrați și cu copiii? Ce este psihoterapia copilului?",
-      a: "Da. Am formare completă în psihoterapia integrativă a copilului și adolescentului. Cu copiii lucrez prin joc, desen, poveste și Sandtray, limbajul lor firesc, iar părinții sunt parteneri în proces, inclusiv prin consiliere parentală. Când e nevoie, facem întâi o evaluare, de exemplu pentru suspiciunea de ADHD.",
+      a: "Da. Lucrez cu copii cu vârste de peste 8 ani, prin joc directiv sau nondirectiv, tehnici proiective, povești terapeutice, Sandtray și alte metode potrivite vârstei, iar părinții sunt parteneri în proces, inclusiv prin consiliere parentală. Când e nevoie, facem întâi o evaluare, de exemplu pentru suspiciunea de ADHD.",
     },
     {
       q: "Ședințele online sunt la fel de eficiente?",

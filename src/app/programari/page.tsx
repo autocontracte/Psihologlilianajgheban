@@ -16,7 +16,7 @@ import { Val } from "@/components/ui/Val";
 export const metadata: Metadata = metaPagina({
   titlu: "Programează o ședință",
   descriere:
-    "Programează o ședință de psihoterapie cu Liliana Jgheban, psihoterapeut integrativ în București (Sector 3), sau psihoterapie online. Alegi ziua și ora; ședința durează 50 de minute.",
+    "Programează o ședință de psihoterapie cu Liliana Jgheban, psihoterapeut integrativ în București (Sector 2), sau psihoterapie online. Alegi ziua și ora; ședința durează 50 de minute.",
   cale: "/programari",
 });
 

@@ -139,7 +139,7 @@ export function Hero() {
             <Portret />
           </motion.div>
 
-          {/* Etichete de sticlă, pe un plan și mai apropiat. Pe telefon stau
+          {/* Eticheta de sticlă, pe un plan și mai apropiat. Pe telefon stau
               pe fotografie; de la tabletă în sus ies în afara ramei. */}
           <motion.div style={{ y: chipY, x: chipX }} className="pointer-events-none absolute inset-0">
             <motion.div
@@ -150,16 +150,6 @@ export function Hero() {
             >
               <IconOffice className="h-5 w-5 text-periwinkle" />
               <span className="font-sans text-[0.88rem] text-ink">În cabinet și online</span>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.9, delay: 1.05, ease: [0.22, 1, 0.36, 1] }}
-              className="glass-strong absolute bottom-[8%] right-3 px-5 py-3.5 sm:-right-6 sm:bottom-[12%] lg:-right-10"
-            >
-              {/* Fără preț la vedere: tariful e în întrebările frecvente și la programare. */}
-              <p className="font-display text-2xl leading-none text-ink">50 de minute</p>
-              <p className="mt-1.5 font-sans text-[0.78rem] text-ink-soft">o ședință de psihoterapie</p>
             </motion.div>
           </motion.div>
         </motion.div>

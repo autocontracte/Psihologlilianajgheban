@@ -137,9 +137,11 @@ export function Nav() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
-            className="glass-strong fixed inset-0 z-40 !border-0 lg:hidden"
+            className="glass-strong fixed inset-0 z-40 overflow-y-auto !border-0 lg:hidden"
           >
-            <div className="flex h-full flex-col justify-center px-8">
+            {/* Centrat când are loc; pe ecrane scunde începe sub logo și se derulează,
+                altfel primele rânduri ajung sub logo. */}
+            <div className="flex min-h-full flex-col justify-center px-8 pb-10 pt-28">
               <nav className="flex flex-col gap-1">
                 {NAV.map((item, i) => (
                   <motion.div

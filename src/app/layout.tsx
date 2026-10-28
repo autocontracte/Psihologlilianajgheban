@@ -125,7 +125,7 @@ export default function RootLayout({
                 address: {
                   "@type": "PostalAddress",
                   streetAddress: SITE.street,
-                  addressRegion: "Sector 3",
+                  addressRegion: "Sector 2",
                   postalCode: SITE.postalCode,
                   addressLocality: SITE.city,
                   addressCountry: "RO",
