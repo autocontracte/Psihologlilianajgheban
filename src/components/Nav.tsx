@@ -25,11 +25,14 @@ export function Nav() {
     };
   }, []);
 
-  // Blochează scroll-ul paginii cât timp meniul mobil e deschis
+  // Blochează scroll-ul paginii cât timp meniul mobil e deschis și ascunde
+  // butoanele plutitoare (WhatsApp, Ana), care altfel stau peste meniu.
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
+    document.documentElement.toggleAttribute("data-meniu-deschis", open);
     return () => {
       document.body.style.overflow = "";
+      document.documentElement.removeAttribute("data-meniu-deschis");
     };
   }, [open]);
 
@@ -137,7 +140,7 @@ export function Nav() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
-            className="glass-strong fixed inset-0 z-40 overflow-y-auto !border-0 lg:hidden"
+            className="glass-strong fara-scrollbar fixed inset-0 z-40 overflow-y-auto !border-0 lg:hidden"
           >
             {/* Centrat când are loc; pe ecrane scunde începe sub logo și se derulează,
                 altfel primele rânduri ajung sub logo. */}

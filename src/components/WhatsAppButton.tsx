@@ -51,7 +51,7 @@ export function WhatsAppButton() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="fixed bottom-5 left-4 z-40 flex flex-row-reverse items-center gap-3 sm:left-6 lg:bottom-8 lg:left-8"
+          className="plutitor fixed bottom-5 left-4 z-40 flex flex-row-reverse items-center gap-3 sm:left-6 lg:bottom-8 lg:left-8"
         >
           <AnimatePresence>
             {hinted && (

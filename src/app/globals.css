@@ -105,6 +105,19 @@ body {
   background: var(--color-periwinkle);
 }
 
+/* Meniul mobil se derulează, dar fără bara verde din dreapta. */
+.fara-scrollbar {
+  scrollbar-width: none;
+}
+.fara-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Cât timp meniul mobil e deschis, butoanele plutitoare (WhatsApp, Ana) dispar. */
+html[data-meniu-deschis] .plutitor {
+  display: none;
+}
+
 /* ============================================================================
    Iconițe
    ========================================================================== */

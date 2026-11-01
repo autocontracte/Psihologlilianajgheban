@@ -142,7 +142,7 @@ export function Ana() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed bottom-5 right-4 z-[45] flex items-center gap-3 sm:right-6 lg:bottom-8 lg:right-8"
+            className="plutitor fixed bottom-5 right-4 z-[45] flex items-center gap-3 sm:right-6 lg:bottom-8 lg:right-8"
           >
             <AnimatePresence>
               {!open && indemn && (

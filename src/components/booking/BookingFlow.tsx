@@ -474,7 +474,8 @@ export function BookingFlow({
                       className="inline-flex items-center gap-2 border border-ink/20 px-4 py-2 font-sans text-[0.85rem] text-ink-soft transition-colors hover:border-periwinkle hover:text-periwinkle"
                     >
                       <span className="mi text-[1.05rem]">
-                        {calendar ? "view_week" : "calendar_month"}
+                        {/* Doar iconițe din subsetul fontului: altfel se vede numele ca text */}
+                        {calendar ? "schedule" : "calendar_month"}
                       </span>
                       {calendar ? "Vezi zilele apropiate" : "Vezi sub formă de calendar"}
                     </button>
