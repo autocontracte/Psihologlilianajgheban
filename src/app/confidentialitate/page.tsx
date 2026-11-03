@@ -44,10 +44,11 @@ const sections: LegalSection[] = [
       "Ca să îți oferim serviciile cerute (programări, ședințe, contract, trusa de ajutor, răspunsuri la mesaje): executarea contractului sau demersurile de dinaintea lui (art. 6 alin. 1 lit. b GDPR).",
       "Ca să respectăm obligațiile legale, de exemplu cele financiar-contabile (art. 6 alin. 1 lit. c GDPR).",
       "Pentru securitatea site-ului și prevenirea abuzurilor: interesul nostru legitim (art. 6 alin. 1 lit. f GDPR).",
+      "Ca să aflăm dacă reclamele Google Ads aduc vizite și programări: doar cu acordul tău, dat din bannerul de cookie-uri (art. 6 alin. 1 lit. a GDPR). Îl poți retrage oricând.",
       "Informațiile despre sănătatea psihică discutate în ședințe sunt prelucrate pentru furnizarea serviciilor psihologice, sub obligația de secret profesional (art. 9 alin. 2 lit. h GDPR).",
     ],
     paragraphs: [
-      "Folosim datele doar în scopurile de mai jos. Nu le folosim pentru marketing, nu le vindem și nu facem profilare automată cu efecte asupra ta.",
+      "Folosim datele doar în scopurile de mai jos. Nu le folosim pentru reclame personalizate, nu le vindem și nu facem profilare automată cu efecte asupra ta.",
     ],
   },
   {
@@ -60,6 +61,7 @@ const sections: LegalSection[] = [
       "Stripe: procesarea plăților cu cardul.",
       "Resend: trimiterea emailurilor automate (confirmări de programare, linkul către trusă).",
       "Google (Google Calendar): programările apar în calendarul Lilianei, cu numele, telefonul, emailul tău și serviciul ales.",
+      "Google (Google Ads), doar dacă accepți cookie-urile: află că ai ajuns pe site dintr-o reclamă și dacă ai făcut o programare, cu un cod al programării și prețul ședinței. Nu primește numele, emailul, telefonul sau serviciul ales.",
       "OpenAI: generează răspunsurile Anei și interpretarea din raportul trusei. Primește textul întrebărilor, respectiv răspunsurile la test, fără numele sau datele tale de contact.",
       "Cloudflare: redirecționarea emailurilor trimise la adresa cabinetului.",
     ],
@@ -109,8 +111,11 @@ const sections: LegalSection[] = [
   },
   {
     heading: "10. Cookie-uri",
+    id: "cookie-uri",
     paragraphs: [
-      "Site-ul nu folosește cookie-uri de urmărire, de statistici sau de publicitate. Folosim doar un cookie strict necesar, care te ține autentificat în cont. Conversația cu Ana e păstrată în memoria browserului tău (sessionStorage) și dispare când închizi fila.",
+      "Fără acordul tău, site-ul folosește doar un cookie strict necesar, care te ține autentificat în cont. Conversația cu Ana e păstrată în memoria browserului tău (sessionStorage) și dispare când închizi fila.",
+      "Dacă accepți din banner, se încarcă eticheta Google Ads (gtag.js), care pune cookie-uri Google ca să măsoare dacă vizita și programarea au venit dintr-o reclamă. Nu o folosim pentru reclame personalizate sau pentru liste de remarketing. Dacă refuzi, eticheta nu se încarcă deloc.",
+      "Îți poți schimba alegerea oricând, din linkul „Cookie-uri” din subsolul site-ului.",
     ],
   },
   {
@@ -125,7 +130,7 @@ export default function ConfidentialitatePage() {
   return (
     <LegalPage
       title="Politica de confidențialitate"
-      updated="septembrie 2026"
+      updated="noiembrie 2026"
       intro="Această pagină explică ce date cu caracter personal sunt colectate prin acest site, în ce scop sunt folosite, cui ajung și care sunt drepturile tale."
       sections={sections}
     />

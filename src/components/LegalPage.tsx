@@ -5,6 +5,8 @@ import { Lumina } from "./ui/Lumina";
 
 export type LegalSection = {
   heading: string;
+  /** Ancoră pentru linkuri directe către secțiune (ex. #cookie-uri). */
+  id?: string;
   paragraphs?: string[];
   bullets?: string[];
 };
@@ -54,7 +56,7 @@ export function LegalPage({
             <div className="space-y-10">
               {sections.map((s, i) => (
                 <Reveal key={s.heading} delay={Math.min(i * 0.05, 0.3)}>
-                  <div className="rounded-none border border-ink/8 bg-cream-warm p-8 lg:p-9">
+                  <div id={s.id} className="scroll-mt-28 rounded-none border border-ink/8 bg-cream-warm p-8 lg:p-9">
                     <h2 className="font-display text-[1.4rem] leading-snug text-ink">
                       {s.heading}
                     </h2>

@@ -4,6 +4,7 @@ import "./globals.css";
 import { PRICE, SITE } from "@/content/site";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { Ana } from "@/components/ana/Ana";
+import { CookieBanner } from "@/components/CookieBanner";
 
 /* Perechea aleasă de Liliana: Lora pentru titluri, Source Sans 3 pentru text. */
 const lora = Lora({
@@ -106,6 +107,7 @@ export default function RootLayout({
         <div data-site-widgets>
           <WhatsAppButton />
           <Ana />
+          <CookieBanner />
         </div>
         <script
           type="application/ld+json"

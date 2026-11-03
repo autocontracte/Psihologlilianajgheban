@@ -4,6 +4,7 @@ import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { IconCheck } from "@/components/ui/Icons";
 import { db } from "@/lib/db";
+import { MasoaraProgramarea } from "./MasoaraProgramarea";
 
 export const metadata: Metadata = {
   title: "Plata a fost primită",
@@ -33,6 +34,7 @@ export default async function ConfirmarePlata({
   return (
     <>
       <Nav />
+      {payment && <MasoaraProgramarea id={payment.appointment.id} valoare={payment.amount / 100} />}
       <main className="flex min-h-screen items-center bg-cream-deep px-6 py-32">
         <div className="mx-auto max-w-lg bg-cream p-10 text-center sm:p-14">
           <div className="mx-auto flex h-16 w-16 items-center justify-center bg-periwinkle-pale text-periwinkle">

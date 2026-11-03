@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { IconArrow, IconCheck, IconOffice, IconOnline } from "../ui/Icons";
+import { masoaraProgramarea } from "@/lib/masurare";
 import { FORMAT_LABEL, type Format } from "@/lib/types";
 import { MEETING } from "@/content/site";
 import { MonthCalendar } from "./MonthCalendar";
@@ -240,6 +241,7 @@ export function BookingFlow({
 
       setCalendarLinks(json.calendar ?? null);
       setDone(true);
+      if (json.appointment?.id) masoaraProgramarea(json.appointment.id, service ? service.price / 100 : undefined);
     } catch (err) {
       setError(err instanceof Error ? err.message : "A apărut o eroare.");
       // Slotul poate fi între timp ocupat — reîmprospătăm orele

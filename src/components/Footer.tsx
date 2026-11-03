@@ -10,6 +10,7 @@ import {
 } from "./ui/Icons";
 import { Logo } from "./ui/Logo";
 import { Val } from "./ui/Val";
+import { ButonCookieUri } from "./CookieBanner";
 
 const socials = [
   { key: "facebook", Icon: IconFacebook, label: "Facebook" },
@@ -166,6 +167,7 @@ export function Footer() {
             >
               Termeni
             </Link>
+            <ButonCookieUri className="font-sans text-[0.75rem] text-cream/40 transition-colors duration-300 hover:text-cream/75" />
           </div>
         </div>
       </div>

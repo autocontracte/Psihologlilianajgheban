@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { labelForDateStr } from "@/lib/tz";
+import { masoaraProgramarea } from "@/lib/masurare";
 import { IconCalendar } from "../ui/Icons";
 
 /* ----------------------------------------------------------------------------
@@ -106,6 +107,7 @@ export function ProgramareAna({ onInchide }: { onInchide: () => void }) {
       const j = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(j.error ?? "Programarea nu a putut fi înregistrată.");
       setGata(true);
+      if (j.appointment?.id) masoaraProgramarea(j.appointment.id, serviciu.price / 100);
     } catch (e) {
       setEroare(e instanceof Error ? e.message : "Programarea nu a putut fi înregistrată.");
     } finally {
