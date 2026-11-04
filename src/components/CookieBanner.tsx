@@ -48,7 +48,7 @@ export function CookieBanner() {
           className="plutitor fixed inset-x-3 bottom-3 z-[60] mx-auto flex max-w-md items-center gap-3 border border-ink/10 bg-cream px-4 py-3 shadow-[0_18px_40px_-20px_rgba(56,62,82,0.5)] sm:bottom-5"
         >
           <p className="flex-1 font-sans text-[0.75rem] leading-[1.5] text-ink-soft">
-            Un cookie Google Ads ne arată dacă reclamele aduc programări.{" "}
+            Acest site folosește cookie-uri.{" "}
             <Link href="/confidentialitate#cookie-uri" className="text-periwinkle underline">
               Detalii
             </Link>
