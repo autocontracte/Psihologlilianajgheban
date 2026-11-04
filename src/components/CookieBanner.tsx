@@ -3,7 +3,12 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { alegereSalvata, pornesteMasurarea, salveazaAlegerea } from "@/lib/masurare";
+import {
+  alegereSalvata,
+  ascultaContactele,
+  pornesteMasurarea,
+  salveazaAlegerea,
+} from "@/lib/masurare";
 
 /* Evenimentul cu care butonul din subsol redeschide bannerul. */
 export const DESCHIDE_COOKIE_URI = "lj-cookie-uri-deschide";
@@ -14,6 +19,7 @@ export function CookieBanner() {
   const [vizibil, setVizibil] = useState(false);
 
   useEffect(() => {
+    ascultaContactele();
     if (alegereSalvata() === null) setVizibil(true);
     else pornesteMasurarea();
 
@@ -39,32 +45,28 @@ export function CookieBanner() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 16 }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="plutitor fixed inset-x-3 bottom-3 z-[60] mx-auto max-w-xl border border-ink/10 bg-cream p-5 shadow-[0_24px_60px_-24px_rgba(56,62,82,0.55)] sm:bottom-6 sm:p-6"
+          className="plutitor fixed inset-x-3 bottom-3 z-[60] mx-auto flex max-w-md items-center gap-3 border border-ink/10 bg-cream px-4 py-3 shadow-[0_18px_40px_-20px_rgba(56,62,82,0.5)] sm:bottom-5"
         >
-          <p className="font-sans text-[0.9rem] leading-[1.7] text-ink-soft">
-            Folosim un cookie Google Ads doar ca să aflăm dacă reclamele noastre
-            aduc vizite și programări. Nu trimitem nimic despre tine sau despre
-            serviciul ales.{" "}
+          <p className="flex-1 font-sans text-[0.75rem] leading-[1.5] text-ink-soft">
+            Un cookie Google Ads ne arată dacă reclamele aduc programări.{" "}
             <Link href="/confidentialitate#cookie-uri" className="text-periwinkle underline">
               Detalii
             </Link>
           </p>
-          <div className="mt-4 flex flex-col gap-2 sm:flex-row-reverse">
-            <button
-              type="button"
-              onClick={() => alege("acceptat")}
-              className="bg-periwinkle px-6 py-3 font-sans text-[0.85rem] text-cream transition-colors hover:bg-ink"
-            >
-              Accept
-            </button>
-            <button
-              type="button"
-              onClick={() => alege("refuzat")}
-              className="border border-ink/20 px-6 py-3 font-sans text-[0.85rem] text-ink-soft transition-colors hover:border-ink/40 hover:text-ink"
-            >
-              Refuz
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => alege("refuzat")}
+            className="shrink-0 px-2 py-1.5 font-sans text-[0.75rem] text-ink-muted transition-colors hover:text-ink"
+          >
+            Refuz
+          </button>
+          <button
+            type="button"
+            onClick={() => alege("acceptat")}
+            className="shrink-0 bg-periwinkle px-3.5 py-1.5 font-sans text-[0.75rem] text-cream transition-colors hover:bg-ink"
+          >
+            Accept
+          </button>
         </motion.div>
       )}
     </AnimatePresence>

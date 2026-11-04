@@ -4,7 +4,8 @@
    Eticheta se încarcă DOAR după ce vizitatorul acceptă cookie-urile de
    măsurare din banner. Fără acord, nu pleacă nimic spre Google.
 
-   Ce trimitem: că cineva a ajuns pe site dintr-un anunț și că a făcut o
+   Ce trimitem: că cineva a ajuns pe site dintr-un anunț, că a apăsat pe
+   telefon sau WhatsApp, că a început o conversație cu Ana și că a făcut o
    programare (cu id-ul programării, ca să nu se numere de două ori, și
    prețul ședinței). Nu trimitem nume, email, telefon sau serviciul ales —
    e un cabinet de psihoterapie, iar Google nu are ce căuta în datele astea.
@@ -14,6 +15,9 @@
 const ADS_ID = "AW-18517449695";
 const ETICHETA_PROGRAMARE = "AJyuCJaSpLEdEN-35_1E";
 const ETICHETA_VIZITA = "MG2UCL_crLEdEN-35_1E";
+const ETICHETA_TELEFON = "qbUZCMPu57EdEN-35_1E";
+const ETICHETA_WHATSAPP = "yMNgCJKw6LEdEN-35_1E";
+const ETICHETA_ANA = "1ikICJWw6LEdEN-35_1E";
 
 const CHEIE = "lj-cookie-uri";
 export const EVENIMENT_ALEGERE = "lj-cookie-uri-alegere";
@@ -88,6 +92,42 @@ export function pornesteMasurarea() {
   } catch {
     window.gtag("event", "conversion", { send_to: `${ADS_ID}/${ETICHETA_VIZITA}` });
   }
+}
+
+/** Trimite conversia doar dacă eticheta e pornită (adică omul a acceptat). */
+function conversie(eticheta: string) {
+  if (typeof window === "undefined" || !window.gtag) return;
+  window.gtag("event", "conversion", { send_to: `${ADS_ID}/${eticheta}` });
+}
+
+/* Click pe telefon sau pe WhatsApp, oriunde pe site (butonul plutitor,
+   secțiunea de contact, linkurile din răspunsurile Anei). Un singur ascultător
+   pe tot documentul, ca să nu atingem fiecare buton în parte. */
+let ascultaDeja = false;
+export function ascultaContactele() {
+  if (ascultaDeja || typeof document === "undefined") return;
+  ascultaDeja = true;
+  document.addEventListener(
+    "click",
+    (e) => {
+      const a = (e.target as Element | null)?.closest?.("a[href]");
+      const href = a?.getAttribute("href") ?? "";
+      if (href.startsWith("tel:")) conversie(ETICHETA_TELEFON);
+      else if (href.includes("wa.me/")) conversie(ETICHETA_WHATSAPP);
+    },
+    { capture: true },
+  );
+}
+
+/** Prima întrebare către Ana dintr-o sesiune. Nu trimitem ce a scris omul. */
+export function masoaraConversatiaCuAna() {
+  try {
+    if (sessionStorage.getItem("lj-ana-masurat")) return;
+    sessionStorage.setItem("lj-ana-masurat", "1");
+  } catch {
+    /* fără stocare: se poate număra de mai multe ori, Google ține una pe click */
+  }
+  conversie(ETICHETA_ANA);
 }
 
 /** Programare reușită. `valoare` în lei. */

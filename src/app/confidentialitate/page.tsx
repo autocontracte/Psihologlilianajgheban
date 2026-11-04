@@ -61,7 +61,7 @@ const sections: LegalSection[] = [
       "Stripe: procesarea plăților cu cardul.",
       "Resend: trimiterea emailurilor automate (confirmări de programare, linkul către trusă).",
       "Google (Google Calendar): programările apar în calendarul Lilianei, cu numele, telefonul, emailul tău și serviciul ales.",
-      "Google (Google Ads), doar dacă accepți cookie-urile: află că ai ajuns pe site dintr-o reclamă și dacă ai făcut o programare, cu un cod al programării și prețul ședinței. Nu primește numele, emailul, telefonul sau serviciul ales.",
+      "Google (Google Ads), doar dacă accepți cookie-urile: află că ai ajuns pe site dintr-o reclamă și dacă ai făcut o programare (cu un cod al programării și prețul ședinței), ai apăsat pe telefon sau pe WhatsApp ori ai început o conversație cu Ana. Nu primește numele, emailul, telefonul, serviciul ales sau ce i-ai scris Anei.",
       "OpenAI: generează răspunsurile Anei și interpretarea din raportul trusei. Primește textul întrebărilor, respectiv răspunsurile la test, fără numele sau datele tale de contact.",
       "Cloudflare: redirecționarea emailurilor trimise la adresa cabinetului.",
     ],
@@ -114,7 +114,7 @@ const sections: LegalSection[] = [
     id: "cookie-uri",
     paragraphs: [
       "Fără acordul tău, site-ul folosește doar un cookie strict necesar, care te ține autentificat în cont. Conversația cu Ana e păstrată în memoria browserului tău (sessionStorage) și dispare când închizi fila.",
-      "Dacă accepți din banner, se încarcă eticheta Google Ads (gtag.js), care pune cookie-uri Google ca să măsoare dacă vizita și programarea au venit dintr-o reclamă. Nu o folosim pentru reclame personalizate sau pentru liste de remarketing. Dacă refuzi, eticheta nu se încarcă deloc.",
+      "Dacă accepți din banner, se încarcă eticheta Google Ads (gtag.js), care pune cookie-uri Google ca să măsoare dacă vizita, programarea, apăsarea pe telefon sau WhatsApp ori conversația cu Ana au venit dintr-o reclamă. Nu o folosim pentru reclame personalizate sau pentru liste de remarketing. Dacă refuzi, eticheta nu se încarcă deloc.",
       "Îți poți schimba alegerea oricând, din linkul „Cookie-uri” din subsolul site-ului.",
     ],
   },
