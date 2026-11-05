@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   alegereSalvata,
   ascultaContactele,
-  pornesteMasurarea,
+  masoaraVizita,
   salveazaAlegerea,
 } from "@/lib/masurare";
 
@@ -14,14 +14,14 @@ import {
 export const DESCHIDE_COOKIE_URI = "lj-cookie-uri-deschide";
 
 /* Bannerul apare o singură dată, până alege omul. Fără acord, eticheta
-   Google nu se încarcă deloc (vezi lib/masurare.ts). */
+   Google rămâne în modul fără cookie-uri (vezi lib/masurare.ts). */
 export function CookieBanner() {
   const [vizibil, setVizibil] = useState(false);
 
   useEffect(() => {
     ascultaContactele();
+    masoaraVizita();
     if (alegereSalvata() === null) setVizibil(true);
-    else pornesteMasurarea();
 
     const deschide = () => setVizibil(true);
     window.addEventListener(DESCHIDE_COOKIE_URI, deschide);
@@ -31,8 +31,6 @@ export function CookieBanner() {
   function alege(a: "acceptat" | "refuzat") {
     salveazaAlegerea(a);
     setVizibil(false);
-    // Retragerea acordului: eticheta deja încărcată pleacă doar la reîncărcare
-    if (a === "refuzat" && window.gtag) window.location.reload();
   }
 
   return (

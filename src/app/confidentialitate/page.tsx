@@ -44,7 +44,7 @@ const sections: LegalSection[] = [
       "Ca să îți oferim serviciile cerute (programări, ședințe, contract, trusa de ajutor, răspunsuri la mesaje): executarea contractului sau demersurile de dinaintea lui (art. 6 alin. 1 lit. b GDPR).",
       "Ca să respectăm obligațiile legale, de exemplu cele financiar-contabile (art. 6 alin. 1 lit. c GDPR).",
       "Pentru securitatea site-ului și prevenirea abuzurilor: interesul nostru legitim (art. 6 alin. 1 lit. f GDPR).",
-      "Ca să aflăm dacă reclamele Google Ads aduc vizite și programări: doar cu acordul tău, dat din bannerul de cookie-uri (art. 6 alin. 1 lit. a GDPR). Îl poți retrage oricând.",
+      "Ca să aflăm dacă reclamele Google Ads aduc vizite și programări: cookie-urile de măsurare se folosesc doar cu acordul tău, dat din bannerul de cookie-uri (art. 6 alin. 1 lit. a GDPR), pe care îl poți retrage oricând. Fără acord, Google primește doar semnale anonime, fără cookie-uri, pe baza interesului nostru legitim de a ști dacă reclamele funcționează (art. 6 alin. 1 lit. f GDPR).",
       "Informațiile despre sănătatea psihică discutate în ședințe sunt prelucrate pentru furnizarea serviciilor psihologice, sub obligația de secret profesional (art. 9 alin. 2 lit. h GDPR).",
     ],
     paragraphs: [
@@ -61,7 +61,7 @@ const sections: LegalSection[] = [
       "Stripe: procesarea plăților cu cardul.",
       "Resend: trimiterea emailurilor automate (confirmări de programare, linkul către trusă).",
       "Google (Google Calendar): programările apar în calendarul Lilianei, cu numele, telefonul, emailul tău și serviciul ales.",
-      "Google (Google Ads), doar dacă accepți cookie-urile: află că ai ajuns pe site dintr-o reclamă și dacă ai făcut o programare (cu un cod al programării și prețul ședinței), ai apăsat pe telefon sau pe WhatsApp ori ai început o conversație cu Ana. Nu primește numele, emailul, telefonul, serviciul ales sau ce i-ai scris Anei.",
+      "Google (Google Ads): află că ai ajuns pe site dintr-o reclamă și dacă ai făcut o programare (cu un cod al programării și prețul ședinței), ai apăsat pe telefon sau pe WhatsApp ori ai început o conversație cu Ana. Nu primește numele, emailul, telefonul, serviciul ales sau ce i-ai scris Anei.",
       "OpenAI: generează răspunsurile Anei și interpretarea din raportul trusei. Primește textul întrebărilor, respectiv răspunsurile la test, fără numele sau datele tale de contact.",
       "Cloudflare: redirecționarea emailurilor trimise la adresa cabinetului.",
     ],
@@ -114,7 +114,7 @@ const sections: LegalSection[] = [
     id: "cookie-uri",
     paragraphs: [
       "Fără acordul tău, site-ul folosește doar un cookie strict necesar, care te ține autentificat în cont. Conversația cu Ana e păstrată în memoria browserului tău (sessionStorage) și dispare când închizi fila.",
-      "Dacă accepți din banner, se încarcă eticheta Google Ads (gtag.js), care pune cookie-uri Google ca să măsoare dacă vizita, programarea, apăsarea pe telefon sau WhatsApp ori conversația cu Ana au venit dintr-o reclamă. Nu o folosim pentru reclame personalizate sau pentru liste de remarketing. Dacă refuzi, eticheta nu se încarcă deloc.",
+      "Pe paginile publice se încarcă eticheta Google Ads (gtag.js), în modul de consimțământ Google. Până când accepți din banner, ea nu pune și nu citește cookie-uri: trimite doar semnale anonime (de exemplu că a avut loc o programare), din care Google estimează câte rezultate au venit din reclame. Dacă accepți, eticheta folosește cookie-uri Google ca să lege vizita, programarea, apăsarea pe telefon sau WhatsApp ori conversația cu Ana de reclama pe care ai dat clic. Nu o folosim pentru reclame personalizate sau pentru liste de remarketing.",
       "Îți poți schimba alegerea oricând, din linkul „Cookie-uri” din subsolul site-ului.",
     ],
   },

@@ -5,6 +5,7 @@ import { PRICE, SITE } from "@/content/site";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { Ana } from "@/components/ana/Ana";
 import { CookieBanner } from "@/components/CookieBanner";
+import { SCRIPT_ETICHETA } from "@/lib/masurare";
 
 /* Perechea aleasă de Liliana: Lora pentru titluri, Source Sans 3 pentru text. */
 const lora = Lora({
@@ -101,6 +102,10 @@ export default function RootLayout({
       lang="ro"
       className={`${lora.variable} ${sourceSans.variable}`}
     >
+      <head>
+        {/* Eticheta Google Ads, în modul de consimțământ: fără cookie-uri până la „Accept" */}
+        <script dangerouslySetInnerHTML={{ __html: SCRIPT_ETICHETA }} />
+      </head>
       <body className="antialiased">
         {children}
         {/* ascunse pe programatorul intern — vezi app/programator/programator.css */}
