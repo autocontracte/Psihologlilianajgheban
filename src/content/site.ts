@@ -432,6 +432,12 @@ export const DIPLOME = {
       an: "2022",
     },
     {
+      src: "/diplome/arpi-psihoterapie-integrativa-2022.webp",
+      titlu: "Formare completă în psihoterapie integrativă: diplomă de specialitate",
+      emitent: "Asociația Română de Psihoterapie Integrativă și Colegiul Psihologilor din România",
+      an: "2022",
+    },
+    {
       src: "/diplome/arpi-trauma-2024.webp",
       titlu: "Specializare în lucrul cu trauma din perspectiva psihoterapiei integrative",
       emitent: "Asociația Română de Psihoterapie Integrativă",
