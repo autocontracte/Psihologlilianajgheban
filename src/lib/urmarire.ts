@@ -194,14 +194,25 @@ function sistem(ua: string) {
    rămâne la fel pentru toată vizita, chiar dacă pe urmă navighează prin site. */
 function contextVizita() {
   const s = stocare("sesiune");
+  let salvat: Record<string, unknown> | null = null;
   try {
-    const salvat = s?.getItem(CHEIE_CONTEXT);
-    if (salvat) return JSON.parse(salvat);
+    const brut = s?.getItem(CHEIE_CONTEXT);
+    if (brut) salvat = JSON.parse(brut);
   } catch {
     /* ce era salvat nu mai e JSON valid: îl refacem */
   }
 
   const q = new URLSearchParams(location.search);
+  const platit = q.get("gclid") || q.get("gbraid") || q.get("wbraid");
+  const sursaNoua =
+    q.get("utm_source") || (q.get("fbclid") ? "facebook" : platit ? "google ads" : "");
+
+  /* Contextul se stabilește la prima pagină și rămâne pentru toată vizita.
+     O singură excepție: dacă omul e deja pe site și se întoarce printr-un clic
+     pe reclamă, reclama ia locul sursei vechi — altfel vizita ar rămâne
+     „direct" și nu s-ar vedea că a fost plătită. */
+  if (salvat && (!sursaNoua || salvat.src || salvat.gclid)) return salvat;
+
   let ref = "";
   try {
     ref = document.referrer ? new URL(document.referrer).host : "";
@@ -209,18 +220,22 @@ function contextVizita() {
     /* referrer stricat */
   }
 
-  const platit = q.get("gclid") || q.get("gbraid") || q.get("wbraid");
   const conexiune = (
     navigator as Navigator & { connection?: { effectiveType?: string } }
   ).connection;
 
   const ctx = {
     ref: ref === location.host ? "" : ref,
-    src:
-      q.get("utm_source") || (q.get("fbclid") ? "facebook" : platit ? "google ads" : ""),
+    src: sursaNoua,
     med: q.get("utm_medium") || (platit ? "cpc" : ""),
     camp: q.get("utm_campaign") || "",
-    land: location.pathname,
+    /* Clicul din reclamă: `gclid` vine de la etichetarea automată Google Ads,
+       iar cuvântul și anunțul doar dacă e pus sufixul de urmărire în cont. */
+    gclid: platit || "",
+    term: q.get("utm_term") || "",
+    cont: q.get("utm_content") || "",
+    /* Prima pagină rămâne cea de la începutul vizitei. */
+    land: (salvat?.land as string) || location.pathname,
     os: sistem(navigator.userAgent),
     w: window.innerWidth || screen.width || 0,
     h: window.innerHeight || screen.height || 0,

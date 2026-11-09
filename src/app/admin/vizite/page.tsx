@@ -307,6 +307,104 @@ export default async function AdminVizitePage({
         </ul>
       </div>
 
+      {/* Din reclame */}
+      <div className="mt-4 bg-cream p-5">
+        <div className="flex flex-wrap items-baseline justify-between gap-3">
+          <h2 className="font-display text-lg text-ink">Cât vine din reclame</h2>
+          <p className="font-sans text-[0.72rem] text-ink-muted">
+            vizite venite dintr-un clic pe reclamă (gclid sau cpc)
+          </p>
+        </div>
+
+        {s.reclame.vizite === 0 ? (
+          <p className="mt-3 font-sans text-[0.8rem] text-ink-muted">
+            Nicio vizită din reclame în perioada aleasă. Dacă tocmai au pornit
+            anunțurile, primele clicuri apar aici în câteva minute.
+          </p>
+        ) : (
+          <>
+            <div className="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
+              <Cifra
+                eticheta="Vizite din reclame"
+                valoare={s.reclame.vizite}
+                accent="text-clay"
+                nota={`${s.reclame.procentDinTot}% din tot traficul`}
+              />
+              <Cifra
+                eticheta="Programări din reclame"
+                valoare={s.reclame.programari}
+                accent="text-periwinkle"
+                nota={`${procent(s.reclame.programari, s.reclame.vizite)} din ele · ${
+                  s.reclame.programariIncepute
+                } au început`}
+              />
+              <Cifra
+                eticheta="Apeluri și WhatsApp"
+                valoare={s.reclame.telefon}
+                nota={`${s.reclame.ana} i-au scris Anei`}
+              />
+              <Cifra
+                eticheta="Stau în medie"
+                valoare={formateazaDurata(s.reclame.timpActiv)}
+                nota={`restul site-ului: ${formateazaDurata(s.reclame.timpActivOrganic)}`}
+              />
+            </div>
+
+            <p className="mt-3 font-sans text-[0.78rem] text-ink-soft">
+              Pentru comparație, restul traficului (căutări, direct, recomandări):{" "}
+              <strong className="font-medium text-ink">
+                {s.reclame.viziteOrganice} vizite
+              </strong>{" "}
+              și{" "}
+              <strong className="font-medium text-ink">
+                {s.reclame.programariOrganice} programări
+              </strong>{" "}
+              ({procent(s.reclame.programariOrganice, s.reclame.viziteOrganice)}).
+            </p>
+
+            <div className="mt-4 grid gap-3 lg:grid-cols-4">
+              <Clasament
+                titlu="Campanii"
+                rows={s.reclame.campanii}
+                gol="Fără nume de campanie — vezi nota de mai jos."
+                cate={8}
+              />
+              <Clasament
+                titlu="Cuvinte căutate"
+                rows={s.reclame.cuvinte}
+                gol="Fără cuvinte — vezi nota de mai jos."
+                cate={8}
+              />
+              <Clasament
+                titlu="Anunțul pe care s-a dat clic"
+                rows={s.reclame.anunturi}
+                gol="Fără anunț — vezi nota de mai jos."
+                cate={8}
+              />
+              <Clasament
+                titlu="Pe ce pagină intră"
+                rows={s.reclame.pagini}
+                gol="—"
+                cate={8}
+              />
+            </div>
+
+            {s.reclame.campanii.length === 0 && (
+              <p className="mt-3 font-sans text-[0.72rem] text-ink-muted">
+                Google trimite singur doar „a venit dintr-o reclamă". Ca să apară și
+                campania, cuvântul căutat și anunțul, în contul Google Ads trebuie pus
+                sufixul de urmărire:{" "}
+                <code className="text-ink-soft">
+                  utm_source=google&amp;utm_medium=cpc&amp;utm_campaign=
+                  {"{campaignid}"}&amp;utm_term={"{keyword}"}&amp;utm_content=
+                  {"{creative}"}
+                </code>
+              </p>
+            )}
+          </>
+        )}
+      </div>
+
       {/* Vizitele pe zile */}
       {s.peZile.length > 1 && (
         <div className="mt-4 bg-cream p-5">

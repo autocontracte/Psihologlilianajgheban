@@ -542,6 +542,11 @@ model Visit {
   source     String   @default("")
   medium     String   @default("")
   campaign   String   @default("")
+  /// Din reclame: identificatorul clicului Google Ads și, dacă e pus sufixul
+  /// de urmărire, cuvântul căutat și anunțul pe care s-a dat clic.
+  gclid      String   @default("")
+  term       String   @default("")
+  content    String   @default("")
   /// Prima pagină deschisă și ultima pagină văzută înainte de plecare.
   landing    String   @default("")
   exitPath   String   @default("")

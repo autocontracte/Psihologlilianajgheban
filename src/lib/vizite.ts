@@ -17,6 +17,9 @@ export type Vizita = {
   source: string;
   medium: string;
   campaign: string;
+  gclid: string;
+  term: string;
+  content: string;
   landing: string;
   exitPath: string;
   device: string;
@@ -234,6 +237,15 @@ export function sinteza(
   const cuAcord = vizite.filter((v) => v.consent === "acceptat");
   const recunoscute = vizite.filter((v) => v.visitorId);
 
+  /* Vizitele venite dintr-o reclamă plătită: `gclid` îl pune Google Ads singur
+     (etichetare automată), iar utm_medium=cpc acoperă și restul reclamelor. */
+  const dinReclame = vizite.filter(
+    (v) => v.gclid || v.medium === "cpc" || /ads|cpc|ppc/i.test(v.source),
+  );
+  const idReclame = new Set(dinReclame.map((v) => v.id));
+  const evReclame = evenimente.filter((e) => idReclame.has(e.visitId));
+  const organice = vizite.filter((v) => !idReclame.has(v.id));
+
   return {
     live: vizite.filter((v) => acum - v.lastSeenAt.getTime() < LIVE_MS),
     total: vizite.length,
@@ -259,6 +271,26 @@ export function sinteza(
     vizitePanaLaProgramare: medie(
       oameni.filter((o) => o.visitsToBook).map((o) => o.visitsToBook as number),
     ),
+
+    /* Din reclame: cât din trafic vine plătit și ce face față de restul. */
+    reclame: {
+      vizite: dinReclame.length,
+      procentDinTot: vizite.length
+        ? Math.round((dinReclame.length / vizite.length) * 100)
+        : 0,
+      programari: dinReclame.filter((v) => v.booked).length,
+      programariIncepute: vizitatoriCu(evReclame, "programare_start"),
+      telefon: evReclame.filter((e) => ["telefon", "whatsapp"].includes(e.type)).length,
+      ana: vizitatoriCu(evReclame, "ana_mesaj"),
+      timpActiv: medie(dinReclame.map((v) => v.activeSec)),
+      timpActivOrganic: medie(organice.map((v) => v.activeSec)),
+      programariOrganice: organice.filter((v) => v.booked).length,
+      viziteOrganice: organice.length,
+      campanii: numara(dinReclame, (v) => v.campaign),
+      cuvinte: numara(dinReclame, (v) => v.term),
+      anunturi: numara(dinReclame, (v) => v.content),
+      pagini: numara(dinReclame, (v) => v.landing),
+    },
 
     /* Pâlnia */
     palnie: [

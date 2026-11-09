@@ -29,6 +29,9 @@ type Corp = {
     src?: string;
     med?: string;
     camp?: string;
+    gclid?: string;
+    term?: string;
+    cont?: string;
     land?: string;
     os?: string;
     w?: number;
@@ -175,7 +178,7 @@ export async function POST(req: Request) {
   try {
     const vizita = await db.visit.findUnique({
       where: { id },
-      select: { events: true, visitorId: true, booked: true, userId: true },
+      select: { events: true, visitorId: true, booked: true, userId: true, gclid: true },
     });
 
     /* Cine e omul, dacă s-a autentificat. Îl căutăm doar la crearea vizitei
@@ -197,6 +200,9 @@ export async function POST(req: Request) {
           source: text(ctx.src, 80),
           medium: text(ctx.med, 80),
           campaign: text(ctx.camp, 120),
+          gclid: text(ctx.gclid, 200),
+          term: text(ctx.term, 120),
+          content: text(ctx.cont, 120),
           landing: text(ctx.land, 300) || "/",
           device: dispozitiv(ua),
           browser: navigator_(ua),
@@ -225,10 +231,26 @@ export async function POST(req: Request) {
       if (evenimente.length) await db.visitEvent.createMany({ data: evenimente });
       await curatenie();
     } else {
+      /* Dacă omul s-a întors printr-un clic pe reclamă în timpul vizitei,
+         sursa venită acum o înlocuiește pe cea veche („direct"). */
+      const ctx = corp.ctx ?? {};
+      const reclamaNoua =
+        text(ctx.gclid, 200) && !vizita.gclid
+          ? {
+              gclid: text(ctx.gclid, 200),
+              source: text(ctx.src, 80) || "google ads",
+              medium: text(ctx.med, 80) || "cpc",
+              campaign: text(ctx.camp, 120),
+              term: text(ctx.term, 120),
+              content: text(ctx.cont, 120),
+            }
+          : {};
+
       await db.visit.update({
         where: { id },
         data: {
           lastSeenAt: new Date(acum),
+          ...reclamaNoua,
           pages: { increment: pagini },
           events: { increment: evenimente.length },
           ...(programat ? { booked: true } : {}),
