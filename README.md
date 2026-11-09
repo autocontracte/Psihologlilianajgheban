@@ -94,6 +94,7 @@ a programat fără cont anulează telefonic.
 | Pagină | Ce face |
 | --- | --- |
 | `/admin` | Cifre la zi, programul de azi, ce urmează |
+| `/admin/vizite` | Statisticile site-ului: de unde vin oamenii, ce citesc, pe ce apasă |
 | `/admin/programari` | Confirmă, anulează, marchează finalizate; note interne |
 | `/admin/program` | Program săptămânal și zile libere (concedii) |
 | `/admin/clienti` | Lista clienților, cu istoricul lor |
@@ -283,6 +284,57 @@ trimite pe WhatsApp sau pe mail.
 
 ---
 
+## Statistici proprii (urmărirea vizitelor)
+
+Site-ul își ține singur statisticile, pe serverul lui, fără Google Analytics și
+fără cookie-uri. Se văd în panou, la `/admin/vizite`.
+
+**Ce se măsoară:** fiecare pagină deschisă și cât s-a stat pe ea, secțiunile
+prin care a trecut vizitatorul (`<section id="…">` din `<main>`), cât la sută a
+derulat (25 / 50 / 75 / 100), fiecare clic pe link sau buton — cu zona din
+pagină și eticheta lui — plus pașii importanți: programare începută și trimisă,
+plecare spre plată, plată reușită, apel, WhatsApp, email, formular de contact,
+mesaj către Ana, trusa de ajutor începută și terminată, contract semnat, cont
+nou.
+
+**Ce nu se măsoară:** nimic din ce scrie omul (mesajele către Ana, răspunsurile
+din trusă, textul formularelor), nicio adresă IP, niciun cookie. Vizita primește
+un număr aleator ținut în `sessionStorage`, care dispare la închiderea filei,
+deci nimeni nu poate fi recunoscut de la o vizită la alta. Datele se șterg
+singure după un an. Paginile interne (`/admin`, `/calendar`, `/programator`) nu
+se urmăresc deloc, iar deschiderea panoului de vizite pune un semn în
+`localStorage` pe browserul administratorului, ca vizitele proprii să nu intre
+în statistici.
+
+| Fișier | Ce face |
+| --- | --- |
+| `src/lib/urmarireTipuri.ts` | lista tipurilor de evenimente și etichetele lor |
+| `src/lib/urmarire.ts` | partea din browser: adună evenimentele și le trimite în loturi |
+| `src/components/Urmaritor.tsx` | ascultătorul de pe tot site-ul (pagini, secțiuni, derulare, clicuri) |
+| `src/app/api/urmarire/route.ts` | primește loturile și le scrie în `Visit` / `VisitEvent` |
+| `src/lib/vizite.ts` | calculele pentru panou |
+| `src/app/admin/vizite/page.tsx` | panoul: cifre, clasamente, traseul fiecărei vizite |
+
+Evenimentele speciale se trimit din componenta lor, cu
+`urmareste("programare", …)`. Un tip nou se adaugă întâi în
+`src/lib/urmarireTipuri.ts` — serverul refuză orice tip care nu e acolo.
+
+Țara și orașul vin din antetele Cloudflare (`cf-ipcountry`, `cf-ipcity`). Fără
+Cloudflare în față rămân goale, restul merge la fel.
+
+### Conturi de administrator
+
+```bash
+npx tsx scripts/adauga-admin.ts <email> "Nume" "+40..." [parola]
+```
+
+Creează un cont nou de administrator (cu parolă generată și afișată o singură
+dată) sau, dacă emailul există deja, îi dă rol de `ADMIN`. Parola unui cont
+existent se schimbă doar dacă e dată explicit în linia de comandă. Pe producție
+scriptul se rulează din `/home/psiholog/app`, ca utilizatorul `psiholog`.
+
+---
+
 ## Ce urmează
 
 ### Testele vocaționale
@@ -324,6 +376,8 @@ src/
 │  ├─ auth.ts                parole, sesiuni, roluri
 │  ├─ tz.ts                  conversii pentru ora României
 │  ├─ slots.ts               calculul orelor libere
+│  ├─ urmarire.ts            urmărirea vizitelor, partea din browser
+│  ├─ vizite.ts              calculele pentru panoul de statistici
 │  └─ types.ts               statusuri, formate, etichete
 └─ content/site.ts           ⭐ tot conținutul editabil
 ```

@@ -2,6 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 import { masoaraConversatiaCuAna } from "@/lib/masurare";
+import { urmareste } from "@/lib/urmarire";
 
 /* ----------------------------------------------------------------------------
    Conversația cu Ana, comună pentru toate locurile în care apare (bara din
@@ -77,6 +78,8 @@ async function trimite(text: string): Promise<boolean> {
   if (!q || stare.busy || intrebari >= ANA_MAX) return false;
 
   if (intrebari === 0) masoaraConversatiaCuAna();
+  /* Pentru statistici se notează doar că a scris, niciodată ce a scris. */
+  urmareste("ana_mesaj", "întrebarea " + (intrebari + 1));
   const urmator: Replica[] = [...stare.turns, { role: "user", content: q }];
   seteaza({ turns: [...urmator, { role: "assistant", content: "" }], busy: true, error: null });
 

@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { authInput, authLabel } from "./AuthShell";
 import { IconArrow } from "../ui/Icons";
+import { urmareste } from "@/lib/urmarire";
 
 export function RegisterForm() {
   const router = useRouter();
@@ -35,6 +36,7 @@ export function RegisterForm() {
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error ?? "Contul nu a putut fi creat.");
+      urmareste("cont_nou");
 
       const safe =
         redirectTo && redirectTo.startsWith("/") && !redirectTo.startsWith("//")

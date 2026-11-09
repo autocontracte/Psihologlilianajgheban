@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { IconArrow, IconCheck, IconOffice, IconOnline } from "../ui/Icons";
 import { masoaraProgramarea } from "@/lib/masurare";
+import { urmareste } from "@/lib/urmarire";
 import { FORMAT_LABEL, type Format } from "@/lib/types";
 import { MEETING } from "@/content/site";
 import { MonthCalendar } from "./MonthCalendar";
@@ -234,6 +235,7 @@ export function BookingFlow({
 
       // Plata online: programarea se confirmă după plată, în pagina Stripe
       if (json.checkoutUrl) {
+        urmareste("plata_start", service?.name);
         redirectRef.current = true;
         window.location.href = json.checkoutUrl;
         return;
@@ -241,6 +243,7 @@ export function BookingFlow({
 
       setCalendarLinks(json.calendar ?? null);
       setDone(true);
+      urmareste("programare", [service?.name, FORMAT_LABEL[format]].filter(Boolean).join(" · "));
       if (json.appointment?.id) masoaraProgramarea(json.appointment.id, service ? service.price / 100 : undefined);
     } catch (err) {
       setError(err instanceof Error ? err.message : "A apărut o eroare.");
@@ -423,7 +426,10 @@ export function BookingFlow({
                     <button
                       key={s.id}
                       type="button"
-                      onClick={() => setServiceId(s.id)}
+                      onClick={() => {
+                        setServiceId(s.id);
+                        urmareste("programare_start", s.name);
+                      }}
                       className={[
                         "rounded-none border p-5 text-left transition-all duration-400 ease-[cubic-bezier(0.22,1,0.36,1)]",
                         serviceId === s.id

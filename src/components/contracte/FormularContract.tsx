@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { PadSemnatura } from "./PadSemnatura";
+import { urmareste } from "@/lib/urmarire";
 import {
   SABLOANE,
   type TipContract,
@@ -94,6 +95,7 @@ export function FormularContract({
         throw new Error(json.error ?? "Nu am putut trimite contractul.");
       }
       setGata(true);
+      urmareste("contract_semnat");
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err) {
       setEroare(err instanceof Error ? err.message : "A apărut o eroare.");

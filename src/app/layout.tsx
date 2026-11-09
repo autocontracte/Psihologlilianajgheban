@@ -5,6 +5,7 @@ import { PRICE, SITE } from "@/content/site";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { Ana } from "@/components/ana/Ana";
 import { CookieBanner } from "@/components/CookieBanner";
+import { Urmaritor } from "@/components/Urmaritor";
 import { SCRIPT_ETICHETA } from "@/lib/masurare";
 
 /* Perechea aleasă de Liliana: Lora pentru titluri, Source Sans 3 pentru text. */
@@ -108,6 +109,9 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         {children}
+        {/* statisticile proprii: ce pagini deschide vizitatorul, cât stă pe
+            fiecare și pe ce apasă — vezi src/lib/urmarire.ts */}
+        <Urmaritor />
         {/* ascunse pe programatorul intern — vezi app/programator/programator.css */}
         <div data-site-widgets>
           <WhatsAppButton />

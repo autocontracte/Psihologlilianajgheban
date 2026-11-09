@@ -486,3 +486,60 @@ model CabRelease {
   @@index([roomId, date])
   @@index([series])
 }
+
+/**
+ * ============================================================================
+ * Urmărirea vizitelor (statistici proprii, fără Google Analytics)
+ * O vizită = o filă deschisă pe site. Id-ul vizitei e aleator și stă în
+ * sessionStorage, deci dispare la închiderea filei: fără cookie-uri, fără IP
+ * salvat, fără nimic care să identifice persoana. Vezi src/lib/urmarire.ts.
+ * ==========================================================================
+ */
+model Visit {
+  /// Id-ul generat în browser (uuid), nu de server.
+  id         String   @id
+  startedAt  DateTime @default(now())
+  /// Ultimul semn de viață; din el ies „în direct" și durata vizitei.
+  lastSeenAt DateTime @default(now())
+  /// De pe ce site a venit (doar domeniul) și etichetele de campanie.
+  referrer   String   @default("")
+  source     String   @default("")
+  medium     String   @default("")
+  campaign   String   @default("")
+  /// Prima pagină deschisă.
+  landing    String   @default("")
+  screenW    Int?
+  /// telefon | tabletă | calculator
+  device     String   @default("")
+  browser    String   @default("")
+  country    String   @default("")
+  city       String   @default("")
+  /// Dacă era autentificat, contul lui — ca să se vadă vizitele clienților.
+  userId     String?
+  /// Numărători ținute la zi, ca panoul să nu recalculeze tot de fiecare dată.
+  pages      Int      @default(0)
+  events     Int      @default(0)
+  booked     Boolean  @default(false)
+  trail      VisitEvent[]
+
+  @@index([startedAt])
+  @@index([lastSeenAt])
+  @@index([userId])
+}
+
+/// Un pas din traseul vizitei: pagină deschisă, secțiune văzută, derulare,
+/// click, apel, programare. Tipurile permise sunt în src/lib/urmarireTipuri.ts.
+model VisitEvent {
+  id      String   @id @default(cuid())
+  visitId String
+  visit   Visit    @relation(fields: [visitId], references: [id], onDelete: Cascade)
+  at      DateTime @default(now())
+  type    String
+  path    String   @default("")
+  /// Ce anume: eticheta butonului, id-ul secțiunii, procentul derulat.
+  detail  String   @default("")
+
+  @@index([visitId, at])
+  @@index([at])
+  @@index([type])
+}

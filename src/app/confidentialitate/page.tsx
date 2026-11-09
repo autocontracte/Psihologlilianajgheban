@@ -115,6 +115,7 @@ const sections: LegalSection[] = [
     paragraphs: [
       "Fără acordul tău, site-ul folosește doar un cookie strict necesar, care te ține autentificat în cont. Conversația cu Ana e păstrată în memoria browserului tău (sessionStorage) și dispare când închizi fila.",
       "Pe paginile publice se încarcă eticheta Google Ads (gtag.js), în modul de consimțământ Google. Până când accepți din banner, ea nu pune și nu citește cookie-uri: trimite doar semnale anonime (de exemplu că a avut loc o programare), din care Google estimează câte rezultate au venit din reclame. Dacă accepți, eticheta folosește cookie-uri Google ca să lege vizita, programarea, apăsarea pe telefon sau WhatsApp ori conversația cu Ana de reclama pe care ai dat clic. Nu o folosim pentru reclame personalizate sau pentru liste de remarketing.",
+      "Ca să știm ce pagini sunt de folos, site-ul ține statistici proprii, pe serverul nostru, fără cookie-uri și fără adrese IP: ce pagini s-au deschis, cât s-a stat pe fiecare și pe ce s-a apăsat. Vizita primește un număr aleator, păstrat în memoria filei (sessionStorage), care dispare când închizi fila — nu se poate recunoaște nimeni de la o vizită la alta și nu se păstrează nimic din ce scrii. Temeiul e interesul legitim de a ne înțelege site-ul (art. 6 alin. 1 lit. f GDPR), iar datele se șterg după un an.",
       "Îți poți schimba alegerea oricând, din linkul „Cookie-uri” din subsolul site-ului.",
     ],
   },

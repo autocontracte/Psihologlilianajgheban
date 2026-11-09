@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { urmareste } from "@/lib/urmarire";
 import { Check, Lock, RotateCcw } from "lucide-react";
 import {
   AFIRMATII,
@@ -99,6 +100,7 @@ export function TestKit({ pretLei, platesteActiv }: { pretLei: number; platesteA
       setRaspunsuri(reluare.raspunsuri);
       setPas(Math.min(reluare.pas ?? 0, toatePasii(reluare.raspunsuri).length));
       setStart(true);
+      urmareste("kit_start", "reluat");
       return;
     }
     try {
@@ -110,6 +112,7 @@ export function TestKit({ pretLei, platesteActiv }: { pretLei: number; platesteA
       setRaspunsuri({});
       setPas(0);
       setStart(true);
+      urmareste("kit_start", "de la început");
     } catch (err) {
       setEroare(err instanceof Error ? err.message : "A apărut o eroare.");
     }
@@ -154,8 +157,10 @@ export function TestKit({ pretLei, platesteActiv }: { pretLei: number; platesteA
         body: JSON.stringify({ answers: raspunsuri, email }),
       });
       if (!salvat.ok) throw new Error("Nu am putut salva răspunsurile. Încearcă din nou.");
+      urmareste("kit_gata");
 
       if (platesteActiv) {
+        urmareste("kit_plata");
         const res = await fetch(`/api/kit/${token}/plata`, { method: "POST" });
         const json = await res.json();
         if (!res.ok) throw new Error(json.error ?? "Plata nu a putut fi pornită.");

@@ -13,6 +13,7 @@ import {
   IconPhone,
 } from "../ui/Icons";
 import { Lumina } from "../ui/Lumina";
+import { urmareste } from "@/lib/urmarire";
 import { Accent } from "../ui/Accent";
 
 type Status = "idle" | "sending" | "sent" | "error";
@@ -43,6 +44,8 @@ export function Contact() {
       if (!res.ok) throw new Error(json.error ?? "Mesajul nu a putut fi trimis.");
 
       setStatus("sent");
+      /* Doar că a trimis mesajul — ce a scris nu intră în statistici. */
+      urmareste("formular", "mesaj din secțiunea de contact");
       form.reset();
     } catch (err) {
       setStatus("error");

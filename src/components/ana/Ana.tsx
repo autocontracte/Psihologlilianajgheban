@@ -8,6 +8,7 @@ import { useNavigheaza } from "./useNavigheaza";
 import { AnaFace, type AnaMood } from "./AnaFace";
 import { AnaMesaje } from "./AnaMesaje";
 import { useAna } from "./useAna";
+import { urmareste } from "@/lib/urmarire";
 
 /* ----------------------------------------------------------------------------
    Ana — asistenta virtuală, în colțul din dreapta jos (WhatsApp stă în stânga).
@@ -86,6 +87,7 @@ export function Ana() {
 
   useEffect(() => {
     if (!open) return;
+    urmareste("ana_deschis");
     const t = setTimeout(() => inputRef.current?.focus(), 80);
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     window.addEventListener("keydown", onKey);
