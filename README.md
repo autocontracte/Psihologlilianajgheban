@@ -286,41 +286,55 @@ trimite pe WhatsApp sau pe mail.
 
 ## Statistici proprii (urmărirea vizitelor)
 
-Site-ul își ține singur statisticile, pe serverul lui, fără Google Analytics și
-fără cookie-uri. Se văd în panou, la `/admin/vizite`.
+Site-ul își ține singur statisticile, pe serverul lui, fără Google Analytics. Se
+văd în panou, la `/admin/vizite`.
 
-**Ce se măsoară:** fiecare pagină deschisă și cât s-a stat pe ea, secțiunile
-prin care a trecut vizitatorul (`<section id="…">` din `<main>`), cât la sută a
-derulat (25 / 50 / 75 / 100), fiecare clic pe link sau buton — cu zona din
-pagină și eticheta lui — plus pașii importanți: programare începută și trimisă,
-plecare spre plată, plată reușită, apel, WhatsApp, email, formular de contact,
-mesaj către Ana, trusa de ajutor începută și terminată, contract semnat, cont
-nou.
+**Două trepte, după ce alege omul în bannerul de cookie-uri:**
 
-**Ce nu se măsoară:** nimic din ce scrie omul (mesajele către Ana, răspunsurile
-din trusă, textul formularelor), nicio adresă IP, niciun cookie. Vizita primește
-un număr aleator ținut în `sessionStorage`, care dispare la închiderea filei,
-deci nimeni nu poate fi recunoscut de la o vizită la alta. Datele se șterg
-singure după un an. Paginile interne (`/admin`, `/calendar`, `/programator`) nu
-se urmăresc deloc, iar deschiderea panoului de vizite pune un semn în
-`localStorage` pe browserul administratorului, ca vizitele proprii să nu intre
-în statistici.
+- *fără acord* — o vizită singuratică. Id-ul ei e aleator și stă în
+  `sessionStorage`, deci dispare la închiderea filei: niciun cookie, nicio
+  adresă IP, nicio legătură cu alte vizite. Temei: interes legitim.
+- *cu acord* — browserul primește și cookie-ul `lj_v` (un an, un alt număr
+  aleator). De aici se vede că omul s-a întors: a câta vizită e, de unde a venit
+  prima oară (*first touch*) și după câte vizite s-a programat. Tot atunci se
+  păstrează și adresa IP a vizitei. La refuz, cookie-ul se șterge.
+
+**Ce se măsoară:** fiecare pagină deschisă și cât s-a stat pe ea, timpul *activ*
+(filă vizibilă și mișcare recentă, nu doar fila deschisă), secțiunile prin care
+a trecut (`<section id="…">` din `<main>`), cât la sută a derulat (pragurile 25
+/ 50 / 75 / 100 și maximul vizitei), fiecare clic pe link sau buton — cu zona
+din pagină și eticheta lui — pagina de pe care a plecat, dispozitiv, sistem,
+browser, mărimea ecranului, limba, fusul orar și tipul conexiunii, viteza
+paginii (LCP, INP, CLS), erorile de JavaScript, clicurile nervoase (trei pe
+același loc în două secunde), paginile inexistente, de unde copiază text, plus
+pașii importanți: programare începută, lăsată la jumătate sau trimisă, plecare
+spre plată, plată reușită, apel, WhatsApp, email, formular de contact, mesaj
+către Ana, trusa de ajutor începută și terminată, contract semnat, cont nou.
+
+**Ce nu se măsoară niciodată:** nimic din ce scrie omul — mesajele către Ana,
+răspunsurile din trusă, textul formularelor. Datele se șterg singure după un an.
+Paginile interne (`/admin`, `/calendar`, `/programator`) nu se urmăresc deloc,
+iar deschiderea panoului de vizite pune un semn în `localStorage` pe browserul
+administratorului (și îi șterge cookie-ul), ca vizitele proprii să nu intre în
+statistici.
 
 | Fișier | Ce face |
 | --- | --- |
 | `src/lib/urmarireTipuri.ts` | lista tipurilor de evenimente și etichetele lor |
-| `src/lib/urmarire.ts` | partea din browser: adună evenimentele și le trimite în loturi |
-| `src/components/Urmaritor.tsx` | ascultătorul de pe tot site-ul (pagini, secțiuni, derulare, clicuri) |
-| `src/app/api/urmarire/route.ts` | primește loturile și le scrie în `Visit` / `VisitEvent` |
-| `src/lib/vizite.ts` | calculele pentru panou |
-| `src/app/admin/vizite/page.tsx` | panoul: cifre, clasamente, traseul fiecărei vizite |
+| `src/lib/urmarire.ts` | partea din browser: acordul, cookie-ul, cifrele vizitei, loturile |
+| `src/components/Urmaritor.tsx` | ascultătorul de pe tot site-ul (pagini, secțiuni, derulare, clicuri, copiere) |
+| `src/app/api/urmarire/route.ts` | primește loturile și le scrie în `Visitor` / `Visit` / `VisitEvent` |
+| `src/lib/vizite.ts` | calculele pentru panou (pâlnia, clasamentele, vitezele) |
+| `src/app/admin/vizite/page.tsx` | panoul: cifre, pâlnie, oameni care revin, traseul fiecărei vizite |
 
 Evenimentele speciale se trimit din componenta lor, cu
 `urmareste("programare", …)`. Un tip nou se adaugă întâi în
 `src/lib/urmarireTipuri.ts` — serverul refuză orice tip care nu e acolo.
 
-Țara și orașul vin din antetele Cloudflare (`cf-ipcountry`, `cf-ipcity`). Fără
-Cloudflare în față rămân goale, restul merge la fel.
+Țara, orașul și regiunea vin din antetele Cloudflare (`cf-ipcountry`,
+`cf-ipcity`, `cf-region`). Orașul apare doar dacă e pornit *Add visitor location
+headers* în Cloudflare (Rules → Settings → Managed Transforms); fără asta rămâne
+doar țara, restul merge la fel.
 
 ### Conturi de administrator
 

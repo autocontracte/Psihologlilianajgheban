@@ -163,6 +163,37 @@ export function BookingFlow({
 
   const service = services.find((s) => s.id === serviceId);
 
+  /* Programare lăsată la jumătate: la plecarea de pe pagină se notează unde a
+     rămas, ca să se vadă în panou la ce pas renunță oamenii. Plecarea spre
+     Stripe nu e abandon — acolo e deja „plata_start”. */
+  const stadiu = useRef({ step: 0, done: false, serviciu: "", zi: "", ora: "" });
+  stadiu.current = {
+    step,
+    done,
+    serviciu: service?.name ?? "",
+    zi: date,
+    ora: time,
+  };
+  useEffect(() => {
+    const noteazaAbandonul = () => {
+      const s = stadiu.current;
+      if (s.done || redirectRef.current || (!s.serviciu && s.step === 0)) return;
+      const unde = [
+        STEPS[s.step] ?? "",
+        s.serviciu,
+        s.zi && s.ora ? `${s.zi} ${s.ora}` : s.zi,
+      ]
+        .filter(Boolean)
+        .join(" · ");
+      urmareste("abandon", unde);
+    };
+    window.addEventListener("pagehide", noteazaAbandonul);
+    return () => {
+      window.removeEventListener("pagehide", noteazaAbandonul);
+      noteazaAbandonul();
+    };
+  }, []);
+
   /* ------------------------------------------------- încărcarea zilelor */
   const loadDays = useCallback(async (id: string) => {
     setLoadingDays(true);

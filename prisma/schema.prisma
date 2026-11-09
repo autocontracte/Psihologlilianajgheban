@@ -490,11 +490,47 @@ model CabRelease {
 /**
  * ============================================================================
  * Urmărirea vizitelor (statistici proprii, fără Google Analytics)
+ *
  * O vizită = o filă deschisă pe site. Id-ul vizitei e aleator și stă în
- * sessionStorage, deci dispare la închiderea filei: fără cookie-uri, fără IP
- * salvat, fără nimic care să identifice persoana. Vezi src/lib/urmarire.ts.
+ * sessionStorage, deci dispare la închiderea filei.
+ *
+ * Fără acordul pentru cookie-uri atât se și păstrează: o vizită singură, fără
+ * cookie, fără adresă IP, fără nicio legătură cu altceva.
+ *
+ * Cu acord (bannerul de cookie-uri), browserul primește și un cookie cu un
+ * număr aleator, valabil un an: de la el încolo vizitele aceluiași om se leagă
+ * între ele într-un `Visitor` — se vede că s-a întors, de câte ori, de unde a
+ * venit prima oară și după câte vizite s-a programat. Vezi src/lib/urmarire.ts.
  * ==========================================================================
  */
+
+/// Omul din spatele mai multor vizite, cât timp are cookie-ul (un an).
+/// Există doar pentru cine a acceptat cookie-urile.
+model Visitor {
+  /// Numărul aleator din cookie-ul `lj_v`.
+  id            String    @id
+  firstSeenAt   DateTime  @default(now())
+  lastSeenAt    DateTime  @default(now())
+  visits        Int       @default(0)
+  /// Prima sursă („first touch"): reclama care l-a adus întâia oară, chiar
+  /// dacă s-a programat abia peste două săptămâni, venind direct.
+  firstReferrer String    @default("")
+  firstSource   String    @default("")
+  firstMedium   String    @default("")
+  firstCampaign String    @default("")
+  firstLanding  String    @default("")
+  /// Contul, dacă s-a autentificat vreodată de pe acest browser.
+  userId        String?
+  booked        Boolean   @default(false)
+  bookedAt      DateTime?
+  /// Câte vizite au fost nevoie până la prima programare.
+  visitsToBook  Int?
+  visitList     Visit[]
+
+  @@index([lastSeenAt])
+  @@index([userId])
+}
+
 model Visit {
   /// Id-ul generat în browser (uuid), nu de server.
   id         String   @id
@@ -506,25 +542,57 @@ model Visit {
   source     String   @default("")
   medium     String   @default("")
   campaign   String   @default("")
-  /// Prima pagină deschisă.
+  /// Prima pagină deschisă și ultima pagină văzută înainte de plecare.
   landing    String   @default("")
-  screenW    Int?
+  exitPath   String   @default("")
   /// telefon | tabletă | calculator
   device     String   @default("")
   browser    String   @default("")
+  os         String   @default("")
+  screenW    Int?
+  screenH    Int?
+  viewW      Int?
+  viewH      Int?
+  /// Limba browserului, fusul orar și tipul de conexiune (4g, wifi…).
+  lang       String   @default("")
+  timezone   String   @default("")
+  connection String   @default("")
   country    String   @default("")
   city       String   @default("")
+  region     String   @default("")
+  /// „acceptat" | „refuzat" | "" (nu a ales încă).
+  consent    String   @default("")
+  /// Adresa IP, păstrată doar dacă omul a acceptat cookie-urile.
+  ip         String   @default("")
   /// Dacă era autentificat, contul lui — ca să se vadă vizitele clienților.
   userId     String?
+  /// Omul, dacă a acceptat cookie-urile.
+  visitorId  String?
+  visitor    Visitor? @relation(fields: [visitorId], references: [id], onDelete: SetNull)
+  /// A câta vizită a acestui om este.
+  visitNo    Int      @default(1)
   /// Numărători ținute la zi, ca panoul să nu recalculeze tot de fiecare dată.
   pages      Int      @default(0)
   events     Int      @default(0)
+  clicks     Int      @default(0)
+  /// Secunde în care chiar a fost acolo (filă vizibilă, mișcare recentă),
+  /// nu doar cât a stat fila deschisă.
+  activeSec  Int      @default(0)
+  /// Cât la sută din cea mai lungă pagină a derulat.
+  maxScroll  Int      @default(0)
+  /// Viteza paginii, așa cum a simțit-o omul (milisecunde, CLS × 1000).
+  lcp        Int?
+  inp        Int?
+  cls        Int?
+  /// Câte erori de JavaScript au apărut în vizită.
+  errors     Int      @default(0)
   booked     Boolean  @default(false)
   trail      VisitEvent[]
 
   @@index([startedAt])
   @@index([lastSeenAt])
   @@index([userId])
+  @@index([visitorId])
 }
 
 /// Un pas din traseul vizitei: pagină deschisă, secțiune văzută, derulare,

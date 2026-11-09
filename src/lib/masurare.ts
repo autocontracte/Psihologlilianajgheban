@@ -45,7 +45,7 @@ var p=location.pathname;if(${JSON.stringify(FARA_MASURARE)}.some(function(x){ret
 window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};
 var ok=false;try{ok=localStorage.getItem(${JSON.stringify(CHEIE_COOKIE_URI)})==="acceptat"}catch(e){}
 var v=ok?"granted":"denied";
-gtag("consent","default",{ad_storage:v,ad_user_data:v,ad_personalization:"denied",analytics_storage:"denied",wait_for_update:500});
+gtag("consent","default",{ad_storage:v,ad_user_data:v,ad_personalization:"denied",analytics_storage:v,wait_for_update:500});
 gtag("js",new Date());gtag("config",${JSON.stringify(ADS_ID)});
 var s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id=${ADS_ID}";document.head.appendChild(s);
 })();`;
@@ -66,7 +66,11 @@ export function salveazaAlegerea(a: Alegere) {
     /* browser fără stocare: alegerea ține cât e deschisă pagina */
   }
   const v = a === "acceptat" ? "granted" : "denied";
-  window.gtag?.("consent", "update", { ad_storage: v, ad_user_data: v });
+  window.gtag?.("consent", "update", {
+    ad_storage: v,
+    ad_user_data: v,
+    analytics_storage: v,
+  });
   window.dispatchEvent(new CustomEvent(EVENIMENT_ALEGERE, { detail: a }));
 }
 

@@ -4,8 +4,10 @@ import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
 import {
-  inAsteptare,
+  noteazaClic,
+  noteazaDerularea,
   noteazaMiscarea,
+  pornesteMasuratorile,
   semnDeViata,
   trimite,
   urmareste,
@@ -90,6 +92,7 @@ export function Urmaritor() {
         const max = document.documentElement.scrollHeight - window.innerHeight;
         if (max <= 0) return;
         const pct = ((window.scrollY + 1) / max) * 100;
+        noteazaDerularea(pct);
         while (atins < praguri.length && pct >= praguri[atins] - 1) {
           urmareste("derulare", `${praguri[atins]}%`);
           atins++;
@@ -111,11 +114,29 @@ export function Urmaritor() {
   useEffect(() => {
     if (urmarireaOprita()) return;
 
+    /* Timpul activ, viteza paginii și erorile de JavaScript. */
+    pornesteMasuratorile();
+
+    /* Trei clicuri pe același loc în două secunde: ceva nu merge sau omul
+       crede că e buton. Merită văzut în panou. */
+    let nervos = { el: null as Element | null, n: 0, at: 0 };
+
     const laClic = (e: MouseEvent) => {
-      const el = (e.target as Element | null)?.closest?.(
-        "a, button, summary, [role=tab], [role=button]",
-      );
+      const tinta = e.target as Element | null;
+      const el = tinta?.closest?.("a, button, summary, [role=tab], [role=button]");
+
+      const acum = Date.now();
+      const acelasi = tinta && nervos.el === tinta && acum - nervos.at < 2000;
+      nervos = { el: tinta, n: acelasi ? nervos.n + 1 : 1, at: acum };
+      if (nervos.n === 3) {
+        const unde = tinta
+          ? [zona(tinta), eticheta(tinta)].filter(Boolean).join(" · ")
+          : "";
+        urmareste("rage", unde || location.pathname);
+      }
+
       if (!el) return;
+      noteazaClic();
 
       const href = el.getAttribute("href") ?? "";
       const unde = [zona(el), eticheta(el)].filter(Boolean).join(" · ");
@@ -131,25 +152,38 @@ export function Urmaritor() {
     document.addEventListener("click", laClic, true);
 
     const laActivitate = () => noteazaMiscarea();
-    (["pointerdown", "keydown"] as const).forEach((n) =>
+    (["pointerdown", "keydown", "mousemove", "touchstart"] as const).forEach((n) =>
       window.addEventListener(n, laActivitate, { passive: true }),
     );
     const puls = setInterval(semnDeViata, 20_000);
 
-    /* Când fila se ascunde sau pagina se închide, trimitem ce a mai rămas. */
-    const laAscundere = () => {
-      if (document.visibilityState === "hidden" && inAsteptare()) trimite();
+    /* Ce text copiază de pe site (numărul de telefon? adresa?) — se notează
+       doar din ce zonă a paginii, nu și textul copiat. */
+    const laCopiere = () => {
+      const sel = document.getSelection();
+      const nod = sel?.anchorNode;
+      const el = (nod?.nodeType === 1 ? nod : nod?.parentElement) as Element | null;
+      urmareste("copiere", el ? zona(el) || location.pathname : location.pathname);
     };
-    const laPlecare = () => inAsteptare() && trimite();
+    document.addEventListener("copy", laCopiere);
+
+    /* Când fila se ascunde sau pagina se închide, trimitem ce a mai rămas —
+       și fără evenimente în coadă, ca să ajungă cifrele finale (timp activ,
+       cât a derulat, pagina de pe care a plecat). */
+    const laAscundere = () => {
+      if (document.visibilityState === "hidden") trimite();
+    };
+    const laPlecare = () => trimite();
     document.addEventListener("visibilitychange", laAscundere);
     window.addEventListener("pagehide", laPlecare);
 
     return () => {
       document.removeEventListener("click", laClic, true);
-      (["pointerdown", "keydown"] as const).forEach((n) =>
+      (["pointerdown", "keydown", "mousemove", "touchstart"] as const).forEach((n) =>
         window.removeEventListener(n, laActivitate),
       );
       clearInterval(puls);
+      document.removeEventListener("copy", laCopiere);
       document.removeEventListener("visibilitychange", laAscundere);
       window.removeEventListener("pagehide", laPlecare);
     };

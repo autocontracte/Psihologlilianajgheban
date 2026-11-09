@@ -2,10 +2,12 @@ import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/Button";
 import { Lumina } from "@/components/ui/Lumina";
+import { Pagina404 } from "@/components/Pagina404";
 
 export default function NotFound() {
   return (
     <>
+      <Pagina404 />
       <Nav />
       <main className="grain relative flex min-h-[80vh] items-center overflow-hidden bg-cream pt-32">
         <Lumina din="dreapta" />

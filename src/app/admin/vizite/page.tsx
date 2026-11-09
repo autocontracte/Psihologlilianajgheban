@@ -2,7 +2,14 @@ import Link from "next/link";
 
 import { UrmarireAdmin } from "@/components/admin/UrmarireAdmin";
 import { TZ } from "@/lib/tz";
-import { durata, formateazaDurata, incarcaVizite, sinteza, sursa } from "@/lib/vizite";
+import {
+  durata,
+  formateazaDurata,
+  incarcaVizite,
+  sinteza,
+  sursa,
+  sursaOmului,
+} from "@/lib/vizite";
 import { TRACK_LABELS, type TrackType } from "@/lib/urmarireTipuri";
 
 export const metadata = { title: "Vizite" };
@@ -104,6 +111,16 @@ function Clasament({
   );
 }
 
+/** Verdict scurt pentru vitezele Core Web Vitals. */
+function viteza(nume: "lcp" | "inp" | "cls", v: number) {
+  const praguri = { lcp: [2500, 4000], inp: [200, 500], cls: [100, 250] }[nume];
+  if (!v) return { text: "—", clasa: "text-ink-muted" };
+  const valoare = nume === "cls" ? (v / 1000).toFixed(2) : `${(v / 1000).toFixed(2)}s`;
+  if (v <= praguri[0]) return { text: valoare, clasa: "text-periwinkle" };
+  if (v <= praguri[1]) return { text: valoare, clasa: "text-sage" };
+  return { text: valoare, clasa: "text-clay" };
+}
+
 export default async function AdminVizitePage({
   searchParams,
 }: {
@@ -114,9 +131,13 @@ export default async function AdminVizitePage({
   const acum = Date.now();
   const de = perioada === 1 ? inceputulZilei(acum) : acum - perioada * 86_400_000;
 
-  const { vizite, evenimente, conturi } = await incarcaVizite(new Date(de));
-  const s = sinteza(vizite, evenimente, acum);
+  const { vizite, evenimente, oameni, conturi } = await incarcaVizite(new Date(de));
+  const s = sinteza(vizite, evenimente, oameni, acum);
   const maxZi = Math.max(1, ...s.peZile.map(([, n]) => n));
+  const palnieMax = s.palnie[0]?.n || 1;
+
+  /* Oamenii care s-au întors, cei mai activi întâi. */
+  const revenitii = [...oameni].filter((o) => o.visits > 1).sort((a, b) => b.visits - a.visits);
 
   return (
     <div>
@@ -126,9 +147,10 @@ export default async function AdminVizitePage({
         <div>
           <h1 className="font-display text-3xl text-ink lg:text-4xl">Vizite</h1>
           <p className="mt-2.5 max-w-2xl font-sans text-[0.88rem] text-ink-soft">
-            Statistici proprii, fără cookie-uri și fără adrese IP salvate. O vizită este
-            o filă deschisă pe site. Pagina se reîmprospătează singură la 20 de secunde,
-            iar vizitele făcute din acest browser nu se mai numără.
+            Statistici proprii, ținute pe serverul nostru. Cine acceptă cookie-urile e
+            recunoscut când se întoarce; cine refuză rămâne o vizită anonimă, fără cookie
+            și fără adresă IP. Pagina se reîmprospătează singură la 20 de secunde, iar
+            vizitele făcute din acest browser nu se mai numără.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-1">
@@ -174,6 +196,7 @@ export default async function AdminVizitePage({
               className="border border-ink/10 px-3 py-1 font-sans text-[0.72rem] text-ink-soft"
             >
               {ultima?.path ?? v.landing} · {v.device} · {sursa(v)}
+              {v.visitNo > 1 ? ` · a ${v.visitNo}-a vizită` : ""}
             </span>
           );
         })}
@@ -184,28 +207,27 @@ export default async function AdminVizitePage({
         <Cifra
           eticheta="Vizite"
           valoare={s.total}
-          nota={`${procent(s.cuInteres, s.total)} au stat mai mult de 10 secunde`}
+          nota={`${s.reveniri} ${s.reveniri === 1 ? "revenire" : "reveniri"} · ${procent(
+            s.cuInteres,
+            s.total,
+          )} au stat peste 10s`}
         />
         <Cifra
-          eticheta="Durata medie"
-          valoare={formateazaDurata(s.durataMedie)}
-          nota={`${s.paginiPeVizita.toFixed(1)} pagini pe vizită`}
+          eticheta="Timp activ mediu"
+          valoare={formateazaDurata(s.timpActivMediu)}
+          nota={`din ${formateazaDurata(s.durataMedie)} cu fila deschisă`}
         />
         <Cifra
           eticheta="Programări trimise"
           valoare={s.programari}
           accent="text-periwinkle"
-          nota={`${procent(s.programari, s.total)} din vizite · ${
-            s.programariIncepute
-          } au început`}
+          nota={`${procent(s.programari, s.total)} din vizite · ${s.programariIncepute} au început`}
         />
         <Cifra
           eticheta="Telefon și WhatsApp"
           valoare={s.telefon + s.whatsapp}
           accent="text-clay"
-          nota={`${s.telefon} apel, ${s.whatsapp} WhatsApp, ${
-            s.email + s.formulare
-          } email`}
+          nota={`${s.telefon} apel, ${s.whatsapp} WhatsApp, ${s.email + s.formulare} email`}
         />
         <Cifra
           eticheta="Conversații cu Ana"
@@ -217,6 +239,72 @@ export default async function AdminVizitePage({
           valoare={s.kitGata}
           nota={`terminată · ${s.kitIncepute} au început`}
         />
+      </div>
+
+      <div className="mt-3 grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6">
+        <Cifra
+          eticheta="Au acceptat cookie-urile"
+          valoare={procent(s.acordAcceptat, s.total)}
+          nota={`${s.acordAcceptat} da · ${s.acordRefuzat} nu · ${s.acordFara} n-au ales`}
+        />
+        <Cifra
+          eticheta="Oameni recunoscuți"
+          valoare={s.oameni}
+          nota={`${s.oameniCuProgramare} s-au programat${
+            s.vizitePanaLaProgramare
+              ? ` · după ${s.vizitePanaLaProgramare.toFixed(1)} vizite`
+              : ""
+          }`}
+        />
+        <Cifra
+          eticheta="Derulare medie"
+          valoare={`${Math.round(s.derulareMedie)}%`}
+          nota={`${s.clicuriMedii.toFixed(1)} clicuri pe vizită`}
+        />
+        <Cifra
+          eticheta="Programări lăsate"
+          valoare={s.abandonuri}
+          accent={s.abandonuri ? "text-clay" : "text-ink"}
+          nota="au început și n-au terminat"
+        />
+        <Cifra
+          eticheta="Viteza paginii"
+          valoare={viteza("lcp", s.lcp).text}
+          accent={viteza("lcp", s.lcp).clasa}
+          nota={`răspuns ${viteza("inp", s.inp).text} · sărituri ${viteza("cls", s.cls).text}`}
+        />
+        <Cifra
+          eticheta="Erori în pagină"
+          valoare={s.erori}
+          accent={s.erori ? "text-clay" : "text-ink"}
+          nota={`${s.nervoase.length} locuri cu clicuri nervoase`}
+        />
+      </div>
+
+      {/* Pâlnia */}
+      <div className="mt-4 bg-cream p-5">
+        <h2 className="font-display text-lg text-ink">De la vizită la programare</h2>
+        <ul className="mt-4 space-y-2">
+          {s.palnie.map((p, i) => (
+            <li key={p.eticheta} className="relative overflow-hidden px-4 py-2.5">
+              <span
+                className="absolute inset-y-0 left-0 bg-periwinkle-pale"
+                style={{ width: `${(p.n / palnieMax) * 100}%` }}
+              />
+              <span className="relative flex items-center justify-between gap-4 font-sans text-[0.8rem]">
+                <span className="text-ink">{p.eticheta}</span>
+                <span className="shrink-0 text-ink-muted">
+                  {p.n}
+                  {i > 0 && s.palnie[i - 1].n > 0 && (
+                    <span className="ml-2 text-periwinkle">
+                      {procent(p.n, s.palnie[i - 1].n)} din pasul dinainte
+                    </span>
+                  )}
+                </span>
+              </span>
+            </li>
+          ))}
+        </ul>
       </div>
 
       {/* Vizitele pe zile */}
@@ -248,8 +336,8 @@ export default async function AdminVizitePage({
         <Clasament titlu="De unde vin" rows={s.surse} gol="Nicio vizită încă." />
         <Clasament titlu="Prima pagină" rows={s.primaPagina} gol="Nicio vizită încă." />
         <Clasament
-          titlu="Dispozitiv și loc"
-          rows={[...s.dispozitive, ...s.orase]}
+          titlu="Ultima pagină înainte de plecare"
+          rows={s.ultimaPagina}
           gol="Nicio vizită încă."
         />
       </div>
@@ -319,9 +407,121 @@ export default async function AdminVizitePage({
         </div>
       </div>
 
-      {s.campanii.length > 0 && (
+      {/* Oamenii care se întorc */}
+      <div className="mt-4 bg-cream p-5">
+        <h2 className="font-display text-lg text-ink">Oameni care se întorc</h2>
+        <p className="mt-1.5 font-sans text-[0.78rem] text-ink-muted">
+          Doar cei care au acceptat cookie-urile. „Prima sursă" e reclama sau linkul
+          care i-a adus întâia oară, chiar dacă pe urmă au venit direct.
+        </p>
+        {revenitii.length === 0 ? (
+          <p className="mt-4 font-sans text-[0.8rem] text-ink-muted">
+            Încă nu s-a întors nimeni (sau nimeni n-a acceptat cookie-urile).
+          </p>
+        ) : (
+          <div className="mt-4 overflow-x-auto">
+            <table className="w-full min-w-[34rem]">
+              <thead>
+                <tr className="border-b border-ink/10">
+                  {["Vizite", "Prima sursă", "Prima pagină", "Prima dată", "Ultima dată", "Programare"].map(
+                    (h, i) => (
+                      <th
+                        key={h}
+                        className={`px-3 py-2.5 font-sans text-[0.74rem] tracking-[0.02em] text-ink-muted ${
+                          i === 0 ? "text-left" : "text-left"
+                        }`}
+                      >
+                        {h}
+                      </th>
+                    ),
+                  )}
+                </tr>
+              </thead>
+              <tbody>
+                {revenitii.slice(0, 40).map((o) => {
+                  const cont = o.userId ? conturi.get(o.userId) : null;
+                  return (
+                    <tr key={o.id} className="border-b border-ink/5 last:border-0">
+                      <td className="px-3 py-2.5 font-sans text-[0.8rem] font-medium text-ink">
+                        {o.visits}
+                      </td>
+                      <td className="px-3 py-2.5 font-sans text-[0.8rem] text-ink-soft">
+                        {sursaOmului(o)}
+                        {o.firstCampaign ? ` · ${o.firstCampaign}` : ""}
+                      </td>
+                      <td className="px-3 py-2.5 font-sans text-[0.8rem] text-ink-soft">
+                        {o.firstLanding}
+                      </td>
+                      <td className="px-3 py-2.5 font-sans text-[0.78rem] text-ink-muted">
+                        {ziScurt.format(o.firstSeenAt)}
+                      </td>
+                      <td className="px-3 py-2.5 font-sans text-[0.78rem] text-ink-muted">
+                        {ziOra.format(o.lastSeenAt)}
+                      </td>
+                      <td className="px-3 py-2.5 font-sans text-[0.78rem]">
+                        {o.booked ? (
+                          <span className="text-periwinkle">
+                            da{o.visitsToBook ? `, la vizita ${o.visitsToBook}` : ""}
+                          </span>
+                        ) : (
+                          <span className="text-ink-muted">—</span>
+                        )}
+                        {cont ? ` · ${cont.name}` : ""}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* Tehnic */}
+      <div className="mt-4 grid gap-3 lg:grid-cols-3">
+        <Clasament
+          titlu="Dispozitiv și sistem"
+          rows={[...s.dispozitive, ...s.sisteme]}
+          gol="Nicio vizită încă."
+        />
+        <Clasament titlu="De unde sunt" rows={s.orase} gol="Nicio vizită încă." />
+        <div className="space-y-3">
+          <Clasament titlu="Limba browserului" rows={s.limbi} gol="—" cate={5} />
+          <Clasament titlu="Conexiune" rows={s.conexiuni} gol="—" cate={5} />
+        </div>
+      </div>
+
+      {/* Ce nu merge */}
+      {(s.nervoase.length > 0 ||
+        s.pagini404.length > 0 ||
+        s.eroriLista.length > 0 ||
+        s.abandonLista.length > 0) && (
+        <div className="mt-4 grid gap-3 lg:grid-cols-4">
+          <Clasament
+            titlu="Clicuri nervoase"
+            rows={s.nervoase}
+            gol="—"
+            cate={6}
+          />
+          <Clasament titlu="Pagini inexistente" rows={s.pagini404} gol="—" cate={6} />
+          <Clasament titlu="Erori în pagină" rows={s.eroriLista} gol="—" cate={6} />
+          <Clasament
+            titlu="Unde lasă programarea"
+            rows={s.abandonLista}
+            gol="—"
+            cate={6}
+          />
+        </div>
+      )}
+
+      {(s.campanii.length > 0 || s.copieri.length > 0) && (
         <div className="mt-4 grid gap-3 lg:grid-cols-3">
-          <Clasament titlu="Campanii" rows={s.campanii} gol="—" />
+          {s.campanii.length > 0 && (
+            <Clasament titlu="Campanii" rows={s.campanii} gol="—" />
+          )}
+          {s.copieri.length > 0 && (
+            <Clasament titlu="De unde copiază text" rows={s.copieri} gol="—" />
+          )}
         </div>
       )}
 
@@ -363,8 +563,13 @@ export default async function AdminVizitePage({
                       </span>
                       <span className="text-ink-soft">
                         {v.pages} {v.pages === 1 ? "pagină" : "pagini"} ·{" "}
-                        {formateazaDurata(durata(v))}
+                        {formateazaDurata(v.activeSec || durata(v))}
                       </span>
+                      {v.visitNo > 1 && (
+                        <span className="border border-ink/15 px-2 py-0.5 text-[0.68rem] text-ink-soft">
+                          a {v.visitNo}-a vizită
+                        </span>
+                      )}
                       {v.booked && (
                         <span className="bg-periwinkle px-2 py-0.5 text-[0.68rem] text-cream">
                           Programare
@@ -391,6 +596,9 @@ export default async function AdminVizitePage({
                       {traseu.map((e, i) => {
                         const dupa = (e.at.getTime() - start) / 1000;
                         const estePagina = e.type === "pagina";
+                        const esteProblema = ["rage", "eroare", "abandon", "p404"].includes(
+                          e.type,
+                        );
                         return (
                           <li
                             key={i}
@@ -405,7 +613,9 @@ export default async function AdminVizitePage({
                               className={`w-[9.5rem] shrink-0 ${
                                 estePagina
                                   ? "font-medium text-periwinkle"
-                                  : "text-ink-muted"
+                                  : esteProblema
+                                    ? "text-clay"
+                                    : "text-ink-muted"
                               }`}
                             >
                               {TRACK_LABELS[e.type as TrackType] ?? e.type}
@@ -422,14 +632,22 @@ export default async function AdminVizitePage({
                           </li>
                         );
                       })}
-                      {(v.referrer || v.campaign || v.browser) && (
-                        <li className="pt-2 font-sans text-[0.72rem] text-ink-muted">
-                          {v.referrer ? `Venit de pe ${v.referrer}` : "Venit direct"}
-                          {v.campaign ? ` · campania ${v.campaign}` : ""}
-                          {v.browser ? ` · ${v.browser}` : ""}
-                          {v.country ? ` · ${v.country}` : ""}
-                        </li>
-                      )}
+
+                      <li className="mt-2 border-t border-ink/10 pt-2 font-sans text-[0.72rem] text-ink-muted">
+                        {v.referrer ? `Venit de pe ${v.referrer}` : "Venit direct"}
+                        {v.campaign ? ` · campania ${v.campaign}` : ""}
+                        {` · ${[v.browser, v.os].filter(Boolean).join(" pe ") || "browser necunoscut"}`}
+                        {v.viewW ? ` · ecran ${v.viewW}px` : ""}
+                        {v.lang ? ` · ${v.lang}` : ""}
+                        {v.connection ? ` · ${v.connection}` : ""}
+                        {v.maxScroll ? ` · a derulat ${v.maxScroll}%` : ""}
+                        {v.clicks ? ` · ${v.clicks} clicuri` : ""}
+                        {v.exitPath ? ` · a plecat de pe ${v.exitPath}` : ""}
+                        {v.consent
+                          ? ` · cookie-uri: ${v.consent}`
+                          : " · n-a ales la cookie-uri"}
+                        {v.ip ? ` · ${v.ip}` : ""}
+                      </li>
                     </ol>
                   </details>
                 </li>

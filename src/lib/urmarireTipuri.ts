@@ -24,6 +24,12 @@ export const TRACK_LABELS = {
   kit_plata: "A cerut interpretarea",
   contract_semnat: "Contract semnat",
   cont_nou: "Cont nou",
+  abandon: "A lăsat programarea neterminată",
+  rage: "Clicuri nervoase",
+  copiere: "A copiat text",
+  p404: "Pagină inexistentă",
+  eroare: "Eroare în pagină",
+  acord: "Răspuns la cookie-uri",
 } as const;
 
 export type TrackType = keyof typeof TRACK_LABELS;
@@ -44,3 +50,6 @@ export const TRACK_IMPORTANT: TrackType[] = [
   "contract_semnat",
   "cont_nou",
 ];
+
+/** Evenimentele care arată o problemă, nu un interes. */
+export const TRACK_PROBLEME: TrackType[] = ["abandon", "rage", "p404", "eroare"];
