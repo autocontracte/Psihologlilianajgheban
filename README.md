@@ -336,6 +336,21 @@ Evenimentele speciale se trimit din componenta lor, cu
 headers* în Cloudflare (Rules → Settings → Managed Transforms); fără asta rămâne
 doar țara, restul merge la fel.
 
+### Conversațiile cu Ana
+
+Se păstrează întregi (întrebările omului și răspunsurile Anei), legate de vizita
+din care s-a scris, și se văd la `/admin/ana`. Conținutul poate fi sensibil:
+se citește doar din panoul de administrare și se șterge automat după 90 de zile
+(`ANA_PASTREAZA_ZILE` în `src/lib/anaIstoric.ts`). Politica de confidențialitate
+spune asta la capitolele „Ce date colectăm", „Cât păstrăm datele" și
+„Cookie-uri". În interfața Anei nu apare niciun avertisment.
+
+Conversația e ținută împreună de o cheie aleatoare din `sessionStorage`
+(`lj-ana-cheie`), trimisă la fiecare întrebare. Întrebarea se salvează înainte
+de răspuns, iar răspunsul Anei se adună din fluxul trimis spre browser și se
+scrie la final — dacă omul închide pagina la jumătate, rămâne exact cât a apucat
+să vadă pe ecran.
+
 ### Conturi de administrator
 
 ```bash

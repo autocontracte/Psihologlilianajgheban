@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { clientIp } from "@/lib/request";
 import { ANA_MAX_INTREBARI, anaActiva, curataIstoric, raspundeAna } from "@/lib/ana";
+import { insoteste, noteazaIntrebarea } from "@/lib/anaIstoric";
 
 /* ----------------------------------------------------------------------------
    Ana — rută pentru chat. Primește istoricul conversației (ținut în browser)
@@ -10,7 +11,9 @@ import { ANA_MAX_INTREBARI, anaActiva, curataIstoric, raspundeAna } from "@/lib/
      - cel mult ANA_MAX_INTREBARI întrebări într-o conversație;
      - cel mult MAX_PE_ORA întrebări de la același IP într-o oră (cine golește
        conversația și o ia de la capăt nu trece de ea).
-   Conversațiile nu se salvează nicăieri.
+
+   Conversațiile se păstrează pentru cabinet (vezi lib/anaIstoric.ts): se citesc
+   doar din /admin/ana și se șterg singure după 90 de zile.
    -------------------------------------------------------------------------- */
 
 export const dynamic = "force-dynamic";
@@ -35,7 +38,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Ana nu este disponibilă acum." }, { status: 503 });
   }
 
-  let body: { messages?: unknown };
+  let body: { messages?: unknown; chat?: unknown; vizita?: unknown };
   try {
     body = await request.json();
   } catch {
@@ -62,8 +65,17 @@ export async function POST(request: Request) {
   }
 
   try {
+    /* Întrebarea se notează înainte de răspuns: dacă OpenAI cade sau omul
+       închide pagina, rămâne măcar ce a întrebat. */
+    const chatId = await noteazaIntrebarea(
+      typeof body.chat === "string" ? body.chat : "",
+      typeof body.vizita === "string" ? body.vizita : "",
+      istoric[istoric.length - 1].content,
+      istoric.filter((m) => m.role === "user").length,
+    );
+
     const flux = await raspundeAna(istoric);
-    return new Response(flux, {
+    return new Response(chatId ? insoteste(flux, chatId) : flux, {
       headers: {
         "Content-Type": "text/plain; charset=utf-8",
         "Cache-Control": "no-store",

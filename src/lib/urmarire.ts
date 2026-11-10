@@ -320,6 +320,12 @@ export function semnDeViata() {
 
 export const inAsteptare = () => coada.length;
 
+/** Id-ul vizitei curente, pentru ce se leagă de ea (conversația cu Ana). */
+export function vizitaCurenta() {
+  if (typeof window === "undefined") return "";
+  return stocare("sesiune")?.getItem(CHEIE_VIZITA) ?? "";
+}
+
 /* ---------------------------------------- Pornirea măsurătorilor de fundal */
 
 /**

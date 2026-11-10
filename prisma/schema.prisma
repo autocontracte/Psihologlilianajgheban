@@ -616,3 +616,41 @@ model VisitEvent {
   @@index([at])
   @@index([type])
 }
+
+/**
+ * ============================================================================
+ * Conversațiile cu Ana
+ * Se păstrează întregi, ca să se vadă cu ce vin oamenii și ce le răspunde Ana.
+ * Pot conține date sensibile, de aceea se citesc doar din panoul de
+ * administrare și se șterg singure după ANA_PASTREAZA_ZILE (vezi
+ * src/lib/anaIstoric.ts). Politica de confidențialitate le descrie.
+ * ==========================================================================
+ */
+model AnaChat {
+  id        String     @id @default(cuid())
+  /// Cheia conversației, generată în browser; ține mesajele împreună.
+  key       String     @unique
+  /// Vizita din care s-a scris, dacă urmărirea e pornită — așa se vede de
+  /// unde a venit omul și ce a făcut pe site în jurul conversației.
+  visitId   String?
+  startedAt DateTime   @default(now())
+  lastAt    DateTime   @default(now())
+  /// Câte întrebări a pus omul.
+  intrebari Int        @default(0)
+  mesaje    AnaMesaj[]
+
+  @@index([lastAt])
+  @@index([visitId])
+}
+
+/// Un mesaj din conversație. `rol` este "om" sau "ana".
+model AnaMesaj {
+  id     String   @id @default(cuid())
+  chatId String
+  chat   AnaChat  @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  rol    String
+  text   String
+  at     DateTime @default(now())
+
+  @@index([chatId, at])
+}

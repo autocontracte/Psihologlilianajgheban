@@ -2,7 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 import { masoaraConversatiaCuAna } from "@/lib/masurare";
-import { urmareste } from "@/lib/urmarire";
+import { urmareste, vizitaCurenta } from "@/lib/urmarire";
 
 /* ----------------------------------------------------------------------------
    Conversația cu Ana, comună pentru toate locurile în care apare (bara din
@@ -15,6 +15,22 @@ export type Replica = { role: "user" | "assistant"; content: string };
 
 export const ANA_MAX = 15;
 const CHEIE = "lj-ana";
+const CHEIE_CONVERSATIE = "lj-ana-cheie";
+
+/** Un număr aleator care ține conversația împreună pe server, cât e fila deschisă. */
+function cheiaConversatiei() {
+  try {
+    let k = sessionStorage.getItem(CHEIE_CONVERSATIE) ?? "";
+    if (!k) {
+      k = crypto.randomUUID();
+      sessionStorage.setItem(CHEIE_CONVERSATIE, k);
+    }
+    return k;
+  } catch {
+    /* fără stocare: conversația se salvează ca mesaje răzlețe */
+    return "";
+  }
+}
 
 export const SALUT: Replica = {
   role: "assistant",
@@ -88,7 +104,13 @@ async function trimite(text: string): Promise<boolean> {
     const res = await fetch("/api/ana", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages: urmator.filter((t) => t !== SALUT && t.content !== SALUT.content) }),
+      body: JSON.stringify({
+        messages: urmator.filter((t) => t !== SALUT && t.content !== SALUT.content),
+        /* Cheia ține mesajele aceleiași conversații împreună pe server, iar
+           vizita o leagă de restul a ce a făcut omul pe site. */
+        chat: cheiaConversatiei(),
+        vizita: vizitaCurenta(),
+      }),
     });
 
     if (!res.ok || !res.body) {
