@@ -24,7 +24,9 @@ type Plata = "ONLINE" | "CABINET";
 type DayInfo = { date: string; free: number; closed: boolean };
 type SlotInfo = { time: string; available: boolean };
 
-const STEPS = ["Serviciul", "Data și ora", "Confirmare"] as const;
+/* Al treilea pas se numea „Confirmare”, dar titlul lui e „Ultimele detalii”:
+   oamenii apăsau pe „3 Confirmare” crezând că mai urmează un pas. */
+const STEPS = ["Serviciul", "Data și ora", "Detalii"] as const;
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -38,6 +40,11 @@ function dayLabel(date: string, opts: Intl.DateTimeFormatOptions) {
   return new Intl.DateTimeFormat("ro-RO", { timeZone: "UTC", ...opts }).format(
     new Date(Date.UTC(y, m - 1, d)),
   );
+}
+
+/** „numele, telefonul și adresa de email” */
+function insiruie(xs: string[]) {
+  return xs.length < 2 ? xs.join("") : `${xs.slice(0, -1).join(", ")} și ${xs[xs.length - 1]}`;
 }
 
 /* --------------------------------------------------------- detalii format */
@@ -120,6 +127,10 @@ export function BookingFlow({
   const [guestName, setGuestName] = useState("");
   const [guestEmail, setGuestEmail] = useState("");
   const [guestPhone, setGuestPhone] = useState("");
+  /* A apăsat pe trimitere cu datele de contact incomplete: abia de acum
+     marcăm câmpurile greșite, nu din prima clipă. */
+  const [incercat, setIncercat] = useState(false);
+  const contactRef = useRef<HTMLDivElement | null>(null);
 
   const [days, setDays] = useState<DayInfo[]>([]);
   const [slots, setSlots] = useState<SlotInfo[]>([]);
@@ -311,7 +322,9 @@ export function BookingFlow({
               {loggedIn
                 ? "Îți confirm programarea în cel mai scurt timp, iar până atunci apare în contul tău ca „în așteptare”."
                 : "Te contactez pe telefon sau email ca să confirm programarea, de regulă în aceeași zi lucrătoare."}{" "}
-              Plata se face la cabinet.
+              {format === "CABINET"
+                ? "Plătești la cabinet, în ziua ședinței."
+                : "Plata o stabilim când îți confirm programarea."}
             </p>
 
             {calendarLinks && (
@@ -380,11 +393,40 @@ export function BookingFlow({
   const canAdvance = step === 0 ? !!serviceId : step === 1 ? !!date && !!time : true;
 
   /* Fără cont, programarea are nevoie de date de contact valide. */
-  const contactReady =
-    loggedIn ||
-    (guestName.trim().length >= 2 &&
-      /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(guestEmail.trim()) &&
-      guestPhone.replace(/\D/g, "").length >= 9);
+  const numeOk = guestName.trim().length >= 2;
+  const telefonOk = guestPhone.replace(/\D/g, "").length >= 9;
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(guestEmail.trim());
+  const contactReady = loggedIn || (numeOk && telefonOk && emailOk);
+  const lipsa = loggedIn
+    ? []
+    : [
+        !numeOk && "numele",
+        !telefonOk && "telefonul",
+        !emailOk && "adresa de email",
+      ].filter((x): x is string => !!x);
+
+  /* Butonul de trimitere nu mai e blocat în tăcere. Înainte, cu datele de
+     contact goale, era doar decolorat: oamenii apăsau pe el, nu se întâmpla
+     nimic și plecau. Acum le spunem ce lipsește și îi ducem la câmp. */
+  function incearcaTrimiterea() {
+    if (busy) return;
+    if (!contactReady) {
+      setIncercat(true);
+      urmareste("programare_blocata", lipsa.join(", "));
+      const primul = contactRef.current?.querySelector<HTMLInputElement>(
+        !numeOk ? "input[name=name]" : !telefonOk ? "input[name=tel]" : "input[name=email]",
+      );
+      primul?.scrollIntoView({ behavior: "smooth", block: "center" });
+      setTimeout(() => primul?.focus({ preventScroll: true }), 400);
+      return;
+    }
+    submit();
+  }
+
+  const campGresit = (ok: boolean) =>
+    incercat && !ok
+      ? guestField.replace("border-ink/15", "border-clay").replace("bg-cream-warm", "bg-clay-pale/40")
+      : guestField;
 
   return (
     <div>
@@ -705,64 +747,12 @@ export function BookingFlow({
                   </dl>
                 </div>
 
-                {/* Date de contact — doar pentru programările fără cont */}
-                {!loggedIn && (
-                  <div className="mt-7">
-                    <div className="flex flex-wrap items-baseline justify-between gap-2">
-                      <span className="font-sans text-[0.74rem] tracking-[0.02em] text-ink-muted">
-                        Datele tale de contact
-                      </span>
-                      <Link
-                        href="/cont/autentificare?redirect=/programari"
-                        className="font-sans text-[0.75rem] text-periwinkle underline decoration-periwinkle/30 underline-offset-4 transition-colors hover:text-ink"
-                      >
-                        Ai deja cont? Autentifică-te
-                      </Link>
-                    </div>
-
-                    <div className="mt-3 space-y-3">
-                      <input
-                        type="text"
-                        value={guestName}
-                        onChange={(e) => setGuestName(e.target.value)}
-                        maxLength={100}
-                        autoComplete="name"
-                        placeholder="Nume și prenume *"
-                        className={guestField}
-                      />
-                      <div className="grid gap-3 sm:grid-cols-2">
-                        <input
-                          type="tel"
-                          value={guestPhone}
-                          onChange={(e) => setGuestPhone(e.target.value)}
-                          maxLength={30}
-                          autoComplete="tel"
-                          placeholder="Telefon *"
-                          className={guestField}
-                        />
-                        <input
-                          type="email"
-                          value={guestEmail}
-                          onChange={(e) => setGuestEmail(e.target.value)}
-                          maxLength={150}
-                          autoComplete="email"
-                          placeholder="Email *"
-                          className={guestField}
-                        />
-                      </div>
-                    </div>
-
-                    <p className="mt-2.5 font-sans text-[0.75rem] leading-relaxed text-ink-muted">
-                      Te contactez pe telefon sau email ca să îți confirm
-                      programarea.
-                    </p>
-                  </div>
-                )}
-
-                {/* Format */}
+                {/* Unde ne vedem — întâi locul, apoi plata. Înainte plata
+                    avea și ea o opțiune „La cabinet”, iar oamenii nu mai
+                    știau care „cabinet” e locul și care e plata. */}
                 <div className="mt-7">
                   <span className="mb-2.5 block font-sans text-[0.74rem] tracking-[0.02em] text-ink-muted">
-                    Cum vrei să ne vedem?
+                    Unde ne vedem?
                   </span>
                   <div className="grid grid-cols-2 gap-3">
                     {(["CABINET", "ONLINE"] as const).map((f) => {
@@ -772,6 +762,7 @@ export function BookingFlow({
                           key={f}
                           type="button"
                           onClick={() => setFormat(f)}
+                          aria-pressed={format === f}
                           className={[
                             "flex items-center justify-center gap-2.5 rounded-none border px-5 py-4 font-sans text-[0.85rem] transition-all duration-400",
                             format === f
@@ -791,6 +782,121 @@ export function BookingFlow({
                   <MeetingNote format={format} />
                 </div>
 
+                {/* Plata: „când”, nu „unde” — ca să nu se mai bată cap în cap
+                    cu alegerea de mai sus. */}
+                <div className="mt-7">
+                  <span className="mb-2.5 block font-sans text-[0.74rem] tracking-[0.02em] text-ink-muted">
+                    Când plătești?
+                  </span>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {(plataOnline ? (["ONLINE", "CABINET"] as const) : (["CABINET"] as const)).map(
+                      (m) => (
+                        <button
+                          key={m}
+                          type="button"
+                          onClick={() => setPlata(m)}
+                          aria-pressed={plata === m}
+                          className={[
+                            "rounded-none border px-5 py-4 text-left transition-all duration-400",
+                            plata === m
+                              ? "border-periwinkle bg-periwinkle text-cream"
+                              : "border-ink/12 bg-cream-warm text-ink-soft hover:border-ink/35",
+                          ].join(" ")}
+                        >
+                          <span className="block font-sans text-[0.88rem]">
+                            {m === "ONLINE"
+                              ? `Acum, cu cardul${service ? ` · ${(service.price / 100).toFixed(0)} lei` : ""}`
+                              : format === "CABINET"
+                                ? "La ședință"
+                                : "După confirmare"}
+                          </span>
+                          <span
+                            className={[
+                              "mt-1 block font-sans text-[0.76rem] leading-relaxed",
+                              plata === m ? "text-cream/80" : "text-ink-muted",
+                            ].join(" ")}
+                          >
+                            {m === "ONLINE"
+                              ? "Programarea se confirmă imediat."
+                              : format === "CABINET"
+                                ? "Plătești la cabinet, în ziua ședinței. Îți confirm eu programarea."
+                                : "Îți confirm eu programarea și stabilim atunci plata."}
+                          </span>
+                        </button>
+                      ),
+                    )}
+                  </div>
+                </div>
+
+                {/* Date de contact — doar pentru programările fără cont. Stau
+                    chiar deasupra butonului, ca să nu fie trecute cu vederea. */}
+                {!loggedIn && (
+                  <div ref={contactRef} className="mt-7 scroll-mt-28">
+                    <div className="flex flex-wrap items-baseline justify-between gap-2">
+                      <span className="font-sans text-[0.74rem] tracking-[0.02em] text-ink-muted">
+                        Datele tale de contact
+                      </span>
+                      <Link
+                        href="/cont/autentificare?redirect=/programari"
+                        className="font-sans text-[0.75rem] text-periwinkle underline decoration-periwinkle/30 underline-offset-4 transition-colors hover:text-ink"
+                      >
+                        Ai deja cont? Autentifică-te
+                      </Link>
+                    </div>
+
+                    <div className="mt-3 space-y-3">
+                      <input
+                        type="text"
+                        name="name"
+                        value={guestName}
+                        onChange={(e) => setGuestName(e.target.value)}
+                        maxLength={100}
+                        autoComplete="name"
+                        placeholder="Nume și prenume *"
+                        aria-invalid={incercat && !numeOk}
+                        className={campGresit(numeOk)}
+                      />
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        <input
+                          type="tel"
+                          name="tel"
+                          inputMode="tel"
+                          value={guestPhone}
+                          onChange={(e) => setGuestPhone(e.target.value)}
+                          maxLength={30}
+                          autoComplete="tel"
+                          placeholder="Telefon *"
+                          aria-invalid={incercat && !telefonOk}
+                          className={campGresit(telefonOk)}
+                        />
+                        <input
+                          type="email"
+                          name="email"
+                          inputMode="email"
+                          value={guestEmail}
+                          onChange={(e) => setGuestEmail(e.target.value)}
+                          maxLength={150}
+                          autoComplete="email"
+                          placeholder="Email *"
+                          aria-invalid={incercat && !emailOk}
+                          className={campGresit(emailOk)}
+                        />
+                      </div>
+                    </div>
+
+                    {incercat && lipsa.length > 0 ? (
+                      <p className="mt-2.5 font-sans text-[0.8rem] leading-relaxed text-clay" role="alert">
+                        Mai completează {insiruie(lipsa)}, ca să te pot contacta pentru confirmare.
+                      </p>
+                    ) : (
+                      <p className="mt-2.5 font-sans text-[0.75rem] leading-relaxed text-ink-muted">
+                        Te contactez pe telefon sau email ca să îți confirm
+                        programarea.
+                      </p>
+                    )}
+                  </div>
+                )}
+
                 {/* Note */}
                 <div className="mt-6">
                   <label
@@ -801,53 +907,13 @@ export function BookingFlow({
                   </label>
                   <textarea
                     id="notes"
-                    rows={4}
+                    rows={3}
                     maxLength={2000}
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
                     placeholder="Câteva rânduri despre ce te aduce în terapie. Poți lăsa gol, vorbim la prima întâlnire."
                     className="w-full resize-none rounded-none border border-ink/15 bg-cream-warm px-5 py-3.5 font-sans text-[0.9rem] text-ink placeholder:text-ink-muted transition-all duration-300 focus:border-periwinkle focus:bg-cream focus:outline-none focus:ring-4 focus:ring-periwinkle/12"
                   />
-                </div>
-
-                {/* Plata */}
-                <div className="mt-7">
-                  <span className="mb-2.5 block font-sans text-[0.74rem] tracking-[0.02em] text-ink-muted">
-                    Cum plătești?
-                  </span>
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    {(plataOnline ? (["ONLINE", "CABINET"] as const) : (["CABINET"] as const)).map(
-                      (m) => (
-                        <button
-                          key={m}
-                          type="button"
-                          onClick={() => setPlata(m)}
-                          className={[
-                            "rounded-none border px-5 py-4 text-left transition-all duration-400",
-                            plata === m
-                              ? "border-periwinkle bg-periwinkle text-cream"
-                              : "border-ink/12 bg-cream-warm text-ink-soft hover:border-ink/35",
-                          ].join(" ")}
-                        >
-                          <span className="block font-sans text-[0.88rem]">
-                            {m === "ONLINE"
-                              ? `Online, acum${service ? ` · ${(service.price / 100).toFixed(0)} lei` : ""}`
-                              : "La cabinet"}
-                          </span>
-                          <span
-                            className={[
-                              "mt-1 block font-sans text-[0.76rem] leading-relaxed",
-                              plata === m ? "text-cream/80" : "text-ink-muted",
-                            ].join(" ")}
-                          >
-                            {m === "ONLINE"
-                              ? "Cu cardul. Programarea se confirmă imediat."
-                              : "Plătești la ședință. Îți confirm eu programarea."}
-                          </span>
-                        </button>
-                      ),
-                    )}
-                  </div>
                 </div>
               </motion.div>
             )}
@@ -890,8 +956,8 @@ export function BookingFlow({
             ) : (
               <button
                 type="button"
-                onClick={submit}
-                disabled={busy || !contactReady}
+                onClick={incearcaTrimiterea}
+                disabled={busy}
                 className="group inline-flex items-center gap-2.5 rounded-none bg-sage px-7 py-3.5 font-sans text-[0.7rem] tracking-[0.02em] text-cream transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-ink disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {busy

@@ -39,7 +39,9 @@ function formatul(p: Programare): string {
 }
 
 function plata(p: Programare): string {
-  return p.paymentMethod === "ONLINE" ? "Plătită online" : "Plata la cabinet";
+  if (p.paymentMethod === "ONLINE") return "Plătită online";
+  // Ședință online cu plata „mai târziu”: „la cabinet” n-ar avea sens
+  return p.format === "CABINET" ? "Plata la cabinet" : "Plata după confirmare";
 }
 
 /** Caseta cu datele ședinței, aceeași în toate emailurile. */

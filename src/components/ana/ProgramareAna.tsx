@@ -1,11 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { labelForDateStr } from "@/lib/tz";
 import { masoaraProgramarea } from "@/lib/masurare";
 import { urmareste } from "@/lib/urmarire";
 import { IconCalendar } from "../ui/Icons";
+import { useAna } from "./useAna";
+
+/* Aduce în vedere elementul, după ce lista de mesaje a terminat de derulat
+   singură spre capăt (altfel derularea ei ar acoperi-o pe a noastră). */
+function aduInVedere(el: HTMLElement | null, unde: ScrollLogicalPosition) {
+  if (!el) return;
+  setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: unde }), 450);
+}
 
 /* ----------------------------------------------------------------------------
    Programarea făcută direct în chatul cu Ana.
@@ -31,8 +39,16 @@ const camp =
   "w-full border border-ink/12 bg-white/70 px-3 py-2.5 font-sans text-[0.88rem] text-ink placeholder:text-ink-muted focus:border-periwinkle focus:outline-none";
 
 function Pas({ numar, titlu, children }: { numar: number; titlu: string; children: React.ReactNode }) {
+  /* Fiecare pas nou apare sub cel de dinainte, adesea în afara ecranului:
+     oamenii apăsau iar și iar pe serviciu crezând că nu s-a întâmplat nimic. */
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    // „Unde” și „Ziua” apar odată: aducem sus „Unde”, ca să nu fie sărit
+    if (numar === 2) aduInVedere(ref.current, "start");
+    else if (numar >= 4) aduInVedere(ref.current, "nearest");
+  }, [numar]);
   return (
-    <div className="mt-4 first:mt-0">
+    <div ref={ref} className="mt-4 first:mt-0">
       <p className="font-sans text-[0.78rem] text-ink-muted">
         <span className="text-periwinkle">{numar}.</span> {titlu}
       </p>
@@ -55,6 +71,13 @@ export function ProgramareAna({ onInchide }: { onInchide: () => void }) {
   const [trimite, setTrimite] = useState(false);
   const [eroare, setEroare] = useState<string | null>(null);
   const [gata, setGata] = useState(false);
+  const { programareCerere } = useAna();
+  const radacina = useRef<HTMLDivElement>(null);
+
+  // La deschidere și la fiecare clic pe „Programează-te aici”: începutul formularului
+  useEffect(() => {
+    aduInVedere(radacina.current, "start");
+  }, [programareCerere]);
 
   useEffect(() => {
     fetch("/api/servicii")
@@ -88,6 +111,16 @@ export function ProgramareAna({ onInchide }: { onInchide: () => void }) {
 
   async function confirma() {
     if (!serviciu || !zi || !ora) return;
+    if (!contactValid) {
+      const lipsa = [
+        nume.trim().length < 2 && "numele",
+        !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim()) && "emailul",
+        telefon.replace(/\D/g, "").length < 9 && "telefonul",
+      ].filter(Boolean) as string[];
+      setEroare(`Mai completează ${lipsa.length < 2 ? lipsa[0] : `${lipsa.slice(0, -1).join(", ")} și ${lipsa[lipsa.length - 1]}`}, ca Liliana să te poată contacta.`);
+      urmareste("programare_blocata", `chat Ana: ${lipsa.join(", ")}`);
+      return;
+    }
     setTrimite(true);
     setEroare(null);
     try {
@@ -143,7 +176,7 @@ export function ProgramareAna({ onInchide }: { onInchide: () => void }) {
     telefon.replace(/\D/g, "").length >= 9;
 
   return (
-    <div className="glass p-5">
+    <div ref={radacina} className="glass scroll-mt-4 p-5">
       <div className="flex items-start justify-between gap-3">
         <p className="flex items-center gap-2 font-display text-[1.05rem] text-ink">
           <IconCalendar className="h-5 w-5 text-periwinkle" />
@@ -265,7 +298,7 @@ export function ProgramareAna({ onInchide }: { onInchide: () => void }) {
             <button
               type="button"
               onClick={confirma}
-              disabled={!contactValid || trimite}
+              disabled={trimite}
               className="mt-3 inline-flex w-full items-center justify-center gap-2 bg-periwinkle px-4 py-3 font-sans text-[0.88rem] text-cream transition-colors hover:bg-ink disabled:opacity-40"
             >
               {trimite ? "Se înregistrează…" : `Confirmă programarea, ora ${ora}`}

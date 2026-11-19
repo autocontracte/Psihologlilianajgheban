@@ -19,12 +19,13 @@ export const TRACK_LABELS = {
   programare: "Programare trimisă",
   plata_start: "A plecat spre plată",
   plata: "Plată reușită",
-  kit_start: "A început trusa de ajutor",
-  kit_gata: "A terminat trusa de ajutor",
-  kit_plata: "A cerut interpretarea",
+  kit_start: "A început un chestionar",
+  kit_gata: "A terminat chestionarul",
+  kit_plata: "A cerut partea din ghid",
   contract_semnat: "Contract semnat",
   cont_nou: "Cont nou",
   abandon: "A lăsat programarea neterminată",
+  programare_blocata: "Programare oprită: date de contact lipsă",
   rage: "Clicuri nervoase",
   copiere: "A copiat text",
   p404: "Pagină inexistentă",
@@ -52,4 +53,4 @@ export const TRACK_IMPORTANT: TrackType[] = [
 ];
 
 /** Evenimentele care arată o problemă, nu un interes. */
-export const TRACK_PROBLEME: TrackType[] = ["abandon", "rage", "p404", "eroare"];
+export const TRACK_PROBLEME: TrackType[] = ["abandon", "programare_blocata", "rage", "p404", "eroare"];

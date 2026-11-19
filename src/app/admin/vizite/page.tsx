@@ -694,7 +694,7 @@ export default async function AdminVizitePage({
                       {traseu.map((e, i) => {
                         const dupa = (e.at.getTime() - start) / 1000;
                         const estePagina = e.type === "pagina";
-                        const esteProblema = ["rage", "eroare", "abandon", "p404"].includes(
+                        const esteProblema = ["rage", "eroare", "abandon", "programare_blocata", "p404"].includes(
                           e.type,
                         );
                         return (
