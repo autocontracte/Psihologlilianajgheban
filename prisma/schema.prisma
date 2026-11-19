@@ -362,6 +362,12 @@ model GuideOrder {
    * În bani: 5000 = 50 lei.
    */
   amount         Int       @default(5000)
+  /**
+   * Chestionarul din care a pornit (1–6) și partea ghidului cumpărată (1–6).
+   * Goale la comenzile vechi ale trusei întregi.
+   */
+  chestionar     Int?
+  parte          Int?
   currency       String    @default("RON")
   /**
    * Interpretarea generată de AI.

@@ -79,7 +79,7 @@ export const NAV = [
   { label: "Acasă", href: "/#acasa" },
   { label: "Despre mine", href: "/#despre" },
   { label: "Servicii", href: "/#servicii" },
-  { label: "Trusă de ajutor", href: "/kit" },
+  { label: "Chestionare", href: "/kit" },
   { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/#contact" },
 ] as const;
@@ -630,14 +630,14 @@ export const CONTACT = {
 
 /* -------------------------------------------------------------------------- */
 
-/* Secțiunea de pe prima pagină care duce la trusa de ajutor „Cum stai, de fapt, în
-   relația ta?" (/kit): test, raport personal și ghid, la un singur preț. */
+/* Secțiunea de pe prima pagină care duce la chestionarele gratuite și la ghidul
+   pe părți (/kit). */
 export const TESTS = {
   title: "Cum stai, de fapt, în *relația ta*?",
   description:
-    "Pentru momentele în care relația doare: certuri, gânduri de despărțire, un divorț în curs sau unul care încă apasă. O trusă de ajutor completă, făcută acasă: un test de 30 de întrebări, un raport personal detaliat în PDF și ghidul practic de 79 de pagini.",
-  items: ["Test de 30 de întrebări", "Raport personal detaliat, în PDF", "Ghidul practic de 79 de pagini"],
-  cta: "Descoperă trusa",
+    "Pentru momentele în care relația doare: certuri, gânduri de despărțire, un divorț în curs, viața după el sau o familie nouă. Un chestionar gratuit îți arată unde ești și ce parte din ghidul practic al Lilianei te poate ajuta acum.",
+  items: ["6 chestionare gratuite, de 5 minute", "Rezultat imediat", "Partea ta din ghid, cu raport personal"],
+  cta: "Alege chestionarul tău",
   href: "/kit",
 };
 

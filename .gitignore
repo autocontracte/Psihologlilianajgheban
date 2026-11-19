@@ -39,3 +39,6 @@ yarn-error.log*
 
 # documente incarcate prin chestionar
 /uploads
+
+# Părțile ghidului: se generează pe server cu scripts/imparte-ghidul.mjs
+/ghiduri/parti/

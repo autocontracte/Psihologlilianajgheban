@@ -25,9 +25,12 @@ import {
   type Rezultat,
 } from "@/lib/kit/test";
 import { platileSuntActive, stripe } from "@/lib/stripe";
+import { RezultatParte } from "@/components/ghid/RezultatParte";
+import { dateParte } from "@/lib/ghid/comanda";
+import { citesteRaportParte } from "@/lib/ghid/raport";
 
 export const metadata = {
-  title: "Raportul tău",
+  title: "Rezultatul tău",
   robots: { index: false, follow: false },
 };
 
@@ -53,6 +56,33 @@ export default async function RezultatKit({ params }: { params: Promise<{ token:
   const { token } = await params;
   const comanda = await comandaVerificata(token);
   if (!comanda) notFound();
+
+  // Ghidul pe părți: rezultatul gratuit, alegerea părții și raportul
+  const pe = dateParte(comanda);
+  if (pe) {
+    if (!pe.rezultat) notFound();
+    return (
+      <>
+        <Nav />
+        <main className="relative overflow-hidden bg-cream-warm">
+          <Lumina din="dreapta" />
+          <div className="relative mx-auto max-w-4xl px-6 pb-24 pt-36 lg:px-10 lg:pt-44">
+            <RezultatParte
+              token={token}
+              platit={comanda.status === "PAID"}
+              rezultat={pe.rezultat}
+              parte={pe.parte}
+              ai={citesteRaportParte(comanda.interpretation, pe.chestionar.zone.map((z) => z.cheie))}
+              interpretareaActiva={interpretareaActiva}
+              platesteActiv={platileSuntActive}
+              email={comanda.email ?? ""}
+            />
+          </div>
+        </main>
+        <Footer />
+      </>
+    );
+  }
 
   const interpretare = citesteInterpretarea(comanda.interpretation);
   const platit = comanda.status === "PAID";

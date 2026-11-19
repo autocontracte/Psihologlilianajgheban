@@ -7,6 +7,9 @@ import { compuneEmail } from "../emailSablon";
 import { SITE } from "@/content/site";
 import { genereazaInterpretare } from "./ai";
 import { calculeaza, type Raspunsuri } from "./test";
+import { genereazaRaportParte } from "../ghid/ai";
+import { dateParte } from "../ghid/comanda";
+import { numeParte, PRET_PARTE_BANI } from "../ghid/parti";
 
 /* ----------------------------------------------------------------------------
    Trusa de ajutor „Cum stai, de fapt, în relația ta?": test + raport personal + ghid.
@@ -21,9 +24,14 @@ export { interpretareaActiva } from "./ai";
 export { PRET_KIT_BANI, PRET_KIT_LEI, NUME_KIT } from "./pret";
 import { PRET_KIT_BANI, NUME_KIT } from "./pret";
 
-export async function creeazaComanda() {
+/** O comandă nouă. Cu `chestionar` (1–6): o parte a ghidului; fără: trusa veche. */
+export async function creeazaComanda(chestionar?: number) {
   return db.guideOrder.create({
-    data: { token: randomBytes(32).toString("base64url"), amount: PRET_KIT_BANI },
+    data: {
+      token: randomBytes(32).toString("base64url"),
+      amount: chestionar ? PRET_PARTE_BANI : PRET_KIT_BANI,
+      ...(chestionar ? { chestionar } : {}),
+    },
   });
 }
 
@@ -41,7 +49,7 @@ export function raspunsuriComanda(comanda: { answers: string }): Raspunsuri {
 }
 
 /** Salvează răspunsurile (le înlocuiește pe cele vechi) și, opțional, emailul. */
-export async function salveazaComanda(token: string, raspunsuri: Raspunsuri, email?: string) {
+export async function salveazaComanda(token: string, raspunsuri: Raspunsuri | undefined, email?: string) {
   const comanda = await db.guideOrder.findUnique({ where: { token } });
   if (!comanda) return null;
   // O comandă plătită nu-și mai schimbă răspunsurile.
@@ -50,7 +58,7 @@ export async function salveazaComanda(token: string, raspunsuri: Raspunsuri, ema
   return db.guideOrder.update({
     where: { token },
     data: {
-      answers: JSON.stringify(raspunsuri),
+      ...(raspunsuri ? { answers: JSON.stringify(raspunsuri) } : {}),
       ...(email !== undefined ? { email: email.trim().toLowerCase() || null } : {}),
     },
   });
@@ -83,7 +91,11 @@ export function genereazaSiSalveaza(token: string, refa = false) {
       if (!comanda) return { ok: false, error: "Comanda nu există." };
       if (comanda.interpretation && !refa) return { ok: true };
 
-      const rezultat = await genereazaInterpretare(raspunsuriComanda(comanda));
+      // Ghidul pe părți: raportul pe partea aleasă (sau, până la alegere, cea recomandată)
+      const pe = dateParte(comanda);
+      const rezultat = pe
+        ? await genereazaRaportParte(pe.chestionar, pe.parte, pe.raspunsuri)
+        : await genereazaInterpretare(raspunsuriComanda(comanda));
       if (!rezultat.ok) {
         console.error("[kit] interpretare esuata", rezultat.error);
         return { ok: false, error: rezultat.error };
@@ -123,6 +135,12 @@ export async function confirmaPlata(comandaId: string, email?: string | null) {
   void genereazaSiSalveaza(actualizata.token);
 
   const link = `${SITE.url}/kit/rezultat/${actualizata.token}`;
+
+  const pe = dateParte(actualizata);
+  if (pe) {
+    await emailuriParte(actualizata.email, link, numeParte(pe.parte), pe.parte.pagini, pe.rezultat?.indice);
+    return;
+  }
   const rez = calculeaza(raspunsuriComanda(actualizata));
 
   if (actualizata.email) {
@@ -160,6 +178,50 @@ export async function confirmaPlata(comandaId: string, email?: string | null) {
         detalii: [
           { eticheta: "Email", valoare: actualizata.email ?? "—" },
           ...(rez ? [{ eticheta: "Indicele relației", valoare: `${rez.indice}/100 (${rez.profil.nume})` }] : []),
+        ],
+        buton: { text: "Deschide în panou", href: `${SITE.url}/admin/kit` },
+      }),
+    });
+  }
+}
+
+/** Emailurile de după cumpărarea unei părți a ghidului. */
+async function emailuriParte(email: string | null, link: string, nume: string, pagini: number, indice?: number) {
+  if (email) {
+    await trimiteEmail({
+      to: email,
+      replyTo: SITE.email,
+      subject: `Ghidul tău: „${nume}”`,
+      ...compuneEmail({
+        eticheta: "Ghidul tău",
+        titlu: nume,
+        previzualizare: "Raportul tău personal și partea ta din ghid te așteaptă.",
+        salut: "Bună,",
+        semnatura: true,
+        paragrafe: [
+          `Îți mulțumesc că ai ales „${nume}” din ghidul practic despre cuplu, divorț și familie. Raportul tău personal și partea ta din ghid sunt pe pagina ta, oricând vrei să revii la ele.`,
+        ],
+        buton: { text: "Deschide raportul", href: link },
+        dupaDetalii: [
+          `Raportul personal se scrie pe baza răspunsurilor tale și e gata în câteva minute. De pe aceeași pagină descarci un singur PDF: raportul tău, urmat de partea din ghid (${pagini} de pagini).`,
+          "Păstrează acest email: linkul e doar al tău. Dacă după ce citești simți nevoia să vorbim, te poți programa oricând.",
+        ],
+        linkuri: [{ text: "Programează o ședință", href: `${SITE.url}/programari` }],
+      }),
+    });
+  }
+
+  if (CABINET_EMAIL) {
+    await trimiteEmail({
+      to: CABINET_EMAIL,
+      subject: `Ghid cumpărat: ${nume} · ${email ?? "fără email"}`,
+      ...compuneEmail({
+        intern: true,
+        eticheta: "Ghid cumpărat",
+        titlu: nume,
+        detalii: [
+          { eticheta: "Email", valoare: email ?? "—" },
+          ...(indice !== undefined ? [{ eticheta: "Cât de greu e acum", valoare: `${indice}/100` }] : []),
         ],
         buton: { text: "Deschide în panou", href: `${SITE.url}/admin/kit` },
       }),

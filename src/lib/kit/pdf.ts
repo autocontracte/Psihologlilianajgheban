@@ -25,12 +25,12 @@ import {
    pentru o discuție în doi, capitolele din ghid și pașii următori.
    -------------------------------------------------------------------------- */
 
-const hex = (h: string): RGB => {
+export const hex = (h: string): RGB => {
   const n = parseInt(h.slice(1), 16);
   return rgb(((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255);
 };
 
-const C = {
+export const C = {
   verde: hex("#6e8567"),
   verdeInchis: hex("#46573f"),
   verdeDeschis: hex("#b7c7ae"),
@@ -48,12 +48,12 @@ const C = {
   alb: rgb(1, 1, 1),
 };
 
-const W = 595.28;
-const H = 841.89;
-const MX = 58;
+export const W = 595.28;
+export const H = 841.89;
+export const MX = 58;
 const SUS = 84;
 const JOS = 74;
-const LATIME = W - MX * 2;
+export const LATIME = W - MX * 2;
 
 type Fonturi = {
   titlu: PDFFont;
@@ -76,11 +76,13 @@ const RADACINA = process.cwd();
 
 /* ---------- Motorul de așezare ---------- */
 
-class Document {
+export class Document {
   doc!: PDFDocument;
   f!: Fonturi;
   pagina!: PDFPage;
   y = 0;
+  /** Textul din antetul fiecărei pagini. */
+  antet = "Cum stai, de fapt, în relația ta?  ·  Raport personal";
   cuprins: { titlu: string; pagina: number }[] = [];
   private caractere = new Map<PDFFont, Set<number>>();
 
@@ -143,7 +145,7 @@ class Document {
     this.pagina = this.doc.addPage([W, H]);
     this.y = H - SUS;
     // antetul discret de pe fiecare pagină
-    this.scrie("Cum stai, de fapt, în relația ta?  ·  Raport personal", MX, H - 42, this.f.text, 8, C.cernealaStearsa);
+    this.scrie(this.antet, MX, H - 42, this.f.text, 8, C.cernealaStearsa);
     const dr = "Liliana Jgheban";
     this.scrie(dr, W - MX - this.lat(dr, this.f.titlu, 9), H - 42, this.f.titlu, 9, C.verde);
     this.pagina.drawLine({ start: { x: MX, y: H - 52 }, end: { x: W - MX, y: H - 52 }, thickness: 0.5, color: C.cremAdanc });
@@ -285,7 +287,7 @@ class Document {
 
 type BucataLogo = { d: string; tx: number; ty: number; deschis: boolean };
 
-async function logo(): Promise<BucataLogo[]> {
+export async function logo(): Promise<BucataLogo[]> {
   try {
     const svg = await readFile(join(RADACINA, "public", "logo-deschis.svg"), "utf8");
     const bucati: BucataLogo[] = [];
@@ -300,7 +302,7 @@ async function logo(): Promise<BucataLogo[]> {
   }
 }
 
-function deseneazaLogo(pagina: PDFPage, bucati: BucataLogo[], cx: number, sus: number, latime: number) {
+export function deseneazaLogo(pagina: PDFPage, bucati: BucataLogo[], cx: number, sus: number, latime: number) {
   const scala = latime / 375;
   const x = cx - latime / 2;
   for (const b of bucati) {
@@ -315,7 +317,7 @@ function deseneazaLogo(pagina: PDFPage, bucati: BucataLogo[], cx: number, sus: n
 
 /* ---------- Raportul ---------- */
 
-const dataRo = (d: Date) =>
+export const dataRo = (d: Date) =>
   new Intl.DateTimeFormat("ro-RO", { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Bucharest" }).format(d);
 
 export async function genereazaRaportPdf(date: DateRaport): Promise<Uint8Array> {

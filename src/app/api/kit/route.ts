@@ -14,11 +14,18 @@ function preaDese(ip: string) {
   return recente.length > MAX;
 }
 
-/** POST — începe o comandă nouă și întoarce tokenul. */
+/** POST — începe o comandă nouă și întoarce tokenul. Corpul: { chestionar: 1–6 }. */
 export async function POST(request: Request) {
   if (preaDese(clientIp(request))) {
     return NextResponse.json({ error: "Prea multe cereri. Încearcă mai târziu." }, { status: 429 });
   }
-  const comanda = await creeazaComanda();
+  let nr: number | undefined;
+  try {
+    const body = await request.json();
+    if (Number.isInteger(body?.chestionar) && body.chestionar >= 1 && body.chestionar <= 6) nr = body.chestionar;
+  } catch {
+    /* fără corp: trusa veche */
+  }
+  const comanda = await creeazaComanda(nr);
   return NextResponse.json({ ok: true, token: comanda.token });
 }
