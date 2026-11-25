@@ -2,6 +2,7 @@ import Link from "next/link";
 import { BookOpen, CalendarDays, Download, FileText } from "lucide-react";
 import { StareInterpretare } from "@/components/kit/StareInterpretare";
 import { CumparaParte } from "@/components/ghid/CumparaParte";
+import { Carte3D } from "@/components/ghid/Carte3D";
 import { paragrafe } from "@/lib/kit/raport";
 import { NIVELURI, type Rezultat } from "@/lib/ghid/chestionare";
 import { numeParte, type Parte } from "@/lib/ghid/parti";
@@ -146,6 +147,8 @@ export function RezultatParte({
         )
       ) : (
         <section className="glass-strong mt-6 p-7 sm:p-10">
+          <div className="grid items-center gap-8 sm:grid-cols-[1fr_10rem]">
+          <div>
           <p className="font-sans text-[0.8rem] tracking-[0.04em] text-sage">PASUL URMĂTOR</p>
           <h2 className="mt-2 font-display text-[1.8rem] leading-tight text-ink sm:text-[2.1rem]">
             Partea din ghid care ți se potrivește
@@ -157,6 +160,9 @@ export function RezultatParte({
               ` Ai pornit de la partea ${rez.aChestionarului.nr}; o poți alege și pe ea.`}{" "}
             Cu ea primești raportul tău personal, scris pe răspunsurile de mai sus.
           </p>
+          </div>
+          <Carte3D parte={rez.recomandata} rotatieY={-26} rotatieX={5} grosime={16} className="mx-auto w-[8.5rem] sm:w-[10rem]" />
+          </div>
           <div className="mt-7">
             <CumparaParte
               token={token}

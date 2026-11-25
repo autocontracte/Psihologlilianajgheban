@@ -1,0 +1,139 @@
+/* Telefonul 3D: rama, grosimea (straturi de umbră), insula din ecran și
+   luciul sticlei. Plutește ușor; la mișcare redusă stă pe loc. */
+
+.scena {
+  perspective: 1600px;
+}
+
+.telefon {
+  position: relative;
+  aspect-ratio: 9 / 19.2;
+  border-radius: 15% / 7.2%;
+  padding: 3.4%;
+  background: linear-gradient(145deg, #3b4049 0%, #1b1e24 55%, #2a2e36 100%);
+  transform: rotateY(var(--ry, -18deg)) rotateX(var(--rx, 8deg)) rotateZ(var(--rz, 2deg));
+  transform-style: preserve-3d;
+  box-shadow:
+    1px 1px 0 #2b2f37,
+    2px 2px 0 #262a31,
+    3px 3px 0 #22252c,
+    4px 4px 0 #1f2228,
+    5px 5px 0 #1c1f24,
+    6px 6px 0 #1a1c21,
+    7px 7px 0 #17191e,
+    30px 40px 60px -10px rgba(20, 24, 22, 0.45),
+    60px 80px 90px -30px rgba(20, 24, 22, 0.35);
+  animation: pluteste 7s ease-in-out infinite;
+}
+
+/* Butoanele de pe lateral */
+.telefon::before,
+.telefon::after {
+  content: "";
+  position: absolute;
+  left: -1.6%;
+  width: 1.6%;
+  border-radius: 2px 0 0 2px;
+  background: #2b2f37;
+}
+.telefon::before {
+  top: 18%;
+  height: 6%;
+}
+.telefon::after {
+  top: 27%;
+  height: 10%;
+}
+
+.ecran {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 12.5% / 5.8%;
+  background: var(--color-cream-warm, #f8f9f4);
+  container-type: inline-size;
+}
+
+.insula {
+  position: absolute;
+  top: 1.9%;
+  left: 50%;
+  width: 31%;
+  height: 3.6%;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: #0f1114;
+  z-index: 3;
+}
+
+.luciu {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.05) 30%, rgba(255, 255, 255, 0) 46%);
+}
+
+.scenaEcran {
+  position: absolute;
+  inset: 0;
+  padding: 17cqw 8cqw 8cqw;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transform: translateY(3%);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.activ {
+  opacity: 1;
+  transform: none;
+}
+
+/* Degetul care atinge răspunsul */
+.atingere {
+  position: absolute;
+  width: 14cqw;
+  height: 14cqw;
+  margin: -7cqw 0 0 -7cqw;
+  border-radius: 999px;
+  background: rgba(110, 133, 103, 0.35);
+  animation: atinge 1.6s ease-out infinite;
+  pointer-events: none;
+}
+
+.bara {
+  transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes pluteste {
+  0%,
+  100% {
+    transform: rotateY(var(--ry, -18deg)) rotateX(var(--rx, 8deg)) rotateZ(var(--rz, 2deg)) translateY(0);
+  }
+  50% {
+    transform: rotateY(calc(var(--ry, -18deg) + 4deg)) rotateX(var(--rx, 8deg)) rotateZ(var(--rz, 2deg)) translateY(-10px);
+  }
+}
+
+@keyframes atinge {
+  0% {
+    transform: scale(0.4);
+    opacity: 0.9;
+  }
+  70% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .telefon,
+  .atingere {
+    animation: none;
+  }
+}

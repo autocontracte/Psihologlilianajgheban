@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { BookOpen } from "lucide-react";
 import { metaPagina } from "@/lib/seo";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { Lumina } from "@/components/ui/Lumina";
 import { Reveal } from "@/components/ui/Reveal";
 import { ChestionarParte } from "@/components/ghid/ChestionarParte";
+import { Carte3D } from "@/components/ghid/Carte3D";
 import { chestionar } from "@/lib/ghid/chestionare";
 import { NUME_GHID, PARTI, PRET_PARTE_LEI, parteDupaSlug } from "@/lib/ghid/parti";
 
@@ -53,8 +53,8 @@ export default async function PaginaChestionar({ params }: { params: Promise<{ s
             <ChestionarParte nr={p.nr} />
           </div>
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-[auto_1fr] sm:items-start">
-            <BookOpen className="hidden h-6 w-6 text-sage sm:block" aria-hidden />
+          <div className="mt-12 grid items-center gap-8 sm:grid-cols-[9.5rem_1fr]">
+            <Carte3D parte={p} rotatieY={-24} rotatieX={5} grosime={16} className="mx-auto w-[9.5rem]" />
             <div>
               <p className="font-sans text-[0.9rem] text-ink">
                 Ce cuprinde „Partea {p.nr}: {p.titlu}” din „{NUME_GHID}”:

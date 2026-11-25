@@ -14,6 +14,8 @@ import { AnaPanou } from "@/components/ana/AnaPanou";
 import { CHESTIONARE } from "@/lib/ghid/chestionare";
 import { NUME_GHID, PARTI, PRET_PARTE_LEI } from "@/lib/ghid/parti";
 import { SITE } from "@/content/site";
+import { Carte3D, clasaInteractiv } from "@/components/ghid/Carte3D";
+import { Telefon3D } from "@/components/ghid/Telefon3D";
 
 /* ----------------------------------------------------------------------------
    Ghidul practic despre cuplu, divorț și familie, pe 6 părți.
@@ -47,23 +49,28 @@ export default function KitPage() {
     <>
       <Nav />
       <main>
-        {/* ---------- Hero ---------- */}
-        <section className="relative overflow-hidden bg-cream pb-16 pt-36 lg:pb-24 lg:pt-44">
-          <Lumina din="dreapta" />
-          <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-10">
+        {/* ---------- Hero: telefonul cu chestionarul și cărțile în evantai ---------- */}
+        <section className="relative overflow-hidden bg-cream pb-20 pt-28 lg:pb-28 lg:pt-40">
+          <div aria-hidden className="pointer-events-none absolute inset-0">
+            <div className="absolute -right-40 -top-40 h-[42rem] w-[42rem] rounded-full bg-periwinkle-pale/70 blur-3xl" />
+            <div className="absolute -bottom-52 right-[20%] h-[30rem] w-[30rem] rounded-full bg-clay-pale/70 blur-3xl" />
+            <div className="absolute -left-40 top-1/3 h-[26rem] w-[26rem] rounded-full bg-sage-pale/80 blur-3xl" />
+          </div>
+          <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-6 lg:grid-cols-[1fr_1.05fr] lg:gap-14 lg:px-10">
             <Reveal>
-              <span className="inline-flex bg-periwinkle-pale px-4 py-2 font-sans text-[0.8rem] text-periwinkle">
-                Pentru cupluri, părinți care se separă și familii noi
+              <span className="inline-flex items-center gap-2 border border-periwinkle/25 bg-cream-warm/80 px-4 py-2 font-sans text-[0.8rem] text-periwinkle backdrop-blur">
+                <span className="h-1.5 w-1.5 rounded-full bg-periwinkle" />
+                6 chestionare gratuite · rezultat în 5 minute
               </span>
-              <h1 className="mt-6 font-display text-[2.6rem] leading-[1.06] text-ink sm:text-[3.4rem] lg:text-[3.9rem]">
+              <h1 className="mt-6 font-display text-[2.7rem] leading-[1.04] text-ink sm:text-[3.6rem] lg:text-[4.2rem]">
                 Cum stai, de fapt, în <em className="not-italic text-periwinkle">relația ta</em>?
               </h1>
-              <p className="mt-6 max-w-xl font-sans text-[1.02rem] leading-[1.85] text-ink-soft">
-                Șase chestionare gratuite, câte unul pentru fiecare situație: o criză de cuplu, o despărțire, un divorț cu
-                sau fără copii, viața după divorț sau o familie nouă. Afli unde ești și ce parte din ghidul Lilianei
-                Jgheban, psihoterapeut, te poate ajuta acum.
+              <p className="mt-6 max-w-xl font-sans text-[1.04rem] leading-[1.85] text-ink-soft">
+                Un chestionar scurt, ales după situația ta: o criză de cuplu, o despărțire, un divorț cu sau fără copii,
+                viața după el sau o familie nouă. Afli unde ești și ce parte din ghidul Lilianei Jgheban, psihoterapeut, te
+                poate ajuta acum.
               </p>
-              <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
+              <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:items-center">
                 <a
                   href="#parti"
                   className="group inline-flex items-center justify-center gap-3 bg-periwinkle px-8 py-4 font-sans text-[0.97rem] text-cream shadow-[0_18px_40px_-18px_rgba(110,133,103,0.9)] transition-colors hover:bg-ink"
@@ -71,33 +78,55 @@ export default function KitPage() {
                   Alege situația ta
                   <IconArrow className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                 </a>
-                <span className="font-sans text-[0.84rem] text-ink-muted">Chestionarul e gratuit</span>
+                <span className="font-sans text-[0.86rem] text-ink-muted">
+                  Gratuit, fără cont. Partea ta din ghid: {PRET_PARTE_LEI} lei.
+                </span>
               </div>
-              <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2">
-                {["Rezultat imediat", "Creat de un psihoterapeut", "Confidențial"].map((t) => (
-                  <li key={t} className="flex items-center gap-2 font-sans text-[0.88rem] text-ink">
-                    <IconCheck className="h-4 w-4 text-periwinkle" />
-                    {t}
+              <ul className="mt-9 grid max-w-lg grid-cols-3 gap-4 border-t border-ink/10 pt-6">
+                {[
+                  { cifra: "6", text: "părți din ghid" },
+                  { cifra: "5 min", text: "un chestionar" },
+                  { cifra: "1 PDF", text: "raport + partea ta" },
+                ].map((x) => (
+                  <li key={x.text}>
+                    <p className="font-display text-[1.7rem] leading-none text-ink">{x.cifra}</p>
+                    <p className="mt-1.5 font-sans text-[0.8rem] text-ink-muted">{x.text}</p>
                   </li>
                 ))}
               </ul>
             </Reveal>
 
-            <Reveal delay={0.15} className="relative">
-              <Image
-                src="/foto/kit-raport-ghid.webp"
-                alt="Raportul personal și ghidul practic despre cuplu, divorț și familie, de Liliana Jgheban"
-                width={1514}
-                height={1154}
-                priority
-                sizes="(min-width: 1024px) 720px, 100vw"
-                className="w-full lg:w-[118%] lg:max-w-none"
-              />
-              <div className="glass-strong absolute bottom-[8%] left-[4%] hidden p-4 sm:block">
-                <p className="font-sans text-[0.75rem] text-ink-muted">Partea ta, cu raport personal</p>
-                <p className="font-display text-[1.9rem] leading-none text-ink">
-                  {PRET_PARTE_LEI} <span className="text-[1rem] text-ink-soft">lei</span>
-                </p>
+            {/* Compoziția 3D: pe telefon stă deasupra titlului, mai compactă */}
+            <Reveal delay={0.15} className="order-first lg:order-none">
+              <div className="relative mx-auto h-[23rem] w-full max-w-[36rem] sm:h-[38rem]">
+                <Carte3D
+                  parte={PARTI[3]}
+                  rotatieY={30}
+                  rotatieX={4}
+                  grosime={20}
+                  className="absolute left-[0%] top-[8%] w-[34%] -rotate-[7deg]"
+                />
+                <Carte3D
+                  parte={PARTI[5]}
+                  rotatieY={-32}
+                  rotatieX={4}
+                  grosime={20}
+                  className="absolute right-[2%] top-[4%] w-[31%] rotate-[6deg]"
+                />
+                <Carte3D
+                  parte={PARTI[1]}
+                  rotatieY={-18}
+                  rotatieX={8}
+                  grosime={22}
+                  className="absolute bottom-[0%] left-[10%] w-[30%] -rotate-[2deg]"
+                />
+                <Telefon3D className="absolute left-[54%] top-[0%] w-[38%] -translate-x-1/2 sm:top-[4%] sm:w-[38%]" />
+                <div className="glass-strong absolute bottom-[8%] right-[0%] hidden p-4 sm:block">
+                  <p className="font-sans text-[0.75rem] text-ink-muted">Partea ta, cu raport personal</p>
+                  <p className="font-display text-[1.9rem] leading-none text-ink">
+                    {PRET_PARTE_LEI} <span className="text-[1rem] text-ink-soft">lei</span>
+                  </p>
+                </div>
               </div>
             </Reveal>
           </div>
@@ -105,38 +134,43 @@ export default function KitPage() {
 
         <Val culoare="var(--color-cream-deep)" />
 
-        {/* ---------- Cele 6 părți ---------- */}
+        {/* ---------- Raftul: cele 6 părți ---------- */}
         <section id="parti" className="relative scroll-mt-24 overflow-hidden bg-cream-deep py-20 lg:py-28">
           <Lumina din="stanga" />
           <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
-            <Reveal className="max-w-3xl">
+            <Reveal className="mx-auto max-w-3xl text-center">
               <p className="font-sans text-[0.85rem] text-periwinkle">Unde te afli acum?</p>
               <h2 className="mt-4 font-display text-4xl leading-tight text-ink sm:text-5xl">
-                Alege situația care seamănă cu a <em className="not-italic text-periwinkle">ta</em>
+                Șase părți. Alege-o pe <em className="not-italic text-periwinkle">a ta</em>.
               </h2>
               <p className="mt-5 font-sans text-[0.98rem] leading-[1.85] text-ink-soft">
-                Dacă nu știi de unde să pornești, începe cu prima. Primele întrebări din orice chestionar arată oricum
-                ce parte ți se potrivește.
+                Fiecare parte are chestionarul ei, gratuit. Dacă nu știi de unde să pornești, începe cu prima: primele
+                întrebări arată oricum ce parte ți se potrivește.
               </p>
             </Reveal>
-            <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-16 grid gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
               {PARTI.map((p, i) => {
                 const c = CHESTIONARE.find((x) => x.parte === p.nr)!;
                 return (
-                  <Reveal key={p.nr} delay={Math.min(i * 0.06, 0.3)}>
-                    <Link
-                      href={`/kit/${p.slug}`}
-                      className="glass group flex h-full flex-col p-7 transition-colors hover:bg-white/70"
-                    >
-                      <p className="font-sans text-[0.75rem] tracking-[0.04em] text-periwinkle">
-                        PARTEA {p.nr} · {p.titlu.toUpperCase()}
-                      </p>
-                      <h3 className="mt-3 font-display text-[1.4rem] leading-snug text-ink">{c.carlig}</h3>
-                      <p className="mt-3 flex-1 font-sans text-[0.9rem] leading-[1.75] text-ink-soft">{p.pentruCine}</p>
-                      <p className="mt-5 inline-flex items-center gap-2 font-sans text-[0.9rem] text-periwinkle">
-                        Fă chestionarul gratuit
-                        <IconArrow className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                      </p>
+                  <Reveal key={p.nr} delay={Math.min((i % 3) * 0.08, 0.24)}>
+                    <Link href={`/kit/${p.slug}`} className={`group flex h-full flex-col ${clasaInteractiv}`}>
+                      <div className="relative mx-auto w-[62%] max-w-[15rem] pb-6 pt-2">
+                        <Carte3D parte={p} rotatieY={-24} rotatieX={5} grosime={18} />
+                      </div>
+                      <div className="glass mt-4 flex flex-1 flex-col p-7 transition-colors duration-500 group-hover:bg-white/75">
+                        <div className="flex items-center justify-between gap-3">
+                          <p className="font-sans text-[0.75rem] tracking-[0.06em] text-periwinkle">PARTEA {p.nr}</p>
+                          <span className="font-sans text-[0.75rem] text-ink-muted">
+                            {p.pagini} pagini · {PRET_PARTE_LEI} lei
+                          </span>
+                        </div>
+                        <h3 className="mt-2 font-display text-[1.45rem] leading-snug text-ink">{c.carlig}</h3>
+                        <p className="mt-3 flex-1 font-sans text-[0.9rem] leading-[1.75] text-ink-soft">{p.pentruCine}</p>
+                        <p className="mt-6 inline-flex items-center gap-2 font-sans text-[0.92rem] text-periwinkle">
+                          Fă chestionarul gratuit
+                          <IconArrow className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                        </p>
+                      </div>
                     </Link>
                   </Reveal>
                 );
@@ -147,9 +181,71 @@ export default function KitPage() {
 
         <Val culoare="var(--color-cream)" varianta={2} />
 
-        {/* ---------- Cum funcționează ---------- */}
+        {/* ---------- Ce primești ---------- */}
         <section className="relative overflow-hidden bg-cream py-20 lg:py-28">
           <Lumina din="dreapta" />
+          <div className="relative mx-auto grid max-w-7xl items-center gap-14 px-6 lg:grid-cols-[1fr_1fr] lg:px-10">
+            <Reveal>
+              <div className="relative mx-auto h-[26rem] w-full max-w-[30rem] sm:h-[30rem]">
+                <Carte3D
+                  parte={PARTI[3]}
+                  rotatieY={-30}
+                  rotatieX={6}
+                  grosime={26}
+                  className="absolute right-[4%] top-[4%] w-[52%]"
+                />
+                <Carte3D
+                  parte={PARTI[3]}
+                  eticheta="Raport personal · Partea 4"
+                  titlu="Raportul tău"
+                  motto="Scris pe răspunsurile tale, cu plan pe 30 de zile"
+                  deschisa
+                  rotatieY={-22}
+                  rotatieX={6}
+                  grosime={8}
+                  className="absolute bottom-[2%] left-[4%] w-[46%] -rotate-[4deg]"
+                />
+              </div>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <p className="font-sans text-[0.85rem] text-periwinkle">Ce primești pentru {PRET_PARTE_LEI} de lei</p>
+              <h2 className="mt-4 font-display text-4xl leading-tight text-ink sm:text-5xl">
+                Raportul tău și partea ta din ghid, <em className="not-italic text-periwinkle">într-un singur PDF</em>
+              </h2>
+              <ul className="mt-8 space-y-4">
+                {[
+                  { titlu: "Raport personal", text: "Scris pe răspunsurile tale: ce arată, ce contează acum, fiecare zonă explicată." },
+                  { titlu: "Plan pe 30 de zile", text: "Pași mici și concreți, săptămână cu săptămână, plus întrebări de reflecție." },
+                  { titlu: "Partea din ghid", text: "Capitolele care te privesc, cu ordinea în care merită citite în cazul tău." },
+                  { titlu: "Al tău, oricând", text: "Pe ecran imediat după plată, în PDF și cu linkul pe email." },
+                ].map((x) => (
+                  <li key={x.titlu} className="flex gap-4">
+                    <span className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center bg-periwinkle text-cream">
+                      <IconCheck className="h-3.5 w-3.5" />
+                    </span>
+                    <div>
+                      <p className="font-display text-[1.15rem] text-ink">{x.titlu}</p>
+                      <p className="mt-0.5 font-sans text-[0.9rem] leading-[1.75] text-ink-soft">{x.text}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              <a
+                href="#parti"
+                className="group mt-9 inline-flex items-center justify-center gap-3 bg-ink px-8 py-4 font-sans text-[0.95rem] text-cream transition-colors hover:bg-periwinkle"
+              >
+                Începe cu chestionarul gratuit
+                <IconArrow className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+              </a>
+            </Reveal>
+          </div>
+        </section>
+
+        <Val culoare="var(--color-cream-deep)" />
+
+        {/* ---------- Cum funcționează ---------- */}
+        <section className="relative overflow-hidden bg-cream-deep py-20 lg:py-28">
+          <Lumina din="stanga" />
           <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
             <Reveal className="max-w-2xl">
               <p className="font-sans text-[0.85rem] text-periwinkle">Cum funcționează</p>
@@ -160,18 +256,21 @@ export default function KitPage() {
             <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {PASI.map((p, i) => (
                 <Reveal key={p.nr} delay={Math.min(i * 0.08, 0.3)}>
-                  <div className="glass h-full p-7">
-                    <span className="flex h-11 w-11 items-center justify-center bg-periwinkle-pale text-periwinkle">
+                  <div className="glass relative h-full overflow-hidden p-7">
+                    <span aria-hidden className="absolute -right-2 -top-4 font-display text-[5.5rem] leading-none text-periwinkle/10">
+                      {p.nr}
+                    </span>
+                    <span className="relative flex h-11 w-11 items-center justify-center bg-periwinkle-pale text-periwinkle">
                       <p.icon className="h-5 w-5" aria-hidden />
                     </span>
-                    <h3 className="mt-5 font-display text-[1.25rem] text-ink">{p.titlu}</h3>
-                    <p className="mt-2 font-sans text-[0.88rem] leading-[1.8] text-ink-soft">{p.text}</p>
+                    <h3 className="relative mt-5 font-display text-[1.25rem] text-ink">{p.titlu}</h3>
+                    <p className="relative mt-2 font-sans text-[0.88rem] leading-[1.8] text-ink-soft">{p.text}</p>
                   </div>
                 </Reveal>
               ))}
             </div>
             <Reveal className="mt-10">
-              <div className="flex flex-col gap-4 border-l-2 border-periwinkle bg-periwinkle-pale/50 px-6 py-5 sm:flex-row sm:items-center">
+              <div className="flex flex-col gap-4 border-l-2 border-periwinkle bg-cream/70 px-6 py-5 sm:flex-row sm:items-center">
                 <BookOpen className="h-6 w-6 shrink-0 text-periwinkle" aria-hidden />
                 <p className="font-sans text-[0.92rem] leading-relaxed text-ink-soft">
                   Fiecare parte vine din „{NUME_GHID}”, scris de Liliana Jgheban, și are introducerea, capitolele ei,
