@@ -59,7 +59,12 @@ export function ChestionarParte({ nr, faraTitlu = false }: { nr: number; faraTit
     if (new URLSearchParams(window.location.search).get("continua") === "1") {
       setToken(p.token);
       setRaspunsuri(p.raspunsuri);
-      setPas(Math.min(p.pas ?? 0, toatePasii(c, p.raspunsuri).length - 1));
+      // prima întrebare la care nu a răspuns încă (cele din chestionarul general se sar)
+      const lista = toatePasii(c, p.raspunsuri);
+      const prima = lista.findIndex((x) =>
+        x.tip === "afirmatie" ? !p.raspunsuri[x.afirmatie.id] : !p.raspunsuri[x.intrebare.id],
+      );
+      setPas(prima < 0 ? lista.length - 1 : prima);
       setStart(true);
       history.replaceState(null, "", window.location.pathname + window.location.hash);
       return;

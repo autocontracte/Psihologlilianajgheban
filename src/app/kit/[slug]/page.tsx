@@ -73,7 +73,7 @@ export default async function PaginaChestionar({ params }: { params: Promise<{ s
             <Reveal>
               <nav className="font-sans text-[0.82rem] text-ink-muted" aria-label="Unde ești">
                 <Link href="/kit" className="hover:text-ink">
-                  Chestionare
+                  Ghiduri
                 </Link>{" "}
                 / <span className="text-periwinkle">Partea {p.nr} din 4 · {p.titlu}</span>
               </nav>

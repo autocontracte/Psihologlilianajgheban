@@ -79,7 +79,7 @@ export const NAV = [
   { label: "Acasă", href: "/#acasa" },
   { label: "Despre mine", href: "/#despre" },
   { label: "Servicii", href: "/#servicii" },
-  { label: "Chestionare", href: "/kit" },
+  { label: "Ghiduri", href: "/kit" },
   { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/#contact" },
 ] as const;
@@ -635,10 +635,10 @@ export const CONTACT = {
 export const TESTS = {
   title: "Cum stai, de fapt, în *relația ta*?",
   description:
-    "Pentru momentele în care relația doare: certuri, gânduri de despărțire, un divorț în curs, viața după el sau o familie nouă. Un chestionar gratuit îți arată unde ești și ce parte din ghidul practic al Lilianei te poate ajuta acum.",
-  items: ["6 chestionare gratuite, de 5 minute", "Rezultat imediat", "Partea ta din ghid, cu raport personal"],
-  cta: "Alege chestionarul tău",
-  href: "/kit",
+    "Pentru momentele în care relația doare: certuri, gânduri de despărțire, un divorț în curs, viața după el sau o familie nouă. Un chestionar gratuit îți arată unde ești și ce ghid al Lilianei te poate ajuta acum.",
+  items: ["Chestionar gratuit, în jur de 5 minute", "Rezultat imediat", "Ghidul potrivit, cu raport personal"],
+  cta: "Află ce ghid ți se potrivește",
+  href: "/kit#chestionar",
 };
 
 /* ============================================================================

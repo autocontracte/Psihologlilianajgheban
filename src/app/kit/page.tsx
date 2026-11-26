@@ -27,7 +27,7 @@ import { GhidGeneral } from "@/components/ghid/GhidGeneral";
    -------------------------------------------------------------------------- */
 
 export const metadata: Metadata = metaPagina({
-  titlu: "Chestionare gratuite despre cuplu, despărțire și familie, cu ghid practic",
+  titlu: "Ghiduri despre cuplu, despărțire și familie, cu chestionar gratuit",
   descriere: `Chestionare gratuite pentru cupluri cu sau fără probleme, despărțire, divorț cu sau fără copii și viața după divorț. Afli unde ești și ce parte din ghidul psihoterapeutului Liliana Jgheban ți se potrivește: ${PRET_PARTE_LEI} lei, cu raport personal.`,
   cale: "/kit",
 });
@@ -141,7 +141,7 @@ export default function KitPage() {
                 Află de ce parte <em className="not-italic text-periwinkle">ai nevoie</em>
               </h2>
               <p className="mx-auto mt-5 max-w-xl font-sans text-[0.98rem] leading-[1.85] text-ink-soft">
-                Două întrebări despre situația ta. Apoi continui direct cu chestionarul potrivit, fără să le mai dai încă o
+                Câteva întrebări despre situația ta, apoi căutăm ghidul potrivit. Continui direct cu chestionarul lui, fără să le mai dai încă o
                 dată.
               </p>
             </Reveal>

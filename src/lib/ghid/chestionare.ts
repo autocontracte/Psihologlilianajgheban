@@ -93,6 +93,35 @@ export const SIGURANTA = ["Nu", "Uneori", "Des"] as const;
 
 export const areCopiiMinori = (r: Raspunsuri) => r.copii === COPII[1];
 
+/* ---------- Întrebările în plus din chestionarul general (/kit) ----------
+   Rafinează recomandarea și ajung, ca context, în raportul personal. */
+
+export const APASA = [
+  "Certurile și felul în care vorbim",
+  "Distanța: trăim unul lângă altul, nu împreună",
+  "Gândul că poate ne despărțim",
+  "Emoțiile despărțirii: tristețe, furie, vinovăție",
+  "Copiii și cum trec prin toate astea",
+  "Relația cu fostul partener",
+  "Familia nouă și locul fiecăruia în ea",
+] as const;
+
+export const DURATA = ["De câteva săptămâni", "De câteva luni", "De mai bine de un an"] as const;
+
+export const CAUTA = [
+  "Să înțeleg ce se întâmplă, de fapt",
+  "Să știu concret ce să fac",
+  "Să-mi protejez copiii",
+  "Să pot merge mai departe",
+] as const;
+
+/** Întrebările generale, cu eticheta din raport. */
+export const INTREBARI_GENERALE = [
+  { id: "apasa", intrebare: "Ce te apasă cel mai mult acum?" },
+  { id: "durata", intrebare: "De cât timp simți asta?" },
+  { id: "cauta", intrebare: "Ce cauți acum, înainte de toate?" },
+] as const;
+
 export const CONTEXT_INAINTE: IntrebareContext[] = [
   {
     id: "situatia",
@@ -666,12 +695,16 @@ export function complet(c: Chestionar, r: Raspunsuri) {
 export function chestionarRecomandat(r: Raspunsuri): number {
   const i = SITUATII.indexOf(r.situatia as (typeof SITUATII)[number]);
   const minori = areCopiiMinori(r);
+  // Ce îl apasă (din chestionarul general) rafinează alegerea, unde e cazul
+  const copiiiApasa = r.apasa === APASA[4] || r.cauta === CAUTA[2];
+  const familiaNoua = r.apasa === APASA[6];
   switch (i) {
     case 2:
-      return 2;
+      return minori && copiiiApasa ? 4 : 2;
     case 3:
       return minori ? 4 : 3;
     case 4:
+      if (familiaNoua) return 6;
       return minori ? 5 : 3;
     case 5:
       return 6;
@@ -735,7 +768,7 @@ export function calculeaza(c: Chestionar, r: Raspunsuri): Rezultat | null {
 export function raspunsuriText(c: Chestionar, r: Raspunsuri): string {
   const eticheta = (v: string) => SCALA.find((s) => s.valoare === v)?.eticheta ?? "—";
   const linii: string[] = [];
-  for (const q of CONTEXT_INAINTE) {
+  for (const q of [...CONTEXT_INAINTE, ...INTREBARI_GENERALE]) {
     if (r[q.id]) linii.push(`${q.intrebare} ${r[q.id]}`);
   }
   for (const z of c.zone) {

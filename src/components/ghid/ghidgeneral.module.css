@@ -1,0 +1,107 @@
+/* Animația „Căutăm ghidul potrivit” și apariția cărții recomandate. */
+
+.raft {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 4%;
+}
+
+.volum {
+  width: 21%;
+  max-width: 7.5rem;
+  opacity: 0.45;
+  filter: saturate(0.7);
+  transform: translateY(0) scale(0.94);
+  transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), filter 0.35s ease;
+}
+
+.activ {
+  opacity: 1;
+  filter: none;
+  transform: translateY(-14px) scale(1.04);
+}
+
+.gasit {
+  opacity: 1;
+  filter: none;
+  transform: translateY(-22px) scale(1.12);
+}
+
+.stins {
+  opacity: 0.15;
+  transform: translateY(6px) scale(0.9);
+}
+
+/* Linia care „scanează” peste raft */
+.scanare {
+  position: relative;
+  height: 2px;
+  margin-top: 1.5rem;
+  overflow: hidden;
+  background: var(--color-cream-deep, #e9ebe1);
+}
+
+.scanare::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 30%;
+  background: linear-gradient(90deg, transparent, var(--color-periwinkle, #6e8567), transparent);
+  animation: scaneaza 1.2s ease-in-out infinite;
+}
+
+.mesaj {
+  animation: apare 0.45s ease both;
+}
+
+/* Cartea recomandată intră rotindu-se spre cititor */
+.intrare {
+  animation: intra 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.textIntrare {
+  animation: apare 0.7s 0.35s ease both;
+}
+
+@keyframes scaneaza {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(340%);
+  }
+}
+
+@keyframes apare {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes intra {
+  from {
+    opacity: 0;
+    transform: perspective(900px) rotateY(70deg) translateY(20px) scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .volum,
+  .scanare::after,
+  .mesaj,
+  .intrare,
+  .textIntrare {
+    animation: none;
+    transition: none;
+  }
+}
