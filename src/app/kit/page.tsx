@@ -17,6 +17,7 @@ import { SITE } from "@/content/site";
 import { Carte3D, clasaInteractiv } from "@/components/ghid/Carte3D";
 import { Telefon3D } from "@/components/ghid/Telefon3D";
 import { GhidGeneral } from "@/components/ghid/GhidGeneral";
+import { DeschideGhidGeneral } from "@/components/ghid/DeschideGhidGeneral";
 
 /* ----------------------------------------------------------------------------
    Ghidul practic despre cuplu, divorț și familie, pe 6 părți.
@@ -68,13 +69,12 @@ export default function KitPage() {
                 poate ajuta acum.
               </p>
               <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:items-center">
-                <a
-                  href="#chestionar"
+                <DeschideGhidGeneral
                   className="group inline-flex items-center justify-center gap-3 bg-periwinkle px-8 py-4 font-sans text-[0.97rem] text-cream shadow-[0_18px_40px_-18px_rgba(110,133,103,0.9)] transition-colors hover:bg-ink"
                 >
                   Află de ce parte ai nevoie
                   <IconArrow className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-                </a>
+                </DeschideGhidGeneral>
                 <span className="font-sans text-[0.86rem] text-ink-muted">
                   Gratuit, fără cont. Partea ta din ghid: {PRET_PARTE_LEI} lei.
                 </span>
@@ -257,13 +257,12 @@ export default function KitPage() {
                   </li>
                 ))}
               </ul>
-              <a
-                href="#chestionar"
+              <DeschideGhidGeneral
                 className="group mt-9 inline-flex items-center justify-center gap-3 bg-ink px-8 py-4 font-sans text-[0.95rem] text-cream transition-colors hover:bg-periwinkle"
               >
                 Începe cu chestionarul gratuit
                 <IconArrow className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-              </a>
+              </DeschideGhidGeneral>
             </Reveal>
           </div>
         </section>
@@ -375,13 +374,12 @@ export default function KitPage() {
                 trăiești și să știi de unde să pornești.
               </p>
               <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-                <a
-                  href="#chestionar"
+                <DeschideGhidGeneral
                   className="inline-flex items-center justify-center gap-2 bg-periwinkle px-7 py-4 font-sans text-[0.93rem] text-cream transition-colors hover:bg-ink"
                 >
                   Află de ce parte ai nevoie
                   <IconArrow className="h-5 w-5" />
-                </a>
+                </DeschideGhidGeneral>
                 <Link
                   href="/programari"
                   className="inline-flex items-center justify-center gap-2 border border-ink/25 px-7 py-4 font-sans text-[0.93rem] text-ink transition-colors hover:border-ink hover:bg-ink hover:text-cream"
@@ -452,13 +450,12 @@ export default function KitPage() {
                 Cinci minute de întrebări, gratuit. Apoi decizi tu dacă vrei raportul personal și partea din ghid care ți se
                 potrivește.
               </p>
-              <a
-                href="#chestionar"
+              <DeschideGhidGeneral
                 className="group mt-9 inline-flex items-center justify-center gap-3 bg-periwinkle-light px-9 py-4 font-sans text-[0.97rem] text-ink transition-colors hover:bg-cream"
               >
                 Află de ce parte ai nevoie
                 <IconArrow className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-              </a>
+              </DeschideGhidGeneral>
             </Reveal>
 
             <div className="mt-16 grid gap-4 text-left md:grid-cols-3">

@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  /* La deploy, build-ul se face în alt folder (NEXT_DIST_DIR=.next-nou) și abia
+     apoi ia locul celui vechi, ca site-ul să nu ruleze dintr-un folder pe jumătate
+     șters (de aici veneau erorile din timpul deploy-ului). Vezi deploy/deploy.sh. */
+  distDir: process.env.NEXT_DIST_DIR || ".next",
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,

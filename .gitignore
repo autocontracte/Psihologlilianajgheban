@@ -42,3 +42,5 @@ yarn-error.log*
 
 # Părțile ghidului: se generează pe server cu scripts/imparte-ghidul.mjs
 /ghiduri/parti/
+/.next-nou/
+/.next-vechi/
