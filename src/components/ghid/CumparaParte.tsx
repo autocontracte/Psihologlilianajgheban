@@ -170,11 +170,11 @@ export function CumparaParte({
             ? "Se deschide plata…"
             : "Se pregătește…"
           : platesteActiv
-            ? `Obține partea ${aleasa.nr} · ${PRET_PARTE_LEI} lei`
+            ? `Obține partea ${aleasa.nr} pentru ${PRET_PARTE_LEI} de lei`
             : `Primește partea ${aleasa.nr} gratuit`}
       </button>
       <p className="mt-3 text-center font-sans text-[0.76rem] leading-relaxed text-ink-muted">
-        {platesteActiv ? "Plată sigură prin Stripe · " : ""}Acces imediat · Raportul e confidențial și rămâne doar al tău
+        {platesteActiv ? "Plată sigură prin Stripe, acces imediat. " : "Acces imediat. "}Raportul e confidențial și rămâne doar al tău.
       </p>
     </div>
   );

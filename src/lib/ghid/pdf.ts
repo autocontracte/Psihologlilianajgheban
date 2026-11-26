@@ -32,7 +32,7 @@ export async function genereazaGhidPersonalPdf(date: DateGhid): Promise<Uint8Arr
   const { parte: p, rezultat: rez, ai, raspunsuri: r } = date;
   const d = await Document.creeaza();
   const { f } = d;
-  d.antet = `${numeParte(p)}  ·  Raport personal`;
+  d.antet = `${numeParte(p)}, raport personal`;
 
   let fundal: PDFImage | null = null;
   try {
@@ -41,7 +41,7 @@ export async function genereazaGhidPersonalPdf(date: DateGhid): Promise<Uint8Arr
     /* fără fotografie, coperta rămâne pe verde */
   }
 
-  d.doc.setTitle(`${numeParte(p)} · Ghidul tău personal`);
+  d.doc.setTitle(`${numeParte(p)}, ghidul tău personal`);
   d.doc.setAuthor("Liliana Jgheban, psihoterapeut");
   d.doc.setSubject(`Raport personal și ${numeParte(p)} din „${NUME_GHID}”`);
   d.doc.setCreator(SITE.url);
@@ -59,7 +59,7 @@ export async function genereazaGhidPersonalPdf(date: DateGhid): Promise<Uint8Arr
     d.scrie(text, (W - d.lat(text, font, marime)) / 2, y, font, marime, culoare, c);
   const spatiat = (text: string) => [...text].join(" ");
 
-  centru(spatiat(`RAPORT PERSONAL · PARTEA ${p.nr} DIN GHID`), H - 300, f.textSemi, 8, C.verdeDeschis);
+  centru(spatiat(`RAPORT PERSONAL, PARTEA ${p.nr} DIN GHID`), H - 300, f.textSemi, 8, C.verdeDeschis);
   let yt = H - 348;
   for (const rand of d.rupe(p.titlu, f.titluBold, 34, 440)) {
     centru(rand, yt, f.titluBold, 34, C.crem);
@@ -163,7 +163,7 @@ export async function genereazaGhidPersonalPdf(date: DateGhid): Promise<Uint8Arr
       d.y -= 18;
       d.scrie(String(i + 1).padStart(2, "0"), MX, d.y, f.titlu, 22, hex(niv.culoare));
       d.scrie(z.nume, MX + 40, d.y + 2, f.titluBold, 16, C.cerneala);
-      const et = `${z.pct}/100 · ${niv.nume}`;
+      const et = `${niv.nume}: ${z.pct}/100`;
       d.scrie(et, W - MX - d.lat(et, f.textSemi, 9.5), d.y + 4, f.textSemi, 9.5, hex(niv.culoare));
       d.y -= 12;
       d.pagina.drawLine({ start: { x: MX, y: d.y }, end: { x: W - MX, y: d.y }, thickness: 0.6, color: C.cremAdanc });
@@ -247,7 +247,7 @@ export async function genereazaGhidPersonalPdf(date: DateGhid): Promise<Uint8Arr
   } else {
     d.sectiune("Analiză", "Zonă cu zonă");
     for (const z of rez.zone) {
-      d.subtitlu(`${z.nume} · ${z.pct}/100`);
+      d.subtitlu(`${z.nume}: ${z.pct}/100`);
       d.paragraf(`${z.descriere} ${z.text}`);
     }
   }

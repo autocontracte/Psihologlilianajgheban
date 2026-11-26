@@ -75,7 +75,7 @@ export default async function PaginaChestionar({ params }: { params: Promise<{ s
                 <Link href="/kit" className="hover:text-ink">
                   Ghiduri
                 </Link>{" "}
-                / <span className="text-periwinkle">Partea {p.nr} din 4 · {p.titlu}</span>
+                / <span className="text-periwinkle">Partea {p.nr} din 4: {p.titlu}</span>
               </nav>
               <h1 className="mt-4 font-display text-[2.3rem] leading-[1.08] text-ink sm:text-[3rem]">{c.carlig}</h1>
               <p className="mt-5 max-w-xl font-sans text-[1rem] leading-[1.85] text-ink-soft">{c.promisiune}</p>

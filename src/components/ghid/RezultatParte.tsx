@@ -121,7 +121,7 @@ export function RezultatParte({
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
                   <p className="font-display text-[1.15rem] text-ink">{z.nume}</p>
                   <p className="font-sans text-[0.85rem]" style={{ color: niv.culoare }}>
-                    {niv.nume} · <span className="font-semibold">{z.pct}/100</span>
+                    {niv.nume}: <span className="font-semibold">{z.pct}/100</span>
                   </p>
                 </div>
                 <div className="mt-2 h-2 bg-cream-deep">
@@ -277,7 +277,7 @@ function RaportPeEcran({ ai, rez, parte }: { ai: RaportParte; rez: Rezultat; par
                   </span>
                   <h3 className="font-display text-[1.35rem] text-ink">{z.nume}</h3>
                   <span className="font-sans text-[0.82rem]" style={{ color: niv.culoare }}>
-                    {z.pct}/100 · {niv.nume}
+                    {niv.nume}: {z.pct}/100
                   </span>
                 </div>
                 <Paragrafe text={text?.text || z.text} className="mt-4" />

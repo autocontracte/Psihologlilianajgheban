@@ -42,7 +42,7 @@ export async function POST(_request: Request, { params }: { params: Promise<{ to
             unit_amount: pret,
             product_data: pe
               ? {
-                  name: `${numeParte(pe.parte)} · ${NUME_GHID}`,
+                  name: `${numeParte(pe.parte)}, din ${NUME_GHID}`,
                   description: `Raport personal pe răspunsurile tale și partea din ghid (PDF, ${pe.parte.pagini} de pagini)`,
                 }
               : {

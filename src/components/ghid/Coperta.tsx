@@ -127,7 +127,7 @@ export function Coperta({
         <img src={deschisa ? "/logo.svg" : "/logo-deschis.svg"} alt="" className="h-auto w-[30cqw] -my-[5cqw]" />
 
         <p className="mt-[9cqw] font-sans uppercase" style={{ fontSize: "2.7cqw", letterSpacing: "0.28em", color: slab }}>
-          {eticheta ?? `Ghid practic · Partea ${parte.nr}`}
+          {eticheta ?? `Ghid practic, partea ${parte.nr}`}
         </p>
         <p className="mt-[3cqw] max-w-full font-display leading-[1.08]" style={{ fontSize: "9.4cqw", color: text }}>
           {titlu ?? parte.titlu}

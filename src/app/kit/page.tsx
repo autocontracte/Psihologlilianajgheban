@@ -180,7 +180,7 @@ export default function KitPage() {
                         <div className="flex items-center justify-between gap-3">
                           <p className="font-sans text-[0.75rem] tracking-[0.06em] text-periwinkle">PARTEA {p.nr}</p>
                           <span className="font-sans text-[0.75rem] text-ink-muted">
-                            {p.pagini} pagini · {PRET_PARTE_LEI} lei
+                            {p.pagini} pagini, {PRET_PARTE_LEI} de lei
                           </span>
                         </div>
                         <h3 className="mt-2 font-display text-[1.4rem] leading-snug text-ink">{p.titlu}</h3>
@@ -223,7 +223,7 @@ export default function KitPage() {
                 />
                 <Carte3D
                   parte={PARTI[2]}
-                  eticheta="Raport personal · Partea 3"
+                  eticheta="Raport personal, partea 3"
                   titlu="Raportul tău"
                   motto="Scris pe răspunsurile tale, cu plan pe 30 de zile"
                   deschisa
@@ -499,7 +499,7 @@ export default function KitPage() {
             ...PARTI.map((p) => ({
               "@context": "https://schema.org",
               "@type": "Product",
-              name: `Partea ${p.nr}: ${p.titlu} · ${NUME_GHID}`,
+              name: `Partea ${p.nr}: ${p.titlu}, din ${NUME_GHID}`,
               description: `${p.pentruCine} Cu raport personal, pe baza unui chestionar gratuit.`,
               image: `${SITE.url}/kit/opengraph-image`,
               brand: { "@type": "Brand", name: "Liliana Jgheban" },

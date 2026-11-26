@@ -115,7 +115,7 @@ export function ChestionarParte({ nr, faraTitlu = false }: { nr: number; faraTit
       setRaspunsuri(reluare.raspunsuri);
       setPas(Math.min(reluare.pas ?? 0, toatePasii(c, reluare.raspunsuri).length - 1));
       setStart(true);
-      urmareste("kit_start", `Partea ${nr} · reluat`);
+      urmareste("kit_start", `Partea ${nr}, reluat`);
       return;
     }
     try {

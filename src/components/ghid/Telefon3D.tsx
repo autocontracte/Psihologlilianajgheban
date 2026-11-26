@@ -87,7 +87,7 @@ export function Telefon3D({
           {/* 0 · întrebarea de deschidere */}
           <div className={cl(0)}>
             <span className="self-start bg-periwinkle-pale px-[3cqw] py-[1.4cqw] font-sans text-periwinkle" style={{ fontSize: "3.4cqw" }}>
-              Chestionar gratuit · Partea 1
+              Chestionar gratuit
             </span>
             <p className="mt-[6cqw] font-display leading-[1.12] text-ink" style={{ fontSize: "8.6cqw" }}>
               {C.carlig}
@@ -222,7 +222,7 @@ export function Telefon3D({
               Raport personal + {P.pagini} de pagini din ghid
             </p>
             <div className="mt-auto bg-periwinkle py-[4cqw] text-center font-sans text-cream" style={{ fontSize: "4.1cqw" }}>
-              Obține partea 1 · {PRET_PARTE_LEI} lei
+              Obține partea 1 pentru {PRET_PARTE_LEI} de lei
             </div>
           </div>
 
