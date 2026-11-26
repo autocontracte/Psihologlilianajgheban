@@ -39,7 +39,7 @@ export function RezultatParte({
     <>
       <header className="text-center">
         <p className="font-sans text-[0.85rem] text-periwinkle">
-          {platit ? numeParte(parte) : `Rezultatul chestionarului · Partea ${rez.chestionar.parte}`}
+          {platit ? numeParte(parte) : "Rezultatul chestionarului tău"}
         </p>
         <h1 className="mt-4 font-display text-[2.3rem] leading-tight text-ink lg:text-[3rem]">
           {platit ? (

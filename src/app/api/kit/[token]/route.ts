@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { salveazaComanda } from "@/lib/kit";
+import { PARTI } from "@/lib/ghid/parti";
 import type { Raspunsuri } from "@/lib/kit/test";
 
 /** PATCH — salvează răspunsurile și, opțional, emailul. */
@@ -36,7 +37,7 @@ export async function PATCH(
     comanda.status !== "PAID" &&
     Number.isInteger(body.parte) &&
     (body.parte as number) >= 1 &&
-    (body.parte as number) <= 6
+    (body.parte as number) <= PARTI.length
   ) {
     await db.guideOrder.update({ where: { id: comanda.id }, data: { parte: body.parte as number } });
   }

@@ -99,8 +99,8 @@ ${APPROACH.values.map((v) => `- ${v.title}: ${v.description}`).join("\n")}
 ${FAQ.items.map((f) => `Î: ${f.q}\nR: ${f.a}`).join("\n")}
 
 CHESTIONARELE GRATUITE ȘI GHIDUL PE PĂRȚI (/kit)
-${TESTS.description} Sunt 6 chestionare gratuite, câte unul pentru fiecare parte a „Ghidului practic despre cuplu, divorț și familie”. Fiecare durează în jur de 5 minute, dă imediat o interpretare generală pe trei zone și arată ce parte a ghidului se potrivește situației. Partea se ia cu ${PRET_PARTE_LEI} lei și vine cu raportul personal (scris pe răspunsuri, pe ecran și în PDF, urmat de partea din ghid). Fiecare parte se poate lua separat. E un instrument de reflecție, nu un test psihologic acreditat, și nu înlocuiește terapia. Când recomanzi un chestionar, pune linkul lui exact:
-${PARTI.map((p) => `- [${CHESTIONARE.find((c) => c.parte === p.nr)!.carlig}](/kit/${p.slug}): Partea ${p.nr}, ${p.titlu}. ${p.pentruCine}`).join("\n")}
+${TESTS.description} „Ghidul practic despre cuplu, divorț și familie” are ${PARTI.length} părți (${PARTI.map((p) => p.titlu).join("; ")}), iar la ele duc ${CHESTIONARE.length} chestionare gratuite, după situația omului. Pe /kit e și un chestionar general, de două întrebări, care arată partea potrivită. Fiecare chestionar durează în jur de 5 minute, dă imediat o interpretare generală pe trei zone și arată ce parte a ghidului se potrivește situației. Partea se ia cu ${PRET_PARTE_LEI} lei și vine cu raportul personal (scris pe răspunsuri, pe ecran și în PDF, urmat de partea din ghid). Fiecare parte se poate lua separat. E un instrument de reflecție, nu un test psihologic acreditat, și nu înlocuiește terapia. Când recomanzi un chestionar, pune linkul lui exact:
+${CHESTIONARE.map((c) => `- [${c.carlig}](/kit/${c.slug}): duce la Partea ${c.parte}, ${PARTI.find((p) => p.nr === c.parte)!.titlu}`).join("\n")}
 Dacă nu e clar ce i se potrivește, trimite la [toate chestionarele](/kit).
 Întrebările frecvente despre chestionare și ghid (răspunde la fel ca pagina):
 ${FAQ_KIT.map((f) => `Î: ${f.q}\nR: ${f.a}`).join("\n")}

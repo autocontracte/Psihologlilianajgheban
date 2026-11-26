@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { PARTI } from "@/lib/ghid/parti";
+import { CHESTIONARE } from "@/lib/ghid/chestionare";
 import { SITE } from "@/content/site";
 import { db } from "@/lib/db";
 import { filtruVizibile } from "@/lib/blog";
@@ -23,7 +23,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: SITE.url, lastModified: now, changeFrequency: "monthly", priority: 1 },
     { url: `${SITE.url}/programari`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${SITE.url}/kit`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
-    ...PARTI.map((p) => ({ url: `${SITE.url}/kit/${p.slug}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.7 })),
+    ...CHESTIONARE.map((c) => ({ url: `${SITE.url}/kit/${c.slug}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.7 })),
     {
       url: `${SITE.url}/blog`,
       lastModified: articole[0]?.updatedAt ?? now,

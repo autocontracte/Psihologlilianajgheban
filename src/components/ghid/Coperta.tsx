@@ -10,12 +10,10 @@ import type { Parte } from "@/lib/ghid/parti";
 export type StilCoperta = { de: string; la: string; lumina: string; motto: string };
 
 export const STILURI: Record<number, StilCoperta> = {
-  1: { de: "#5b7353", la: "#2c3a29", lumina: "#9db58f", motto: "Înainte să hotărăști ceva, înțelege ce se întâmplă" },
-  2: { de: "#56627a", la: "#262c3a", lumina: "#9fb0cc", motto: "Când despărțirea e pe masă" },
-  3: { de: "#9a6450", la: "#4f2e24", lumina: "#e0ab92", motto: "Când vă despărțiți fără copii împreună" },
-  4: { de: "#4d6e68", la: "#22352f", lumina: "#93c2b6", motto: "Ce trăiește copilul și ce îl protejează" },
-  5: { de: "#8f7856", la: "#4a3c28", lumina: "#e0c79c", motto: "Cum rămâneți o echipă de părinți" },
-  6: { de: "#6d566b", la: "#33263a", lumina: "#c9a7c6", motto: "Familii noi, cu copii din relații diferite" },
+  1: { de: "#5b7353", la: "#2c3a29", lumina: "#9db58f", motto: "Cu probleme sau fără: ce o pune în pericol și ce o ține vie" },
+  2: { de: "#56627a", la: "#262c3a", lumina: "#9fb0cc", motto: "Când despărțirea e pe masă sau deja în curs" },
+  3: { de: "#4d6e68", la: "#22352f", lumina: "#93c2b6", motto: "Ce trăiește copilul și ce îl protejează" },
+  4: { de: "#6d566b", la: "#33263a", lumina: "#c9a7c6", motto: "Co-parentajul și familia care o ia de la capăt" },
 };
 
 const AUR = "#d3b47a";
@@ -42,18 +40,7 @@ function Ilustratie({ nr, culoare }: { nr: number; culoare: string }) {
           <circle cx="100" cy="86" r="3.5" fill={culoare} />
         </>
       );
-    case 3: // o ușă deschisă, cu lumină
-      return (
-        <>
-          <path d="M70 128 L70 34 Q100 10 130 34 L130 128" {...p} />
-          <path d="M70 128 L92 120 L92 40 Q96 30 102 26" {...p} strokeOpacity={0.6} />
-          {[0, 1, 2, 3, 4].map((i) => (
-            <path key={i} d={`M112 ${60 + i * 12} L${150 + i * 6} ${54 + i * 14}`} {...p} strokeOpacity={0.35} />
-          ))}
-          <path d="M40 128 L160 128" {...p} />
-        </>
-      );
-    case 4: // doi părinți și copilul ocrotit între ei
+    case 3: // doi părinți și copilul ocrotit între ei
       return (
         <>
           <path d="M40 128 C40 70 70 52 78 52" {...p} />
@@ -65,7 +52,7 @@ function Ilustratie({ nr, culoare }: { nr: number; culoare: string }) {
           <path d="M58 92 Q100 70 142 92" {...p} strokeDasharray="2 4" />
         </>
       );
-    case 5: // două case unite de un drum
+    case 4: // două case unite de un drum
       return (
         <>
           <path d="M22 110 L22 78 L46 58 L70 78 L70 110 Z" {...p} />

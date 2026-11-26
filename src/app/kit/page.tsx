@@ -16,18 +16,19 @@ import { NUME_GHID, PARTI, PRET_PARTE_LEI } from "@/lib/ghid/parti";
 import { SITE } from "@/content/site";
 import { Carte3D, clasaInteractiv } from "@/components/ghid/Carte3D";
 import { Telefon3D } from "@/components/ghid/Telefon3D";
+import { GhidGeneral } from "@/components/ghid/GhidGeneral";
 
 /* ----------------------------------------------------------------------------
    Ghidul practic despre cuplu, divorț și familie, pe 6 părți.
 
    Fiecare parte are un chestionar gratuit (/kit/<slug>) cu interpretare
-   generală; partea se ia cu 59 de lei, cu raportul personal inclus. Pagina
+   generală; partea se ia cu 49 de lei, cu raportul personal inclus. Pagina
    aceasta e intrarea: alegi situația ta și pornești chestionarul ei.
    -------------------------------------------------------------------------- */
 
 export const metadata: Metadata = metaPagina({
   titlu: "Chestionare gratuite despre cuplu, despărțire și familie, cu ghid practic",
-  descriere: `Șase chestionare gratuite, pentru cupluri în criză, despărțire, divorț cu sau fără copii, co-parentaj și familia recompusă. Afli unde ești și ce parte din ghidul psihoterapeutului Liliana Jgheban ți se potrivește: ${PRET_PARTE_LEI} lei, cu raport personal.`,
+  descriere: `Chestionare gratuite pentru cupluri cu sau fără probleme, despărțire, divorț cu sau fără copii și viața după divorț. Afli unde ești și ce parte din ghidul psihoterapeutului Liliana Jgheban ți se potrivește: ${PRET_PARTE_LEI} lei, cu raport personal.`,
   cale: "/kit",
 });
 
@@ -58,11 +59,7 @@ export default function KitPage() {
           </div>
           <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-6 lg:grid-cols-[1fr_1.05fr] lg:gap-14 lg:px-10">
             <Reveal>
-              <span className="inline-flex items-center gap-2 border border-periwinkle/25 bg-cream-warm/80 px-4 py-2 font-sans text-[0.8rem] text-periwinkle backdrop-blur">
-                <span className="h-1.5 w-1.5 rounded-full bg-periwinkle" />
-                6 chestionare gratuite · rezultat în 5 minute
-              </span>
-              <h1 className="mt-6 font-display text-[2.7rem] leading-[1.04] text-ink sm:text-[3.6rem] lg:text-[4.2rem]">
+              <h1 className="font-display text-[2.7rem] leading-[1.04] text-ink sm:text-[3.6rem] lg:text-[4.2rem]">
                 Cum stai, de fapt, în <em className="not-italic text-periwinkle">relația ta</em>?
               </h1>
               <p className="mt-6 max-w-xl font-sans text-[1.04rem] leading-[1.85] text-ink-soft">
@@ -72,10 +69,10 @@ export default function KitPage() {
               </p>
               <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:items-center">
                 <a
-                  href="#parti"
+                  href="#chestionar"
                   className="group inline-flex items-center justify-center gap-3 bg-periwinkle px-8 py-4 font-sans text-[0.97rem] text-cream shadow-[0_18px_40px_-18px_rgba(110,133,103,0.9)] transition-colors hover:bg-ink"
                 >
-                  Alege situația ta
+                  Află de ce parte ai nevoie
                   <IconArrow className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                 </a>
                 <span className="font-sans text-[0.86rem] text-ink-muted">
@@ -84,7 +81,7 @@ export default function KitPage() {
               </div>
               <ul className="mt-9 grid max-w-lg grid-cols-3 gap-4 border-t border-ink/10 pt-6">
                 {[
-                  { cifra: "6", text: "părți din ghid" },
+                  { cifra: "4", text: "părți din ghid" },
                   { cifra: "5 min", text: "un chestionar" },
                   { cifra: "1 PDF", text: "raport + partea ta" },
                 ].map((x) => (
@@ -100,14 +97,14 @@ export default function KitPage() {
             <Reveal delay={0.15} className="order-first lg:order-none">
               <div className="relative mx-auto h-[23rem] w-full max-w-[36rem] sm:h-[38rem]">
                 <Carte3D
-                  parte={PARTI[3]}
+                  parte={PARTI[2]}
                   rotatieY={30}
                   rotatieX={4}
                   grosime={20}
                   className="absolute left-[0%] top-[8%] w-[34%] -rotate-[7deg]"
                 />
                 <Carte3D
-                  parte={PARTI[5]}
+                  parte={PARTI[3]}
                   rotatieY={-32}
                   rotatieX={4}
                   grosime={20}
@@ -132,46 +129,76 @@ export default function KitPage() {
           </div>
         </section>
 
-        <Val culoare="var(--color-cream-deep)" />
+        <Val culoare="var(--color-cream-warm)" />
 
-        {/* ---------- Raftul: cele 6 părți ---------- */}
+        {/* ---------- Chestionarul general: de ce parte ai nevoie ---------- */}
+        <section id="chestionar" className="relative scroll-mt-24 overflow-hidden bg-cream-warm py-20 lg:py-24">
+          <Lumina din="dreapta" />
+          <div className="relative mx-auto max-w-3xl px-6 lg:px-10">
+            <Reveal className="text-center">
+              <p className="font-sans text-[0.85rem] text-periwinkle">Chestionarul general</p>
+              <h2 className="mt-4 font-display text-4xl leading-tight text-ink sm:text-5xl">
+                Află de ce parte <em className="not-italic text-periwinkle">ai nevoie</em>
+              </h2>
+              <p className="mx-auto mt-5 max-w-xl font-sans text-[0.98rem] leading-[1.85] text-ink-soft">
+                Două întrebări despre situația ta. Apoi continui direct cu chestionarul potrivit, fără să le mai dai încă o
+                dată.
+              </p>
+            </Reveal>
+            <div className="mt-10">
+              <GhidGeneral />
+            </div>
+          </div>
+        </section>
+
+        <Val culoare="var(--color-cream-deep)" varianta={2} />
+
+        {/* ---------- Raftul: cele 4 părți ---------- */}
         <section id="parti" className="relative scroll-mt-24 overflow-hidden bg-cream-deep py-20 lg:py-28">
           <Lumina din="stanga" />
           <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
             <Reveal className="mx-auto max-w-3xl text-center">
-              <p className="font-sans text-[0.85rem] text-periwinkle">Unde te afli acum?</p>
+              <p className="font-sans text-[0.85rem] text-periwinkle">Sau alege direct</p>
               <h2 className="mt-4 font-display text-4xl leading-tight text-ink sm:text-5xl">
-                Șase părți. Alege-o pe <em className="not-italic text-periwinkle">a ta</em>.
+                Patru părți. Alege-o pe <em className="not-italic text-periwinkle">a ta</em>.
               </h2>
               <p className="mt-5 font-sans text-[0.98rem] leading-[1.85] text-ink-soft">
-                Fiecare parte are chestionarul ei, gratuit. Dacă nu știi de unde să pornești, începe cu prima: primele
-                întrebări arată oricum ce parte ți se potrivește.
+                La fiecare parte duce un chestionar gratuit, ales după situația ta. Rezultatul îți spune oricum dacă ți se
+                potrivește alta.
               </p>
             </Reveal>
-            <div className="mt-16 grid gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-16 grid gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
               {PARTI.map((p, i) => {
-                const c = CHESTIONARE.find((x) => x.parte === p.nr)!;
+                const intrari = CHESTIONARE.filter((x) => x.parte === p.nr);
                 return (
-                  <Reveal key={p.nr} delay={Math.min((i % 3) * 0.08, 0.24)}>
-                    <Link href={`/kit/${p.slug}`} className={`group flex h-full flex-col ${clasaInteractiv}`}>
-                      <div className="relative mx-auto w-[62%] max-w-[15rem] pb-6 pt-2">
+                  <Reveal key={p.nr} delay={Math.min(i * 0.08, 0.24)}>
+                    <div className={`group flex h-full flex-col ${clasaInteractiv}`}>
+                      <Link href={`/kit/${intrari[0].slug}`} className="relative mx-auto block w-[64%] max-w-[13.5rem] pb-6 pt-2" tabIndex={-1}>
                         <Carte3D parte={p} rotatieY={-24} rotatieX={5} grosime={18} />
-                      </div>
-                      <div className="glass mt-4 flex flex-1 flex-col p-7 transition-colors duration-500 group-hover:bg-white/75">
+                      </Link>
+                      <div className="glass mt-4 flex flex-1 flex-col p-6 transition-colors duration-500 group-hover:bg-white/75">
                         <div className="flex items-center justify-between gap-3">
                           <p className="font-sans text-[0.75rem] tracking-[0.06em] text-periwinkle">PARTEA {p.nr}</p>
                           <span className="font-sans text-[0.75rem] text-ink-muted">
                             {p.pagini} pagini · {PRET_PARTE_LEI} lei
                           </span>
                         </div>
-                        <h3 className="mt-2 font-display text-[1.45rem] leading-snug text-ink">{c.carlig}</h3>
-                        <p className="mt-3 flex-1 font-sans text-[0.9rem] leading-[1.75] text-ink-soft">{p.pentruCine}</p>
-                        <p className="mt-6 inline-flex items-center gap-2 font-sans text-[0.92rem] text-periwinkle">
-                          Fă chestionarul gratuit
-                          <IconArrow className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                        </p>
+                        <h3 className="mt-2 font-display text-[1.4rem] leading-snug text-ink">{p.titlu}</h3>
+                        <p className="mt-2 font-sans text-[0.88rem] leading-[1.7] text-ink-soft">{p.pentruCine}</p>
+                        <div className="mt-auto space-y-2 pt-5">
+                          {intrari.map((c) => (
+                            <Link
+                              key={c.slug}
+                              href={`/kit/${c.slug}`}
+                              className="flex items-start justify-between gap-3 border-t border-ink/10 pt-2.5 font-sans text-[0.88rem] text-periwinkle transition-colors hover:text-ink"
+                            >
+                              <span>{c.carlig}</span>
+                              <IconArrow className="mt-0.5 h-4 w-4 shrink-0" />
+                            </Link>
+                          ))}
+                        </div>
                       </div>
-                    </Link>
+                    </div>
                   </Reveal>
                 );
               })}
@@ -188,15 +215,15 @@ export default function KitPage() {
             <Reveal>
               <div className="relative mx-auto h-[26rem] w-full max-w-[30rem] sm:h-[30rem]">
                 <Carte3D
-                  parte={PARTI[3]}
+                  parte={PARTI[2]}
                   rotatieY={-30}
                   rotatieX={6}
                   grosime={26}
                   className="absolute right-[4%] top-[4%] w-[52%]"
                 />
                 <Carte3D
-                  parte={PARTI[3]}
-                  eticheta="Raport personal · Partea 4"
+                  parte={PARTI[2]}
+                  eticheta="Raport personal · Partea 3"
                   titlu="Raportul tău"
                   motto="Scris pe răspunsurile tale, cu plan pe 30 de zile"
                   deschisa
@@ -231,7 +258,7 @@ export default function KitPage() {
                 ))}
               </ul>
               <a
-                href="#parti"
+                href="#chestionar"
                 className="group mt-9 inline-flex items-center justify-center gap-3 bg-ink px-8 py-4 font-sans text-[0.95rem] text-cream transition-colors hover:bg-periwinkle"
               >
                 Începe cu chestionarul gratuit
@@ -349,10 +376,10 @@ export default function KitPage() {
               </p>
               <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                 <a
-                  href="#parti"
+                  href="#chestionar"
                   className="inline-flex items-center justify-center gap-2 bg-periwinkle px-7 py-4 font-sans text-[0.93rem] text-cream transition-colors hover:bg-ink"
                 >
-                  Alege situația ta
+                  Află de ce parte ai nevoie
                   <IconArrow className="h-5 w-5" />
                 </a>
                 <Link
@@ -403,7 +430,7 @@ export default function KitPage() {
               <Reveal delay={0.1} className="lg:sticky lg:top-28">
                 <AnaPanou
                   intro="Nu ai găsit răspunsul în listă? Întreabă-mă orice: ce chestionar ți se potrivește, ce primești sau cum se plătește."
-                  sugestii={["Ce chestionar mi se potrivește?", "Ce primesc pentru 59 de lei?", "Ne-am despărțit deja. Mă ajută?"]}
+                  sugestii={["Ce chestionar mi se potrivește?", `Ce primesc pentru ${PRET_PARTE_LEI} de lei?`, "Ne-am despărțit deja. Mă ajută?"]}
                 />
               </Reveal>
             </div>
@@ -426,10 +453,10 @@ export default function KitPage() {
                 potrivește.
               </p>
               <a
-                href="#parti"
+                href="#chestionar"
                 className="group mt-9 inline-flex items-center justify-center gap-3 bg-periwinkle-light px-9 py-4 font-sans text-[0.97rem] text-ink transition-colors hover:bg-cream"
               >
-                Alege situația ta
+                Află de ce parte ai nevoie
                 <IconArrow className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
               </a>
             </Reveal>
@@ -481,7 +508,7 @@ export default function KitPage() {
                 price: String(PRET_PARTE_LEI),
                 priceCurrency: "RON",
                 availability: "https://schema.org/InStock",
-                url: `${SITE.url}/kit/${p.slug}`,
+                url: `${SITE.url}/kit/${CHESTIONARE.find((c) => c.parte === p.nr)!.slug}`,
               },
             })),
             {

@@ -48,6 +48,11 @@ export type Zona = {
 };
 
 export type Chestionar = {
+  /** Numărul chestionarului (1–6); e salvat în comandă. */
+  id: number;
+  /** Adresa lui: /kit/<slug>. */
+  slug: string;
+  /** Partea ghidului la care duce (1–4). */
   parte: number;
   /** Titlul cu care e anunțat (pe /kit și în reclame). */
   carlig: string;
@@ -145,6 +150,8 @@ export const SCALA = [
 
 export const CHESTIONARE: Chestionar[] = [
   {
+    id: 1,
+    slug: "preventia-divortului",
     parte: 1,
     carlig: "Simți că nu mai merge ceva în relație?",
     promisiune:
@@ -223,6 +230,8 @@ export const CHESTIONARE: Chestionar[] = [
     },
   },
   {
+    id: 2,
+    slug: "despartirea",
     parte: 2,
     carlig: "Te gândești la despărțire sau decizia a fost deja luată?",
     promisiune:
@@ -301,7 +310,9 @@ export const CHESTIONARE: Chestionar[] = [
     },
   },
   {
-    parte: 3,
+    id: 3,
+    slug: "divortul-fara-copii",
+    parte: 2,
     carlig: "Divorțezi și nu aveți copii împreună?",
     promisiune:
       "Află unde ești, emoțional și practic, și ce te ajută să închei relația fără să te pierzi pe drum. Chestionar gratuit, în jur de 5 minute.",
@@ -379,7 +390,9 @@ export const CHESTIONARE: Chestionar[] = [
     },
   },
   {
-    parte: 4,
+    id: 4,
+    slug: "divortul-cu-copii",
+    parte: 3,
     carlig: "Vă despărțiți și aveți copii?",
     promisiune:
       "Află cum trăiește copilul vostru despărțirea, ce îl protejează și ce îl încarcă fără să vă dați seama. Chestionar gratuit, în jur de 5 minute.",
@@ -457,7 +470,9 @@ export const CHESTIONARE: Chestionar[] = [
     },
   },
   {
-    parte: 5,
+    id: 5,
+    slug: "co-parentajul",
+    parte: 4,
     carlig: "După divorț, mai funcționați ca o echipă de părinți?",
     promisiune:
       "Află ce merge în co-parentajul vostru și ce îl încarcă pe copil între cele două case. Chestionar gratuit, în jur de 5 minute.",
@@ -535,7 +550,9 @@ export const CHESTIONARE: Chestionar[] = [
     },
   },
   {
-    parte: 6,
+    id: 6,
+    slug: "familia-recompusa",
+    parte: 4,
     carlig: "Familie nouă, cu copii din relații diferite?",
     promisiune:
       "Află unde se blochează lucrurile în familia voastră recompusă și cum le dați timp să se așeze. Chestionar gratuit, în jur de 5 minute.",
@@ -614,7 +631,8 @@ export const CHESTIONARE: Chestionar[] = [
   },
 ];
 
-export const chestionar = (nr: number | null | undefined) => CHESTIONARE.find((c) => c.parte === nr) ?? null;
+export const chestionar = (id: number | null | undefined) => CHESTIONARE.find((c) => c.id === id) ?? null;
+export const chestionarDupaSlug = (slug: string) => CHESTIONARE.find((c) => c.slug === slug) ?? null;
 
 export const afirmatii = (c: Chestionar) => c.zone.flatMap((z) => z.afirmatii);
 
@@ -644,14 +662,11 @@ export function complet(c: Chestionar, r: Raspunsuri) {
 
 /* ---------- Rezultatul ---------- */
 
-/** Ce parte se potrivește situației descrise. */
-export function parteRecomandata(r: Raspunsuri): number {
+/** Ce chestionar se potrivește situației descrise (1–6). */
+export function chestionarRecomandat(r: Raspunsuri): number {
   const i = SITUATII.indexOf(r.situatia as (typeof SITUATII)[number]);
   const minori = areCopiiMinori(r);
   switch (i) {
-    case 0:
-    case 1:
-      return 1;
     case 2:
       return 2;
     case 3:
@@ -664,6 +679,9 @@ export function parteRecomandata(r: Raspunsuri): number {
       return 1;
   }
 }
+
+/** Ce parte a ghidului se potrivește situației descrise (1–4). */
+export const parteRecomandata = (r: Raspunsuri) => chestionar(chestionarRecomandat(r))!.parte;
 
 export type ScorZona = Zona & { pct: number; nivel: CheieNivel; text: string };
 

@@ -17,14 +17,16 @@ import type { Parte } from "./parti";
 const CHEIE = process.env.OPENAI_API_KEY;
 const MODEL = process.env.KIT_OPENAI_MODEL || "gpt-4.1";
 
-const ROMANE = ["I", "II", "III", "IV", "V", "VI"];
-
-/** Doar concluziile din partea cumpărată, ca raportul să rămână în subiect. */
-function cunostinteParte(nr: number): string {
-  const start = GHID_CUNOSTINTE.indexOf(`### PARTEA ${ROMANE[nr - 1]} `);
-  if (start < 0) return GHID_CUNOSTINTE;
-  const urm = GHID_CUNOSTINTE.indexOf("### ", start + 4);
-  return GHID_CUNOSTINTE.slice(start, urm < 0 ? undefined : urm).trim();
+/** Doar concluziile din partea cumpărată (din secțiunile I–VI pe care le
+    cuprinde), ca raportul să rămână în subiect. */
+function cunostinteParte(p: Parte): string {
+  const bucati = p.romane.map((rom) => {
+    const start = GHID_CUNOSTINTE.indexOf(`### PARTEA ${rom} `);
+    if (start < 0) return "";
+    const urm = GHID_CUNOSTINTE.indexOf("### ", start + 4);
+    return GHID_CUNOSTINTE.slice(start, urm < 0 ? undefined : urm).trim();
+  });
+  return bucati.every(Boolean) ? bucati.join("\n\n") : GHID_CUNOSTINTE;
 }
 
 function sistem(c: Chestionar, p: Parte, cuCopii: boolean) {
@@ -58,7 +60,7 @@ CE ÎNTORCI: un singur obiect JSON, exact cu aceste câmpuri:
 "zone" are exact ${c.zone.length} elemente, în ordinea: ${c.zone.map((z) => z.cheie).join(", ")}. "plan" are exact 4 săptămâni. "capitole" cuprinde toate capitolele părții (${p.capitole.map((t) => `„${t}”`).join(", ")}), în ordinea în care îi folosesc cel mai mult acum. În total, raportul are în jur de 1.800-2.400 de cuvinte.
 
 PRINCIPIILE DIN ACEASTĂ PARTE A GHIDULUI:
-${cunostinteParte(p.nr)}`;
+${cunostinteParte(p)}`;
 }
 
 export type RezultatAI = { ok: true; raport: RaportParte } | { ok: false; error: string };

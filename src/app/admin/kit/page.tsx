@@ -95,7 +95,7 @@ export default async function AdminKitPage() {
                           {c.status === "PAID" ? "Plătit" : pe.rezultat ? "Chestionar gata" : "Neterminat"}
                         </span>
                         <span className="font-sans text-[0.8rem] text-ink-muted">
-                          Chestionarul {pe.chestionar.parte}
+                          Chestionarul {pe.chestionar.id}
                           {c.status === "PAID" ? ` · a luat ${numeParte(pe.parte)}` : pe.rezultat ? ` · recomandată: partea ${pe.rezultat.recomandata.nr}` : ""}
                           {" · "}
                           {c.email ?? "fără email"} · {formatDateTime(c.createdAt)}

@@ -28,7 +28,7 @@ type Progres = { token: string; raspunsuri: Raspunsuri; pas: number };
 const stilCamp =
   "w-full rounded-none border border-ink/15 bg-cream-warm px-5 py-3.5 font-sans text-[0.95rem] text-ink placeholder:text-ink-muted transition-all duration-300 focus:border-periwinkle focus:bg-cream focus:outline-none focus:ring-4 focus:ring-periwinkle/12";
 
-export function ChestionarParte({ nr }: { nr: number }) {
+export function ChestionarParte({ nr, faraTitlu = false }: { nr: number; faraTitlu?: boolean }) {
   const c = gasesteChestionar(nr)!;
   const CHEIE = `ghid_progres_${nr}`;
   const nrAfirmatii = afirmatii(c).length;
@@ -54,7 +54,17 @@ export function ChestionarParte({ nr }: { nr: number }) {
 
   useEffect(() => {
     const p = citeste();
-    if (p && Object.keys(p.raspunsuri).length) setReluare(p);
+    if (!p || !Object.keys(p.raspunsuri).length) return;
+    // Venit din chestionarul general: reia direct, fără ecranul de început
+    if (new URLSearchParams(window.location.search).get("continua") === "1") {
+      setToken(p.token);
+      setRaspunsuri(p.raspunsuri);
+      setPas(Math.min(p.pas ?? 0, toatePasii(c, p.raspunsuri).length - 1));
+      setStart(true);
+      history.replaceState(null, "", window.location.pathname + window.location.hash);
+      return;
+    }
+    setReluare(p);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -180,7 +190,9 @@ export function ChestionarParte({ nr }: { nr: number }) {
     return (
       <div ref={cutie} className="glass-strong p-8 text-center sm:p-12">
         <p className="font-sans text-[0.85rem] text-periwinkle">Chestionar gratuit</p>
-        <h2 className="mt-3 font-display text-[1.9rem] leading-tight text-ink sm:text-[2.3rem]">{c.carlig}</h2>
+        <h2 className="mt-3 font-display text-[1.9rem] leading-tight text-ink sm:text-[2.3rem]">
+          {faraTitlu ? `${nrAfirmatii} afirmații, în jur de 5 minute` : c.carlig}
+        </h2>
         <p className="mx-auto mt-5 max-w-xl font-sans text-[0.95rem] leading-[1.85] text-ink-soft">
           Câteva întrebări despre situația ta, apoi {nrAfirmatii} afirmații. Pentru fiecare, alegi cât de adevărată e
           pentru tine acum. Nu există răspunsuri bune sau rele, iar răspunsurile se salvează pe măsură ce le dai.

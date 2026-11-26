@@ -8,7 +8,7 @@ export const INTREBARI_FRECVENTE = [
     a: `Alegi situația care ți se potrivește și completezi chestionarul ei, gratuit, în jur de 5 minute. Primești imediat o interpretare generală și afli care parte a ghidului ți se potrivește. Dacă vrei, iei partea respectivă cu ${PRET_PARTE_LEI} lei: primești raportul tău personal, scris pe răspunsurile tale, și partea din ghid, într-un singur PDF.`,
   },
   {
-    q: "Ce primesc pentru 59 de lei?",
+    q: `Ce primesc pentru ${PRET_PARTE_LEI} de lei?`,
     a: "Raportul tău personal (rezumat, analiza fiecărei zone, resurse, lucruri la care să fii atent, plan pe 30 de zile, întrebări de reflecție și ordinea în care să citești capitolele), pe ecran și în PDF, plus partea aleasă din „Ghid practic despre cuplu, divorț și familie”, scris de Liliana Jgheban.",
   },
   {
@@ -17,7 +17,7 @@ export const INTREBARI_FRECVENTE = [
   },
   {
     q: "Pot lua mai multe părți?",
-    a: "Da. Fiecare parte are chestionarul ei și se ia separat, cu raportul personal pe răspunsurile din acel chestionar.",
+    a: "Da. Fiecare parte se ia separat, cu raportul personal scris pe răspunsurile din chestionarul care te-a dus la ea.",
   },
   {
     q: "Este un test psihologic acreditat?",
