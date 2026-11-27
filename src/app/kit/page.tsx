@@ -7,7 +7,6 @@ import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { Reveal } from "@/components/ui/Reveal";
 import { Lumina } from "@/components/ui/Lumina";
-import { Val } from "@/components/ui/Val";
 import { IconArrow, IconCheck } from "@/components/ui/Icons";
 import { INTREBARI_FRECVENTE } from "@/lib/kit/faq";
 import { AnaPanou } from "@/components/ana/AnaPanou";
@@ -129,8 +128,6 @@ export default function KitPage() {
           </div>
         </section>
 
-        <Val culoare="var(--color-cream-warm)" />
-
         {/* ---------- Chestionarul general: de ce parte ai nevoie ---------- */}
         <section id="chestionar" className="relative scroll-mt-24 overflow-hidden bg-cream-warm py-20 lg:py-24">
           <Lumina din="dreapta" />
@@ -150,8 +147,6 @@ export default function KitPage() {
             </div>
           </div>
         </section>
-
-        <Val culoare="var(--color-cream-deep)" varianta={2} />
 
         {/* ---------- Raftul: cele 4 părți ---------- */}
         <section id="parti" className="relative scroll-mt-24 overflow-hidden bg-cream-deep py-20 lg:py-28">
@@ -205,8 +200,6 @@ export default function KitPage() {
             </div>
           </div>
         </section>
-
-        <Val culoare="var(--color-cream)" varianta={2} />
 
         {/* ---------- Ce primești ---------- */}
         <section className="relative overflow-hidden bg-cream py-20 lg:py-28">
@@ -267,8 +260,6 @@ export default function KitPage() {
           </div>
         </section>
 
-        <Val culoare="var(--color-cream-deep)" />
-
         {/* ---------- Cum funcționează ---------- */}
         <section className="relative overflow-hidden bg-cream-deep py-20 lg:py-28">
           <Lumina din="stanga" />
@@ -307,8 +298,6 @@ export default function KitPage() {
           </div>
         </section>
 
-        <Val culoare="var(--color-ink)" />
-
         {/* ---------- Ce spun cercetările ---------- */}
         <section className="grain relative overflow-hidden bg-ink py-20 lg:py-28">
           <Lumina varianta="noapte" din="stanga" />
@@ -342,8 +331,6 @@ export default function KitPage() {
             </Reveal>
           </div>
         </section>
-
-        <Val culoare="var(--color-cream-deep)" />
 
         {/* ---------- Autoarea ---------- */}
         <section className="relative overflow-hidden bg-cream-deep py-20 lg:py-24">
@@ -392,8 +379,6 @@ export default function KitPage() {
           </div>
         </section>
 
-        <Val culoare="var(--color-cream)" varianta={2} />
-
         {/* ---------- Întrebări frecvente ---------- */}
         {/* overflow-clip, nu hidden: altfel panoul Anei nu mai poate sta „sticky" */}
         <section className="relative overflow-clip bg-cream py-20 lg:py-28">
@@ -434,8 +419,6 @@ export default function KitPage() {
             </div>
           </div>
         </section>
-
-        <Val culoare="var(--color-ink)" />
 
         {/* ---------- Final ---------- */}
         <section className="grain relative overflow-hidden bg-ink py-20 lg:py-28">
